@@ -11,4 +11,4 @@ export JAVA_HOME="${JAVA_PATH}/bin/java"
 export JDK_HOME="${JAVA_PATH}/bin/java"
 
 cat /dev/null | "${JAVA_PATH}/bin/java" -Xmx1384M -XX:MaxMetaspaceSize=384M -XX:+UseCompressedOops \
-    -jar sbt-launch-*.jar "$@"
+    -jar sbt-launch.jar "$@"
