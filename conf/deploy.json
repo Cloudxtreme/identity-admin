@@ -1,0 +1,31 @@
+{
+  "defaultStacks" : ["identity"],
+  "packages" : {
+    "identity-admin": {
+      "type": "autoscaling",
+      "apps": [
+        "identity-admin"
+      ],
+      "data": {
+        "port": "9000",
+        "bucket": "gu-identity-admin-dist"
+      }
+    }
+  },
+  "recipes" : {
+    "default" : {
+      "depends" : [
+        "uploadArtifacts",
+        "deploy"
+      ]
+    },
+    "uploadArtifacts": {
+      "actionsBeforeApp": ["identity-admin.uploadArtifacts"]
+    },
+    "deploy": {
+      "actionsPerHost": [
+        "identity-admin.deploy"
+      ]
+    }
+  }
+}
