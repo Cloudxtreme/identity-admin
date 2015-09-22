@@ -23,11 +23,13 @@ aws --profile identity s3 cp s3://identity-local-ssl/idadmin-thegulocal-com-exp2
 aws --profile identity s3 cp s3://identity-local-ssl/idadmin-thegulocal-com-exp2018-09-16.key . 1>/dev/null
 ```
 
-* Find the configuration folder of nginx on your machine:
+* Find the configuration folder of nginx by running:
 
 ```bash
 nginxHome=`nginx -V 2>&1 | grep "configure arguments:" | sed 's/[^*]*conf-path=\([^ ]*\)\/nginx\.conf.*/\1/g'`
 ```
+
+`echo $nginxHome` should display the name of the folder.
 
 * Create symbolic links for the certificates and identity-admin configuration file for nginx (note: this might require `sudo`)
 
