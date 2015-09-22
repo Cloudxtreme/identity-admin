@@ -10,11 +10,11 @@ Ensure you have the correct [identity-admin hosts](https://github.com/guardian/i
 
 We have valid SSL certificates for thegulocal.com and the subdomains we use for local development.
 
-The certificates for the local subdomain idadmin.thegulocal.com are stored in the AWS S3 Identity bucket and are set up as part of the identity-admin.conf for nginx.
+The certificates for the local subdomain `idadmin.thegulocal.com` are stored in the AWS S3 Identity bucket and are set up as part of the `identity-admin.conf` for nginx.
 
 Follow these installation steps to correctly setup nginx and valid SSL certificates locally:
 
-* Make sure you are in the base identity-admin directory
+* Make sure you are in the base `identity-admin` directory
 
 * Make sure you have access to the S3 bucket identity-local-ssl and download them using the [AWS CLI utility](https://aws.amazon.com/cli/) (the following command will download them in your current directory using your Identity profile on AWS):
 
@@ -46,7 +46,7 @@ sudo nginx
 
 * Optional - verify that your configuration is set up as expected
 
-`ls -la $nginxHome` should show the certificates correctly symlinked to the **full pathname** of the downloaded certificates
-`ls -la $nginxHome/sites-enabled` should show `identity-admin.conf`  correctly symlinked to the **full pathname** of `identity-admin/nginx/identity-admin.conf`
+    - `ls -la $nginxHome` should show the certificates correctly symlinked to the **full pathname** of the downloaded certificates
+    - `ls -la $nginxHome/sites-enabled` should show `identity-admin.conf`  correctly symlinked to the **full pathname** of `identity-admin/nginx/identity-admin.conf`
 
 You should now be able to start the application (`sbt run`), go to [https://idadmin.thegulocal.com/management/healthcheck](https://idadmin.thegulocal.com/management/healthcheck) and see a green padlock for your local SSL certificate as well as a 200 response.
