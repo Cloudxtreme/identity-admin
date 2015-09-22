@@ -11,3 +11,5 @@ riffRaffPackageType := (packageZipTarball in Universal).value
 riffRaffBuildIdentifier := "DEV"
 riffRaffUploadArtifactBucket := "riffraff-artifact"
 riffRaffUploadManifestBucket := "riffraff-builds"
+
+play.PlayImport.PlayKeys.playDefaultPort := 8852
