@@ -15,7 +15,8 @@
   "recipes" : {
     "default" : {
       "depends" : [
-        "uploadArtifacts"
+        "uploadArtifacts",
+        "deploy"
       ]
     },
     "uploadArtifacts": {
