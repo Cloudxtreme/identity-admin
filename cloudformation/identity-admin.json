@@ -191,15 +191,32 @@
         },
         "UserData": {
           "Fn::Base64": {
-            "Fn::Join": [
-              "",
-              [
-                "#!/bin/bash -ev\n",
-                "export IDENTITY_stage='",
-                {
-                  "Ref": "Stage"
-                },
-                "'\n"
+            "Fn::Join": [ "", [
+              "#!/bin/bash -ev\n",
+
+              "export IDENTITY_stage='", {
+                "Ref": "Stage"
+              }, "'\n",
+
+              "aws s3 cp s3://gu-identity-dist/cwlogs-setup.sh .\n",
+              "chmod +x cwlogs-setup.sh\n",
+              "./cwlogs-setup.sh\n",
+
+              "aws s3 cp s3://gu-identity-dist/set-ssh-keys.sh .\n",
+              "chmod +x set-ssh-keys.sh\n",
+              "./set-ssh-keys.sh\n",
+
+              "aws s3 cp s3://gu-identity-dist/logstash-setup.sh .\n",
+              "chmod +x logstash-setup.sh\n",
+              "./logstash-setup.sh\n",
+
+              "aws s3 cp s3://gu-identity-admin-dist/identity-admin-bootstrap.sh .\n",
+              "chmod +x identity-api-bootstrap.sh\n",
+              "./identity-api-bootstrap.sh\n",
+
+
+              "service identity-admin start\n",
+              "sleep 20s\n"
               ]
             ]
           }
