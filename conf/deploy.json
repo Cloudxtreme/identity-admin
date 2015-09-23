@@ -7,7 +7,7 @@
         "identity-admin"
       ],
       "data": {
-        "port": "9000",
+        "port": "8852",
         "bucket": "gu-identity-admin-dist"
       }
     }
