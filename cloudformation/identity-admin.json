@@ -64,6 +64,10 @@
       "Description": "Public subnets to use for the ELB",
       "Type": "List<AWS::EC2::Subnet::Id>"
     },
+    "LogstashHost" : {
+      "Description": "Logstash load balancer host",
+      "Type": "String"
+    },
     "AmiId": {
       "Description": "Custom AMI to use for instances, created using Packer",
       "Type": "String"
@@ -156,6 +160,16 @@
             "Value": {
               "Ref": "Stage"
             },
+            "PropagateAtLaunch": "true"
+          },
+          {
+            "Key": "LogstashHost",
+            "Value": { "Ref": "LogstashHost" },
+            "PropagateAtLaunch": "true"
+          },
+          {
+            "Key": "Name",
+            "Value": {"Fn::FindInMap": ["StageVariables", { "Ref": "Stage" }, "InstanceName" ]},
             "PropagateAtLaunch": "true"
           },
           {
