@@ -173,7 +173,10 @@
             "Value": "identity-admin",
             "PropagateAtLaunch": "true"
           }
-        ]
+        ],
+        "VPCZoneIdentifier": {
+          "Ref": "PrivateVpcSubnets"
+        }
       }
     },
     "LaunchConfig": {
