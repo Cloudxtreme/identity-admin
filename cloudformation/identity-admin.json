@@ -302,7 +302,7 @@
       "Properties": {
         "VpcId": { "Ref": "VpcId" },
         "GroupDescription": "Open up HTTP access to load balancer",
-        "SecurityGroupIngress": [
+        "SecurityGroupEgress": [
           {
             "IpProtocol": "tcp",
             "FromPort": "443",
