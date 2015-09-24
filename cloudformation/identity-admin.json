@@ -138,11 +138,6 @@
               },
               {
                 "Effect": "Allow",
-                "Action": "ses:SendEmail",
-                "Resource": "*"
-              },
-              {
-                "Effect": "Allow",
                 "Action": [
                   "cloudwatch:*",
                   "logs:*"
