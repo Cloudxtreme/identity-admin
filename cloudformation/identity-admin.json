@@ -165,23 +165,23 @@
         "Scheme" : "internal",
         "Listeners": [{
           "LoadBalancerPort": "443",
-          "InstancePort": "8852",
+          "InstancePort": "9000",
           "Protocol": "HTTPS",
           "SSLCertificateId": { "Fn::FindInMap": [ "CertsMap", { "Ref": "Stage" },"ssl" ]}
         },
           {
             "LoadBalancerPort": "80",
-            "InstancePort": "8852",
+            "InstancePort": "9000",
             "Protocol": "HTTP"
           },
           {
             "LoadBalancerPort": "8800",
-            "InstancePort": "8852",
+            "InstancePort": "9000",
             "Protocol": "HTTP"
           }],
         "CrossZone": "true",
         "HealthCheck": {
-          "Target": "HTTP:8852/management/healthcheck",
+          "Target": "HTTP:9000/management/healthcheck",
           "HealthyThreshold": "2",
           "UnhealthyThreshold": "10",
           "Interval": "30",
@@ -323,8 +323,8 @@
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "8852",
-            "ToPort": "8852",
+            "FromPort": "9000",
+            "ToPort": "9000",
             "CidrIp": "0.0.0.0/0"
           }
         ]
@@ -339,8 +339,8 @@
         "SecurityGroupIngress": [
           {
             "IpProtocol": "tcp",
-            "FromPort": "8852",
-            "ToPort": "8852",
+            "FromPort": "9000",
+            "ToPort": "9000",
             "SourceSecurityGroupId": {
               "Ref": "LoadBalancerSecurityGroup"
             }
