@@ -8,6 +8,13 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtNativePackage
 
 riffRaffPackageType := (packageZipTarball in Universal).value
 
+riffRaffArtifactResources ++= Seq(
+  baseDirectory.value / "provisioning" / "gu-identity-admin-dist"/"identity-admin-bootstrap.sh" ->
+    "packages/identity-admin/identity-admin-bootstrap.sh",
+  baseDirectory.value / "provisioning" / "gu-identity-admin-dist"/ "identity-admin-upstart.conf" ->
+    "packages/identity-admin/identity-admin-upstart.conf"
+)
+
 riffRaffBuildIdentifier := "DEV"
 riffRaffUploadArtifactBucket := "riffraff-artifact"
 riffRaffUploadManifestBucket := "riffraff-builds"
