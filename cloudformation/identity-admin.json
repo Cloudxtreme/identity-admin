@@ -166,7 +166,7 @@
     "LoadBalancer": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Properties": {
-        "Scheme" : "internal",
+        "Scheme" : "internet-facing",
         "Listeners": [{
           "LoadBalancerPort": "443",
           "InstancePort": "9000",
