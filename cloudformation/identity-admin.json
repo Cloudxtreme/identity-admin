@@ -66,6 +66,10 @@
       "Description": "Public subnets to use in VPC",
       "Type": "List<AWS::EC2::Subnet::Id>"
     },
+    "PublicVpcSubnets" : {
+      "Description": "Public subnets to use for the ELB",
+      "Type": "List<AWS::EC2::Subnet::Id>"
+    },
     "LogstashHost" : {
       "Description": "Logstash load balancer host",
       "Type": "String"
@@ -173,11 +177,6 @@
             "LoadBalancerPort": "80",
             "InstancePort": "9000",
             "Protocol": "HTTP"
-          },
-          {
-            "LoadBalancerPort": "8800",
-            "InstancePort": "9000",
-            "Protocol": "HTTP"
           }],
         "CrossZone": "true",
         "HealthCheck": {
@@ -187,7 +186,7 @@
           "Interval": "30",
           "Timeout": "10"
         },
-        "Subnets": { "Ref": "PrivateVpcSubnets" },
+        "Subnets": { "Ref": "PublicVpcSubnets" },
         "SecurityGroups": [
           { "Ref": "LoadBalancerSecurityGroup" }
         ]
