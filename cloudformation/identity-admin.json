@@ -302,7 +302,7 @@
       "Properties": {
         "VpcId": { "Ref": "VpcId" },
         "GroupDescription": "Open up HTTP access to load balancer",
-        "SecurityGroupEgress": [
+        "SecurityGroupIngress": [
           {
             "IpProtocol": "tcp",
             "FromPort": "443",
@@ -314,7 +314,9 @@
             "FromPort": "80",
             "ToPort": "80",
             "CidrIp": "0.0.0.0/0"
-          },
+          }
+        ],
+        "SecurityGroupEgress": [
           {
             "IpProtocol": "tcp",
             "FromPort": "9000",
