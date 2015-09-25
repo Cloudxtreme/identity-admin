@@ -170,12 +170,7 @@
           "InstancePort": "9000",
           "Protocol": "HTTPS",
           "SSLCertificateId": { "Fn::FindInMap": [ "CertsMap", { "Ref": "Stage" },"ssl" ]}
-        },
-          {
-            "LoadBalancerPort": "80",
-            "InstancePort": "9000",
-            "Protocol": "HTTP"
-          }],
+        }],
         "CrossZone": "true",
         "HealthCheck": {
           "Target": "HTTP:9000/management/healthcheck",
@@ -310,12 +305,6 @@
             "IpProtocol": "tcp",
             "FromPort": "443",
             "ToPort": "443",
-            "CidrIp": { "Ref": "InternalCidrIp" }
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
             "CidrIp": { "Ref": "InternalCidrIp" }
           }
         ],
