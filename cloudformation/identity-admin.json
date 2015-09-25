@@ -18,7 +18,6 @@
     "InstanceType": {
       "Description": "EC2 instance type",
       "Type": "String",
-      "Default": "t2.small",
       "AllowedValues": [
         "t2.micro",
         "t2.small",
@@ -77,6 +76,10 @@
     "AmiId": {
       "Description": "Custom AMI to use for instances, created using Packer",
       "Type": "String"
+    },
+    "InternalCidrIp": {
+        "Description": "Internal network CIDR IP",
+        "Type": "String"
     }
   },
 
@@ -307,13 +310,13 @@
             "IpProtocol": "tcp",
             "FromPort": "443",
             "ToPort": "443",
-            "CidrIp": "0.0.0.0/0"
+            "CidrIp": { "Ref": "InternalCidrIp" }
           },
           {
             "IpProtocol": "tcp",
             "FromPort": "80",
             "ToPort": "80",
-            "CidrIp": "0.0.0.0/0"
+            "CidrIp": { "Ref": "InternalCidrIp" }
           }
         ],
         "SecurityGroupEgress": [
