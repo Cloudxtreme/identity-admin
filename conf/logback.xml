@@ -1,16 +1,34 @@
 <configuration>
-    
-  <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
 
-  <appender name="LOGFILE" class="ch.qos.logback.core.FileAppender">
-    <file>${application.home}/logs/application.log</file>
-    <encoder>
-      <pattern>%date [%level] from %logger in %thread - %message%n%xException</pattern>
-    </encoder>
-  </appender>
+    <contextName>identity-admin</contextName>
 
-  <root level="DEBUG">
-    <appender-ref ref="LOGFILE" />
-  </root>
+    <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/identity-admin-app.log</file>
 
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/identity-admin-app.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36}:%line - %msg%n%xException{full}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ACCESSLOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/identity-admin-access.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/identity-admin-access.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="LOGFILE"/>
+    </root>
 </configuration>
