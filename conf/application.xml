@@ -3,10 +3,10 @@
     <contextName>identity-admin</contextName>
 
     <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/identity-admin-app.log</file>
+        <file>/identity-admin/logs/identity-admin-app.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/identity-admin-app.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>/identity-admin/logs/identity-admin-app.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 
@@ -16,10 +16,10 @@
     </appender>
 
     <appender name="ACCESSLOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/identity-admin-access.log</file>
+        <file>/identity-admin/logs/identity-admin-access.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/identity-admin-access.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>/identity-admin/logs/identity-admin-access.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 
