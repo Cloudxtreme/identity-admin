@@ -4,8 +4,8 @@ scalaVersion := "2.11.7"
 
 version := "1.0.0-SNAPSHOT"
 
-libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.1.3"
-lazy val logback = "ch.qos.logback" % "logback-classic" % "1.1.3"
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.9"
+lazy val logback = "ch.qos.logback" % "logback-classic" % "1.0.9"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtNativePackager, UniversalPlugin, RiffRaffArtifact)
 
