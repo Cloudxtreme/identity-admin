@@ -13,3 +13,4 @@ cp -R provisioning target/packages
 cd target
 
 zip -r artifacts.zip *
+
