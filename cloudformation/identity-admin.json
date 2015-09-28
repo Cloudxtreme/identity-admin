@@ -282,7 +282,7 @@
               "chmod +x logstash-setup.sh\n",
               "./logstash-setup.sh\n",
 
-              "aws s3 cp s3://gu-identity-admin-dist/identity/CODE/identity-admin/identity-admin-bootstrap.sh .\n",
+              "aws s3 cp s3://gu-identity-admin-dist/identity-admin-bootstrap.sh .\n",
               "chmod +x identity-admin-bootstrap.sh\n",
               "./identity-admin-bootstrap.sh\n",
 
