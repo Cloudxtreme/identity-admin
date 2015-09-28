@@ -4,6 +4,9 @@ scalaVersion := "2.11.7"
 
 version := "1.0.0-SNAPSHOT"
 
+libraryDependencies ++= Seq("org.slf4j" % "slf4j-api" % "1.7.5",
+  "org.slf4j" % "slf4j-simple" % "1.7.5")
+
 lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtNativePackager, UniversalPlugin, RiffRaffArtifact)
 
 riffRaffPackageType := (packageZipTarball in Universal).value
