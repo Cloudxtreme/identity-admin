@@ -18,7 +18,6 @@
     "InstanceType": {
       "Description": "EC2 instance type",
       "Type": "String",
-      "Default": "t2.small",
       "AllowedValues": [
         "t2.micro",
         "t2.small",
@@ -77,6 +76,10 @@
     "AmiId": {
       "Description": "Custom AMI to use for instances, created using Packer",
       "Type": "String"
+    },
+    "InternalCidrIp": {
+        "Description": "Internal network CIDR IP",
+        "Type": "String"
     }
   },
 
@@ -164,18 +167,13 @@
         "Scheme" : "internet-facing",
         "Listeners": [{
           "LoadBalancerPort": "443",
-          "InstancePort": "9000",
+          "InstancePort": "8852",
           "Protocol": "HTTPS",
           "SSLCertificateId": { "Fn::FindInMap": [ "CertsMap", { "Ref": "Stage" },"ssl" ]}
-        },
-          {
-            "LoadBalancerPort": "80",
-            "InstancePort": "9000",
-            "Protocol": "HTTP"
-          }],
+        }],
         "CrossZone": "true",
         "HealthCheck": {
-          "Target": "HTTP:9000/management/healthcheck",
+          "Target": "HTTP:8852/management/healthcheck",
           "HealthyThreshold": "2",
           "UnhealthyThreshold": "10",
           "Interval": "30",
@@ -284,7 +282,7 @@
               "chmod +x logstash-setup.sh\n",
               "./logstash-setup.sh\n",
 
-              "aws s3 cp s3://gu-identity-admin-dist/identity/CODE/identity-admin/identity-admin-bootstrap.sh .\n",
+              "aws s3 cp s3://gu-identity-admin-dist/identity-admin-bootstrap.sh .\n",
               "chmod +x identity-admin-bootstrap.sh\n",
               "./identity-admin-bootstrap.sh\n",
 
@@ -307,20 +305,14 @@
             "IpProtocol": "tcp",
             "FromPort": "443",
             "ToPort": "443",
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "CidrIp": "0.0.0.0/0"
+            "CidrIp": { "Ref": "InternalCidrIp" }
           }
         ],
         "SecurityGroupEgress": [
           {
             "IpProtocol": "tcp",
-            "FromPort": "9000",
-            "ToPort": "9000",
+            "FromPort": "8852",
+            "ToPort": "8852",
             "CidrIp": "0.0.0.0/0"
           }
         ]
@@ -335,8 +327,8 @@
         "SecurityGroupIngress": [
           {
             "IpProtocol": "tcp",
-            "FromPort": "9000",
-            "ToPort": "9000",
+            "FromPort": "8852",
+            "ToPort": "8852",
             "SourceSecurityGroupId": {
               "Ref": "LoadBalancerSecurityGroup"
             }
