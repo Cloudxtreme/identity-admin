@@ -421,7 +421,7 @@
     "topicSendEmailToIdentityDev": {
       "Type": "AWS::SNS::Topic",
       "Properties": {
-        "DisplayName": {"Fn::Join": ["-", ["SendEmailToIdentityDev", { "Ref" : "Stack" }]]},
+        "DisplayName": "SendEmailToIdentityDev",
         "Subscription": [
           {
             "Endpoint": {"Ref":"AlarmEmailAddress"},
