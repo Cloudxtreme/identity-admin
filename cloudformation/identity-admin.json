@@ -80,6 +80,10 @@
     "InternalCidrIp": {
       "Description": "Internal network CIDR IP",
       "Type": "String"
+    },
+    "AlarmEmailAddress": {
+      "Description": "Contact email for alarms",
+      "Type": "String"
     }
   },
 
@@ -411,6 +415,43 @@
         "AutoScalingGroupName": { "Ref": "AutoscalingGroup" },
         "Cooldown": "3600",
         "ScalingAdjustment": "-1"
+      }
+    },
+
+    "topicSendEmailToIdentityDev": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "DisplayName": {"Fn::Join": ["-", ["SendEmailToIdentityDev", { "Ref" : "Stack" }]]},
+        "Subscription": [
+          {
+            "Endpoint": {"Ref":"AlarmEmailAddress"},
+            "Protocol": "email"
+          }
+        ]
+      }
+    },
+
+    "alarmNoHealthyHosts": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ActionsEnabled": "true",
+        "AlarmDescription": "There are no healthy hosts",
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": "1",
+        "MetricName": "HealthyHostCount",
+        "Namespace": "AWS/ELB",
+        "Period": "60",
+        "Statistic": "Average",
+        "Threshold": "1",
+        "AlarmActions": [
+          { "Ref": "topicSendEmailToIdentityDev" }
+        ],
+        "Dimensions": [
+          {
+            "Name": "LoadBalancerName",
+            "Value": { "Ref": "LoadBalancer"}
+          }
+        ]
       }
     }
   },
