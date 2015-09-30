@@ -1,12 +1,11 @@
 package controllers
 
-import org.slf4j.LoggerFactory
 import play.api.mvc._
+import util.Logging
 
-object Application extends Controller {
+object Application extends Controller with Logging{
 
   def index = Action {
-    val logger = LoggerFactory.getLogger(this.getClass)
     logger.info("Index page hit.")
     Ok(views.html.index())
   }
