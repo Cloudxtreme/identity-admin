@@ -304,6 +304,10 @@
               "chmod +x cwlogs-setup.sh\n",
               "./cwlogs-setup.sh\n",
 
+              "aws s3 cp s3://gu-identity-dist/cron-setup.sh .\n",
+              "chmod +x cron-setup.sh\n",
+              "./cron-setup.sh\n",
+
               "aws s3 cp s3://gu-identity-dist/set-ssh-keys.sh .\n",
               "chmod +x set-ssh-keys.sh\n",
               "./set-ssh-keys.sh\n",
