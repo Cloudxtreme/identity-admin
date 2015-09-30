@@ -78,8 +78,8 @@
       "Type": "String"
     },
     "InternalCidrIp": {
-      "Description": "Internal network CIDR IP",
-      "Type": "String"
+        "Description": "Internal network CIDR IP",
+        "Type": "String"
     }
   },
 
@@ -90,18 +90,14 @@
         "LatencyAlarmThreshold": 0.5,
         "LatencyAlarmPeriod": 60,
         "NotificationAlarmPeriod": 1200,
-        "InstanceName": "PROD:identity-admin",
-        "HostedZoneName": "useradmin.gutools.co.uk.",
-        "DomainName": "useradmin.gutools.co.uk."
+        "InstanceName": "PROD:identity-admin"
       },
       "CODE": {
         "AutoscalingNotificationsARN": "arn:aws:sns:eu-west-1:942464564246:AutoscalingNotificationsCODE",
         "LatencyAlarmThreshold": 5,
         "LatencyAlarmPeriod": 1200,
         "NotificationAlarmPeriod": 1200,
-        "InstanceName": "CODE:identity-admin",
-        "HostedZoneName": "useradmin.code.dev-gutools.co.uk.",
-        "DomainName": "useradmin.code.dev-gutools.co.uk."
+        "InstanceName": "CODE:identity-admin"
       }
     },
     "CertsMap": {
@@ -162,32 +158,6 @@
       "Properties": {
         "Path": "/",
         "Roles": [ {"Ref": "IdentityRole"} ]
-      }
-    },
-
-    "HostedZone": {
-      "Type" : "AWS::Route53::HostedZone",
-      "Properties" : {
-        "Name" : {"Fn::FindInMap": ["StageVariables", {
-          "Ref": "Stage"
-        }, "DomainName"]}
-      }
-    },
-
-    "MainDnsEntry": {
-      "Type": "AWS::Route53::RecordSet",
-      "Properties": {
-        "AliasTarget": {
-          "DNSName" : {"Fn::GetAtt": ["LoadBalancer", "DNSName"]},
-          "HostedZoneId" : {"Fn::GetAtt": ["LoadBalancer", "CanonicalHostedZoneNameID"]}
-        },
-        "HostedZoneName": {"Fn::FindInMap": ["StageVariables", {
-          "Ref": "Stage"
-        }, "HostedZoneName"]},
-        "Name": {"Fn::FindInMap": ["StageVariables", {
-          "Ref": "Stage"
-        }, "DomainName"]},
-        "Type": "A"
       }
     },
 
