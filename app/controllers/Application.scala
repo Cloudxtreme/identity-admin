@@ -1,12 +1,10 @@
 package controllers
 
 import play.api.mvc._
-import util.Logging
 
-object Application extends Controller with Logging{
+object Application extends Controller with AuthActions {
 
-  def index = Action {
-    logger.info("Index page hit.")
+  def index = AuthAction {
     Ok(views.html.index())
   }
 

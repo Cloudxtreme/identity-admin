@@ -3,6 +3,10 @@
 # ~~~~
 
 # Home page
-GET        /                    controllers.Application.index
+GET        /                              controllers.Application.index
 
-GET /management/healthcheck controllers.Application.healthCheck
+GET        /management/healthcheck        controllers.Application.healthCheck
+
+GET        /login                         controllers.Login.login
+GET        /loginAction                   controllers.Login.loginAction
+GET        /oauth2callback                controllers.Login.oauth2Callback

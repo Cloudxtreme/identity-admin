@@ -1,5 +1,12 @@
 # Identity-admin
 
+# Application configuration
+
+Configuration files:
+- Environment-specific configuration (`conf/<ENV>.conf`)
+- Application configuration (`conf/application.conf`)
+- System file with additional properties (`/etc/gu/identity-admin.conf`)
+
 # Setting up Identity Admin locally
 
 ## Hosts
@@ -52,3 +59,10 @@ sudo nginx
     - `ls -la $nginxHome/sites-enabled` should show `identity-admin.conf`  correctly symlinked to the **full pathname** of `identity-admin/nginx/identity-admin.conf`
 
 You should now be able to start the application (`sbt run`), go to [https://idadmin.thegulocal.com/management/healthcheck](https://idadmin.thegulocal.com/management/healthcheck) and see a green padlock for your local SSL certificate as well as a 200 response.
+
+
+## Running the application
+
+```
+sbt devrun
+```
