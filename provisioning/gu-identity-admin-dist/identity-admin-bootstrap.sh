@@ -12,4 +12,4 @@ tar -xvzf /$apptag/$apptag.tar.gz -C /$apptag
 
 chown -R $apptag /$apptag
 sed -i "s/<APP>/$apptag/g" /etc/init/$apptag.conf
-sed -i "s/<Stage>/$stagetag/g" /etc/init/$apptag.conf
+sed -i "s/<STAGE>/$stagetag/g" /etc/init/$apptag.conf
