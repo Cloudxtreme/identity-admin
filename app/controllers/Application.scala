@@ -9,8 +9,4 @@ object Application extends Controller with AuthActions with Logging {
     logger.info("Index page hit.")
     Ok(views.html.index())
   }
-
-  def healthCheck = Action {
-    Ok("200 OK")
-  }
 }
