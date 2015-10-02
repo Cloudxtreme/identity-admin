@@ -19,8 +19,8 @@ Follow these installation steps to correctly setup nginx and valid SSL certifica
 * Make sure you have access to the S3 bucket identity-local-ssl and download them using the [AWS CLI utility](https://aws.amazon.com/cli/) (the following command will download them in your current directory using your Identity profile on AWS):
 
 ```bash
-aws --profile identity s3 cp s3://identity-local-ssl/useradmin-thegulocal-com-exp2018-09-16-bundle.crt . 1>/dev/null
-aws --profile identity s3 cp s3://identity-local-ssl/useradmin-thegulocal-com-exp2018-09-16.key . 1>/dev/null
+aws --profile identity s3 cp s3://identity-local-ssl/useradmin-thegulocal-com-exp2016-10-02-bundle.crt . 1>/dev/null
+aws --profile identity s3 cp s3://identity-local-ssl/useradmin-thegulocal-com-exp2016-10-02.key . 1>/dev/null
 ```
 
 * Find the configuration folder of nginx by running:
@@ -34,8 +34,8 @@ nginxHome=`nginx -V 2>&1 | grep "configure arguments:" | sed 's/[^*]*conf-path=\
 * Create symbolic links for the certificates and identity-admin configuration file for nginx (note: this might require `sudo`)
 
 ```bash
-sudo ln -fs `pwd`/useradmin-thegulocal-com-exp2018-09-16-bundle.crt $nginxHome/useradmin-thegulocal-com-exp2018-09-16-bundle.crt
-sudo ln -fs `pwd`/useradmin-thegulocal-com-exp2018-09-16.key $nginxHome/useradmin-thegulocal-com-exp2018-09-16.key
+sudo ln -fs `pwd`/useradmin-thegulocal-com-exp2016-10-02-bundle.crt $nginxHome/useradmin-thegulocal-com-exp2016-10-02-bundle.crt
+sudo ln -fs `pwd`/useradmin-thegulocal-com-exp2016-10-02.key $nginxHome/useradmin-thegulocal-com-exp2016-10-02.key
 sudo ln -fs `pwd`/nginx/identity-admin.conf $nginxHome/sites-enabled/identity-admin.conf
 ```
 
