@@ -10,7 +10,7 @@ Ensure you have the correct [identity-admin hosts](https://github.com/guardian/i
 
 We have valid SSL certificates for thegulocal.com and the subdomains we use for local development.
 
-The certificates for the local subdomain `idadmin.thegulocal.com` are stored in the AWS S3 Identity bucket and are set up as part of the `identity-admin.conf` for nginx.
+The certificates for the local subdomain `useradmin.thegulocal.com` are stored in the AWS S3 Identity bucket and are set up as part of the `identity-admin.conf` for nginx.
 
 Follow these installation steps to correctly setup nginx and valid SSL certificates locally:
 
@@ -19,8 +19,8 @@ Follow these installation steps to correctly setup nginx and valid SSL certifica
 * Make sure you have access to the S3 bucket identity-local-ssl and download them using the [AWS CLI utility](https://aws.amazon.com/cli/) (the following command will download them in your current directory using your Identity profile on AWS):
 
 ```bash
-aws --profile identity s3 cp s3://identity-local-ssl/idadmin-thegulocal-com-exp2018-09-16-bundle.crt . 1>/dev/null
-aws --profile identity s3 cp s3://identity-local-ssl/idadmin-thegulocal-com-exp2018-09-16.key . 1>/dev/null
+aws --profile identity s3 cp s3://identity-local-ssl/useradmin-thegulocal-com-exp2016-10-02-bundle.crt . 1>/dev/null
+aws --profile identity s3 cp s3://identity-local-ssl/useradmin-thegulocal-com-exp2016-10-02.key . 1>/dev/null
 ```
 
 * Find the configuration folder of nginx by running:
@@ -34,8 +34,8 @@ nginxHome=`nginx -V 2>&1 | grep "configure arguments:" | sed 's/[^*]*conf-path=\
 * Create symbolic links for the certificates and identity-admin configuration file for nginx (note: this might require `sudo`)
 
 ```bash
-sudo ln -fs `pwd`/idadmin-thegulocal-com-exp2018-09-16-bundle.crt $nginxHome/idadmin-thegulocal-com-exp2018-09-16-bundle.crt
-sudo ln -fs `pwd`/idadmin-thegulocal-com-exp2018-09-16.key $nginxHome/idadmin-thegulocal-com-exp2018-09-16.key
+sudo ln -fs `pwd`/useradmin-thegulocal-com-exp2016-10-02-bundle.crt $nginxHome/useradmin-thegulocal-com-exp2016-10-02-bundle.crt
+sudo ln -fs `pwd`/useradmin-thegulocal-com-exp2016-10-02.key $nginxHome/useradmin-thegulocal-com-exp2016-10-02.key
 sudo ln -fs `pwd`/nginx/identity-admin.conf $nginxHome/sites-enabled/identity-admin.conf
 ```
 
@@ -51,4 +51,4 @@ sudo nginx
     - `ls -la $nginxHome` should show the certificates correctly symlinked to the **full pathname** of the downloaded certificates
     - `ls -la $nginxHome/sites-enabled` should show `identity-admin.conf`  correctly symlinked to the **full pathname** of `identity-admin/nginx/identity-admin.conf`
 
-You should now be able to start the application (`sbt run`), go to [https://idadmin.thegulocal.com/management/healthcheck](https://idadmin.thegulocal.com/management/healthcheck) and see a green padlock for your local SSL certificate as well as a 200 response.
+You should now be able to start the application (`sbt run`), go to [https://useradmin.thegulocal.com/management/healthcheck](https://useradmin.thegulocal.com/management/healthcheck) and see a green padlock for your local SSL certificate as well as a 200 response.
