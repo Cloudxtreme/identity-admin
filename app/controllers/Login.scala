@@ -50,8 +50,8 @@ object Login extends Controller with AuthActions {
 
   def auth(token: String, session: Session) = {
     GoogleAuth.validatedUserIdentity(googleAuthConfig, token).map { identity =>
-      session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(routes.Application.index()))
-        .withSession {
+      val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(routes.Application.index()))
+      redirect.withSession {
           session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
       }
     } recover {
