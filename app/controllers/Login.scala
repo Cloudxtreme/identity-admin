@@ -43,7 +43,7 @@ object Login extends Controller with AuthActions {
 
   def oauth2Callback = Action.async { implicit request =>
     val session = request.session
-    session.get(ANTI_FORGERY_KEY).map(auth(_: String, session: Session)(request)).getOrElse(forgery)
+    session.get(ANTI_FORGERY_KEY).map(auth(_: String, session: Session)).getOrElse(forgery)
   }
 
   def forgery = Future.successful(Redirect(routes.Login.login()).flashing("error" -> "Anti forgery token missing in session"))
