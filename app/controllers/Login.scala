@@ -18,6 +18,7 @@ object Login extends Controller with AuthActions {
   val clientId = current.configuration.getString("identity-admin.google.clientId").get
   val clientSecret = current.configuration.getString("identity-admin.google.clientSecret").get
   val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
+
   val googleAuthConfig =
     GoogleAuthConfig(
       clientId = clientId,
@@ -40,28 +41,29 @@ object Login extends Controller with AuthActions {
     }
   }
 
-
   def oauth2Callback = Action.async { implicit request =>
     val session = request.session
-    session.get(ANTI_FORGERY_KEY) match {
-      case None =>
-        Future.successful(Redirect(routes.Login.login())
-          .flashing("error" -> "Anti forgery token missing in session"))
-      case Some(token) =>
-        GoogleAuth.validatedUserIdentity(googleAuthConfig, token).map { identity =>
-          val redirect = session.get(LOGIN_ORIGIN_KEY) match {
-            case Some(url) => Redirect(url)
-            case None => Redirect(routes.Application.index())
-          }
-          redirect.withSession {
-            session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
-          }
-        } recover {
-          case t =>
-            Redirect(routes.Login.login())
-              .withSession(session - ANTI_FORGERY_KEY)
-              .flashing("error" -> s"Login failure: ${t.toString}")
-        }
+    session.get(ANTI_FORGERY_KEY).map(auth(_: String, session: Session)).getOrElse(forgery)
+  }
+
+  def forgery = Future.successful(Redirect(routes.Login.login())
+    .flashing("error" -> "Anti forgery token missing in session"))
+
+  def auth(token: String, session: Session) = {
+    GoogleAuth.validatedUserIdentity(googleAuthConfig, token).map { identity =>
+      val redirect = session.get(LOGIN_ORIGIN_KEY) match {
+        case Some(url) => Redirect(url)
+        case None => Redirect(routes.Application.index())
+      }
+      redirect.withSession {
+        session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
+      }
+    } recover {
+      case t =>
+        Redirect(routes.Login.login())
+          .withSession(session - ANTI_FORGERY_KEY)
+          .flashing("error" -> s"Login failure: ${t.toString}")
     }
   }
+
 }
