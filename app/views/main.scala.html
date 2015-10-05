@@ -5,12 +5,25 @@
 <html lang="en">
     <head>
         <title>@title</title>
-        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/custom.css")">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
-    <div class="container-fluid">
-        <body>
-        @content
-        </body>
-    </div>
+    <body>
+        <div class="container-fluid">
+            <div class="row guardian-background top-padding bottom-padding">
+                <div class="row-same-height">
+                    <div class="col-md-1 col-xs-height col-middle"><img src="@routes.Assets.at("images/roundel.png")" class="img-responsive" alt="Guardian Roundel"></div>
+                    <div class="col-md-11 col-xs-height col-middle">
+                        <form role="form">
+                            <input class="input-width-95" type="text" name="query" placeholder="Search by username, email, postcode or IP address...">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">@content</div>
+            </div>
+        </div>
+    </body>
 </html>
