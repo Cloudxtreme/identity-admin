@@ -14,7 +14,7 @@ trait AuthActions extends Actions {
 }
 
 object Login extends Controller with AuthActions {
-  val ANTI_FORGERY_KEY = current.configuration.getString("identity-admin.antiForgeryToken").get
+  val ANTI_FORGERY_KEY = current.configuration.getString("identity-admin.google.clientId").get
   val clientId = current.configuration.getString("identity-admin.google.clientId").get
   val clientSecret = current.configuration.getString("identity-admin.google.clientSecret").get
   val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
@@ -43,12 +43,12 @@ object Login extends Controller with AuthActions {
 
   def oauth2Callback = Action.async { implicit request =>
     val session = request.session
-    session.get(ANTI_FORGERY_KEY).map(auth(_: String, session: Session)).getOrElse(forgery)
+    session.get(ANTI_FORGERY_KEY).map(auth(_: String, session: Session)(request)).getOrElse(forgery)
   }
 
   def forgery = Future.successful(Redirect(routes.Login.login()).flashing("error" -> "Anti forgery token missing in session"))
 
-  def auth(token: String, session: Session) = {
+  def auth(token: String, session: Session)(implicit request: RequestHeader) = {
     GoogleAuth.validatedUserIdentity(googleAuthConfig, token).map { identity =>
       val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(routes.Application.index()))
       redirect.withSession {
