@@ -1,0 +1,30 @@
+.guardian-background {
+    background-color:#005689
+}
+
+.input-95 {
+    width:95%;
+}
+
+.top-padding {
+    padding-top: 1%;
+}
+
+.bottom-padding {
+    padding-bottom: 1%;
+}
+
+.row-same-height {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.col-xs-height {
+    display: table-cell;
+    float: none;
+}
+
+.col-middle {
+    vertical-align: middle;
+}
