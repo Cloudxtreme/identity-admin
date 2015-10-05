@@ -5,8 +5,12 @@
 <html lang="en">
     <head>
         <title>@title</title>
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
-    <body>
-    @content
-    </body>
+    <div class="container-fluid">
+        <body>
+        @content
+        </body>
+    </div>
 </html>
