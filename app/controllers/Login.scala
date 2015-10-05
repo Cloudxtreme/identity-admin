@@ -14,7 +14,7 @@ trait AuthActions extends Actions {
 }
 
 object Login extends Controller with AuthActions {
-  val ANTI_FORGERY_KEY = "antiForgeryToken"
+  val ANTI_FORGERY_KEY = current.configuration.getString("identity-admin.antiForgeryToken").get
   val clientId = current.configuration.getString("identity-admin.google.clientId").get
   val clientSecret = current.configuration.getString("identity-admin.google.clientSecret").get
   val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
