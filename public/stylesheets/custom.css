@@ -13,18 +13,3 @@
 .bottom-padding {
     padding-bottom: 1%;
 }
-
-.row-same-height {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
-
-.col-xs-height {
-    display: table-cell;
-    float: none;
-}
-
-.col-middle {
-    vertical-align: middle;
-}
