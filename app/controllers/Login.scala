@@ -58,7 +58,7 @@ object Login extends Controller with AuthActions {
       case t =>
         Redirect(routes.Login.login())
           .withSession(session - ANTI_FORGERY_KEY)
-          .flashing("error" -> s"Login failure: ${t.toString}")
+          .flashing("error" -> s"Login failure: ${t.getMessage}")
     }
   }
 }
