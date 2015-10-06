@@ -52,3 +52,12 @@ sudo nginx
     - `ls -la $nginxHome/sites-enabled` should show `identity-admin.conf`  correctly symlinked to the **full pathname** of `identity-admin/nginx/identity-admin.conf`
 
 You should now be able to start the application (`sbt run`), go to [https://useradmin.thegulocal.com/management/healthcheck](https://useradmin.thegulocal.com/management/healthcheck) and see a green padlock for your local SSL certificate as well as a 200 response.
+
+## Testing - Lines in the sand
+
+- All tests should be included in this repo and executed before deployment. 
+- Failing tests will block deployment.
+- Prefer unit tests to integration/functional tests.
+- Browser tests should only be written if the functionality cannot be tested any other way.
+- Tests should always complete in under five minutes.
+- Unstable tests are not acceptable.
