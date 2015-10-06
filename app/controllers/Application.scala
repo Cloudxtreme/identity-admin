@@ -13,4 +13,8 @@ object Application extends Controller with Logging{
   def healthCheck = Action {
     Ok("200 OK")
   }
+
+  def userSearch(input: String) = Action {
+    Ok(views.html.searchForUser())
+  }
 }
