@@ -6,10 +6,11 @@
     width:95%;
 }
 
-.top-padding {
-    padding-top: 1%;
+.padding-base-bar {
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
 }
 
-.bottom-padding {
-    padding-bottom: 1%;
+.padding-search-bar{
+    padding-top: 1%;
 }
