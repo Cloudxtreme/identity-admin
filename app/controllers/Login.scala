@@ -1,5 +1,8 @@
 package controllers
 
+import actions.CSRFRequest.CSRFAction
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
@@ -11,13 +14,15 @@ import scala.concurrent.Future
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
   val authConfig = Login.googleAuthConfig
+  val loginUrl = routes.Login.login()
 }
 
 object Login extends Controller with AuthActions {
-  val ANTI_FORGERY_KEY = "antiForgeryToken"
+  val ANTI_FORGERY_KEY = current.configuration.getString("identity-admin.antiForgeryKey").get
   val clientId = current.configuration.getString("identity-admin.google.clientId").get
   val clientSecret = current.configuration.getString("identity-admin.google.clientSecret").get
   val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
+  val indexUrl = routes.Application.index()
   val googleAuthConfig =
     GoogleAuthConfig(
       clientId = clientId,
@@ -40,28 +45,18 @@ object Login extends Controller with AuthActions {
     }
   }
 
-
-  def oauth2Callback = Action.async { implicit request =>
+  def oauth2Callback = (Action andThen CSRFAction).async { implicit request =>
     val session = request.session
-    session.get(ANTI_FORGERY_KEY) match {
-      case None =>
-        Future.successful(Redirect(routes.Login.login())
-          .flashing("error" -> "Anti forgery token missing in session"))
-      case Some(token) =>
-        GoogleAuth.validatedUserIdentity(googleAuthConfig, token).map { identity =>
-          val redirect = session.get(LOGIN_ORIGIN_KEY) match {
-            case Some(url) => Redirect(url)
-            case None => Redirect(routes.Application.index())
-          }
-          redirect.withSession {
-            session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
-          }
-        } recover {
-          case t =>
-            Redirect(routes.Login.login())
-              .withSession(session - ANTI_FORGERY_KEY)
-              .flashing("error" -> s"Login failure: ${t.toString}")
-        }
+    val newSession = session - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
+
+    GoogleAuth.validatedUserIdentity(googleAuthConfig, request.csrfToken).map { identity =>
+      val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexUrl))
+      redirect.withSession {
+        newSession + (UserIdentity.KEY -> Json.toJson(identity).toString)
+      }
+    } recover { case t: IllegalArgumentException =>
+      Redirect(loginUrl).withSession(newSession)
+        .flashing("error" -> Messages("login.failure", t.getMessage))
     }
   }
 }

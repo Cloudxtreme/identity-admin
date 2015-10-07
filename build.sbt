@@ -8,8 +8,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtNativePackage
 
 libraryDependencies ++= Seq(
   "com.gu" %% "play-googleauth" % "0.3.0",
-  "org.scalatest" %% "scalatest" % "2.2.5" % "test",
-  ws
+  ws,
+  specs2 % "test"
 )
 
 riffRaffPackageType := (packageZipTarball in Universal).value
