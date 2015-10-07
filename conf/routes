@@ -3,6 +3,8 @@
 # ~~~~
 
 # Home page
-GET        /                    controllers.Application.index
+GET        /                              controllers.Application.index
 
-GET /management/healthcheck controllers.Application.healthCheck
+GET        /management/healthcheck        controllers.Application.healthCheck
+
+GET        /assets/*file                  controllers.Assets.at(path="/public", file)
