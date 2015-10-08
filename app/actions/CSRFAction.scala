@@ -16,7 +16,7 @@ object CSRFAction extends ActionRefiner[Request, CSRFRequest] {
   private val ANTI_FORGERY_KEY = current.configuration.getString("identity-admin.antiForgeryKey").get
   private val loginUrl = routes.Login.login()
 
-  override protected def refine[A](request: Request[A]): Future[Either[Result, CSRFRequest[A]]] = Future.successful {
+  override protected def refine[A](request: Request[A]): Future[Either[Result, CSRFRequest[A]]] = Future {
     val csrfToken = request.session.get(ANTI_FORGERY_KEY)
     csrfToken match {
       case Some(token) => Right(new CSRFRequest[A](token, request))
