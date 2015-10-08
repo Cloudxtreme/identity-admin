@@ -10,8 +10,9 @@ resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
 libraryDependencies ++= Seq(
   "com.gu" %% "play-googleauth" % "0.3.0",
-  ws,
-  specs2 % "test"
+  specs2 % "test",
+  "org.webjars" % "bootstrap" % "3.3.5",
+  ws
 )
 
 riffRaffPackageType := (packageZipTarball in Universal).value

@@ -1,5 +1,4 @@
 *.class
-*.log
 
 # sbt specific
 .cache
@@ -19,3 +18,7 @@ project/plugins/project/
 # local certificates
 *.crt
 *.key
+
+# log files
+*.log
+logs/*
