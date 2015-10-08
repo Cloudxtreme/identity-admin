@@ -6,7 +6,6 @@ import org.specs2.mutable._
 import play.api.mvc.Action
 import play.api.mvc.Results.Ok
 import play.api.test.Helpers._
-import CSRFRequest.CSRFAction
 
 class CSRFActionSpec extends Specification {
 
