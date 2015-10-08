@@ -10,10 +10,6 @@ object Application extends Controller with AuthActions with Logging {
     Ok(views.html.index())
   }
 
-  def healthCheck = Action {
-    Ok("200 OK")
-  }
-
   def userSearch(input: String) = Action {
     Ok(views.html.searchForUser())
   }
