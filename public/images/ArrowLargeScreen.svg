@@ -1,0 +1,14 @@
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="200px" height="200px" viewBox="0 0 200 200">
+    <defs>
+        <marker id="Arrow"
+        markerWidth="5" markerHeight="5" viewBox="-6 -6 12 12"
+        refX="-2" refY="0"
+        markerUnits="strokeWidth"
+        orient="auto">
+            <polygon points="-2,0 -5,5 5,0 -5,-5" fill="#A9A9A9" stroke="#A9A9A9" stroke-width="1px"/>
+        </marker>
+    </defs>
+    <path d="M 10,180 Q 220,250 150,50" stroke="#A9A9A9" fill="none" stroke-width="5px" marker-end="url(#Arrow)"/>
+</svg>
