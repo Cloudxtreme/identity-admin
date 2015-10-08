@@ -47,15 +47,14 @@ object Login extends Controller with AuthActions {
 
   def oauth2Callback = (Action andThen CSRFAction).async { implicit request =>
     val session = request.session
-    val newSession = session - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
 
     GoogleAuth.validatedUserIdentity(googleAuthConfig, request.csrfToken).map { identity =>
       val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexUrl))
       redirect.withSession {
-        newSession + (UserIdentity.KEY -> Json.toJson(identity).toString)
+        session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
       }
     } recover { case t: IllegalArgumentException =>
-      Redirect(loginUrl).withSession(newSession)
+      Redirect(loginUrl).withSession(session - ANTI_FORGERY_KEY)
         .flashing("error" -> Messages("login.failure", t.getMessage))
     }
   }
