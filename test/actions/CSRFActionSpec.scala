@@ -1,13 +1,12 @@
 package actions
 
 import play.api.test.{FakeApplication, FakeRequest}
-import collection.mutable.Stack
-import org.specs2.mutable._
+import org.scalatestplus.play.PlaySpec
 import play.api.mvc.Action
 import play.api.mvc.Results.Ok
 import play.api.test.Helpers._
 
-class CSRFActionSpec extends Specification {
+class CSRFActionSpec extends PlaySpec {
 
   implicit val app = FakeApplication(additionalConfiguration = Map("identity-admin.antiForgeryKey" -> "antiForgeryToken"))
 

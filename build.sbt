@@ -6,11 +6,9 @@ version := "1.0.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtNativePackager, UniversalPlugin, RiffRaffArtifact)
 
-resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
-
 libraryDependencies ++= Seq(
   "com.gu" %% "play-googleauth" % "0.3.0",
-  specs2 % "test",
+  "org.scalatestplus" %% "play" % "1.4.0-M3",
   "org.webjars" % "bootstrap" % "3.3.5",
   ws
 )
