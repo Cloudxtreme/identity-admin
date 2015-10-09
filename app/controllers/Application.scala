@@ -1,5 +1,6 @@
 package controllers
 
+import models.SearchResult
 import play.api.mvc._
 import util.Logging
 
@@ -11,6 +12,6 @@ object Application extends Controller with AuthActions with Logging {
   }
 
   def userSearch(input: String) = Action {
-    Ok(views.html.searchForUser(input))
+    Ok(views.html.searchForUser(input, SearchResult.mockData()))
   }
 }

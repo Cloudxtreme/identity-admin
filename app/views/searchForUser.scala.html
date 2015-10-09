@@ -1,4 +1,4 @@
-@(searchBarText: String)
+@(searchBarText: String, searchResult : SearchResult)
     @main("User Search")(searchBarText){
         <div class="container-fluid">
             <div class="row">
@@ -15,15 +15,15 @@
                 <div class="col-sm-1 hidden-xs visible-sm visible-md visible-lg visible-xl"></div>
             </div>
             <div class="row search-grid-padding">
-                <div class="col-sm-3"><p>email@@email.com<p></div>
+                <div class="col-sm-3"><p>@searchResult.email<p></div>
                 <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Username</h5></div>
-                <div class="col-sm-2"><p>myUsername<p></div>
+                <div class="col-sm-2"><p>@searchResult.username<p></div>
                 <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Name</h5></div>
-                <div class="col-sm-2"><p>Firstname Surname<p></div>
+                <div class="col-sm-2"><p>@searchResult.name<p></div>
                 <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Registered Date</h5></div>
-                <div class="col-sm-2"><p>05 Apr 2015<p></div>
+                <div class="col-sm-2"><p>@searchResult.registeredDate<p></div>
                 <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Last Activity Date</h5></div>
-                <div class="col-sm-2"><p>06 Apr 2015 12:30:31<p></div>
+                <div class="col-sm-2"><p>@searchResult.lastActivityDate<p></div>
                 <div class="col-sm-1">
                     <button class="btn btn-primary" type="button">Edit</button>
                 </div>
