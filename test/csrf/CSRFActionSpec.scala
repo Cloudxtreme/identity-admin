@@ -14,7 +14,7 @@ class CSRFActionSpec extends PlaySpec {
   "CSRFAction" should {
     "stop a request if there is no CSRF token present" in {
       running(app) {
-        val action = (Action andThen CSRFAction) {
+        val action = CSRFAction {
           request => Ok
         }
 
@@ -32,7 +32,7 @@ class CSRFActionSpec extends PlaySpec {
   "CSRFAction" should {
     "allow a request to go through and return a CSRF token if it is present" in {
       running(app) {
-        val action = (Action andThen CSRFAction) {
+        val action = CSRFAction {
           request => {
             val token = request.csrfToken
             Ok(token)

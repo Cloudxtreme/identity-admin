@@ -45,7 +45,7 @@ object Login extends Controller with AuthActions {
     }
   }
 
-  def oauth2Callback = (Action andThen CSRFAction).async { implicit request =>
+  def oauth2Callback = CSRFAction.async { implicit request =>
     val session = request.session
 
     GoogleAuth.validatedUserIdentity(googleAuthConfig, request.csrfToken).map { identity =>

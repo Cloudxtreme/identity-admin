@@ -2,7 +2,7 @@ package csrf
 
 import controllers.routes
 import play.api.i18n.Messages
-import play.api.mvc.{WrappedRequest, Result, Request, ActionRefiner}
+import play.api.mvc._
 import play.api.mvc.Results.Redirect
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.i18n.Messages.Implicits._
@@ -12,7 +12,7 @@ import scala.concurrent.Future
 
 class CSRFRequest[A](val csrfToken: String, request: Request[A]) extends WrappedRequest[A](request)
 
-object CSRFAction extends ActionRefiner[Request, CSRFRequest] {
+object CSRFAction extends ActionRefiner[Request, CSRFRequest] with ActionBuilder[CSRFRequest] {
   private val loginCall = routes.Login.login()
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, CSRFRequest[A]]] = Future {
