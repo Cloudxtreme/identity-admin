@@ -17,8 +17,8 @@ object GoogleGroups {
 
   def isAuthorised(email: String): Future[Either[String, Set[String]]] = {
     val checker = new GoogleGroupChecker(serviceAccount)
-    val future = checker.retrieveGroupsFor(email)
-    future.map(Right(_)) recover {
+    val f = checker.retrieveGroupsFor(email)
+    f.map(Right(_)) recover {
       case _ => Left("Future Failed")
     }
   }
