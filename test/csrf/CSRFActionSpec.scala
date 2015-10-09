@@ -1,14 +1,15 @@
-package actions
+package csrf
 
 import play.api.test.{FakeApplication, FakeRequest}
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.Action
 import play.api.mvc.Results.Ok
 import play.api.test.Helpers._
+import CSRF.ANTI_FORGERY_KEY
 
 class CSRFActionSpec extends PlaySpec {
 
-  implicit val app = FakeApplication(additionalConfiguration = Map("identity-admin.antiForgeryKey" -> "antiForgeryToken"))
+  implicit val app = FakeApplication()
 
   "CSRFAction" should {
     "stop a request if there is no CSRF token present" in {
@@ -38,7 +39,6 @@ class CSRFActionSpec extends PlaySpec {
           }
         }
 
-        val ANTI_FORGERY_KEY = "antiForgeryToken"
         val request = FakeRequest().withSession(ANTI_FORGERY_KEY -> "abcd")
 
         val result = call(action, request)
