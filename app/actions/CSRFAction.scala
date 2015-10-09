@@ -14,13 +14,13 @@ class CSRFRequest[A](val csrfToken: String, request: Request[A]) extends Wrapped
 
 object CSRFAction extends ActionRefiner[Request, CSRFRequest] {
   private val ANTI_FORGERY_KEY = current.configuration.getString("identity-admin.antiForgeryKey").get
-  private val loginUrl = routes.Login.login()
+  private val loginCall = routes.Login.login()
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, CSRFRequest[A]]] = Future {
     val csrfToken = request.session.get(ANTI_FORGERY_KEY)
     csrfToken match {
       case Some(token) => Right(new CSRFRequest[A](token, request))
-      case None => Left(Redirect(loginUrl).flashing("error" -> Messages("login.missingAntiForgeryToken")))
+      case None => Left(Redirect(loginCall).flashing("error" -> Messages("login.missingAntiForgeryToken")))
     }
   }
 }

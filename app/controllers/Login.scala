@@ -14,7 +14,7 @@ import scala.concurrent.Future
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
   val authConfig = Login.googleAuthConfig
-  val loginUrl = routes.Login.login()
+  val loginCall = routes.Login.login()
 }
 
 object Login extends Controller with AuthActions {
@@ -22,7 +22,7 @@ object Login extends Controller with AuthActions {
   val clientId = current.configuration.getString("identity-admin.google.clientId").get
   val clientSecret = current.configuration.getString("identity-admin.google.clientSecret").get
   val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
-  val indexUrl = routes.Application.index()
+  val indexCall = routes.Application.index()
   val googleAuthConfig =
     GoogleAuthConfig(
       clientId = clientId,
@@ -49,12 +49,12 @@ object Login extends Controller with AuthActions {
     val session = request.session
 
     GoogleAuth.validatedUserIdentity(googleAuthConfig, request.csrfToken).map { identity =>
-      val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexUrl))
+      val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
       redirect.withSession {
         session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
       }
     } recover { case t: IllegalArgumentException =>
-      Redirect(loginUrl).withSession(session - ANTI_FORGERY_KEY)
+      Redirect(loginCall).withSession(session - ANTI_FORGERY_KEY)
         .flashing("error" -> Messages("login.failure", t.getMessage))
     }
   }
