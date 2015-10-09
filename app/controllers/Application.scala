@@ -11,6 +11,6 @@ object Application extends Controller with AuthActions with Logging {
   }
 
   def userSearch(input: String) = Action {
-    Ok(views.html.searchForUser())
+    Ok(views.html.searchForUser(input))
   }
 }
