@@ -5,9 +5,8 @@ import org.scalatest.Matchers
 
 class GoogleGroups$Test extends FlatSpec with Matchers {
 
-  "credientials" should "load" in {
-    val creds = GoogleGroups.credential()
-    println(creds.getServiceAccountId)
+  "isAuthorised" should "print out details" in {
+    GoogleGroups.isAuthorised("mark.butler@guardian.co.uk")
   }
 
 }
