@@ -25,7 +25,7 @@ object GoogleGroups {
     val checker = new GoogleGroupChecker(serviceAccount)
     val f = checker.retrieveGroupsFor(email)
     f.map(Right(_)) recover {
-      case _ => Left("Future failed")
+      case e => Left("Future failed" + e.getMessage)
     }
   }
 }
