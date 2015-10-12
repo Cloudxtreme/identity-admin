@@ -15,6 +15,11 @@ object GoogleGroups {
     credentials.getServiceAccountPrivateKey,
     credentials.getServiceAccountUser)
 
+  private val credentials: GoogleCredential = {
+    val fileInputStream = new FileInputStream("/etc/gu/identity-admin-cert.json")
+    GoogleCredential.fromStream(fileInputStream)
+  }
+
   def isAuthorised(email: String): Future[Either[String, Set[String]]] = {
     val checker = new GoogleGroupChecker(serviceAccount)
     val f = checker.retrieveGroupsFor(email)
@@ -22,10 +27,4 @@ object GoogleGroups {
       case _ => Left("Future Failed")
     }
   }
-
-  private val credentials: GoogleCredential = {
-    val fileInputStream = new FileInputStream("/etc/gu/identity-admin-cert.json")
-    GoogleCredential.fromStream(fileInputStream)
-  }
-
 }

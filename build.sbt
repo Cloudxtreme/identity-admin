@@ -13,8 +13,6 @@ libraryDependencies ++= Seq(
   ws
 )
 
-libraryDependencies += "org.webjars" % "webjars-locator-core" % "0.26"
-
 riffRaffPackageType := (packageZipTarball in Universal).value
 
 riffRaffBuildIdentifier := "DEV"
