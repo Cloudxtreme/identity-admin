@@ -21,6 +21,8 @@ object GoogleGroups {
     GoogleCredential.fromStream(fileInputStream.get)
   }
 
+  val requiredGroups = Set("2FA_enforce","useradmin")
+
   def userGroups(email: String): Future[Either[String, Set[String]]] = {
     val checker = new GoogleGroupChecker(serviceAccount)
     val f = checker.retrieveGroupsFor(email)
@@ -30,4 +32,11 @@ object GoogleGroups {
   }
 
   def isAuthorised(required: Set[String], groups: Set[String]): Boolean = (required & groups) == required
+
+  def isUserAdmin(email: String): Future[Boolean] = {
+    userGroups(email).map( _ match {
+      case Right(groups) => isAuthorised(requiredGroups, groups)
+      case Left(_) => false
+    })
+  }
 }

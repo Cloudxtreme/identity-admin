@@ -9,8 +9,7 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.googleauth._
 import play.api.Play.current
-
-import scala.concurrent.Future
+import services.GoogleGroups
 
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
@@ -23,6 +22,7 @@ object Login extends Controller with AuthActions {
   val clientSecret = current.configuration.getString("identity-admin.google.clientSecret").get
   val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
   val indexCall = routes.Application.index()
+  val requiredGroups = Set("2FA_enforce", "useradmin")
   val googleAuthConfig =
     GoogleAuthConfig(
       clientId = clientId,
@@ -45,17 +45,32 @@ object Login extends Controller with AuthActions {
     }
   }
 
+  case class User(userIdentity: UserIdentity, isAdmin: Boolean)
+
   def oauth2Callback = CSRFAction.async { implicit request =>
     val session = request.session
 
-    GoogleAuth.validatedUserIdentity(googleAuthConfig, request.csrfToken).map { identity =>
-      val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
-      redirect.withSession {
-        session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
+    val result = for {
+      identity <- GoogleAuth.validatedUserIdentity(googleAuthConfig, request.csrfToken)
+      admin <- GoogleGroups.isUserAdmin(identity.email)
+    } yield User(identity, admin)
+
+    result map { _ match {
+      case User(identity, true) => {
+        val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
+        redirect.withSession {
+          session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
+        }
       }
-    } recover { case t: IllegalArgumentException =>
-      Redirect(loginCall).withSession(session - ANTI_FORGERY_KEY)
-        .flashing("error" -> Messages("login.failure", t.getMessage))
+      case _ => {
+        Redirect(loginCall).withSession(session - ANTI_FORGERY_KEY)
+          .flashing("error" -> Messages("groups.failure"))
+      }
+    }} recover {
+      case t => {
+        Redirect(loginCall).withSession(session - ANTI_FORGERY_KEY)
+          .flashing("error" -> Messages("login.failure", t.getMessage))
+      }
     }
   }
 }
