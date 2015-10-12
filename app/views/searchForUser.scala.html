@@ -21,9 +21,19 @@
                 <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Name</h5></div>
                 <div class="col-sm-2"><p>@searchResult.name<p></div>
                 <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Registered Date</h5></div>
-                <div class="col-sm-2"><p>@searchResult.registeredDate<p></div>
+                <div class="col-sm-2"><p>
+                    @searchResult.registeredDate.getDayOfMonth
+                    @searchResult.registeredDate.monthOfYear.getAsText
+                    @searchResult.registeredDate.getYear
+                <p></div>
                 <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Last Activity Date</h5></div>
-                <div class="col-sm-2"><p>@searchResult.lastActivityDate<p></div>
+                <div class="col-sm-2"><p>
+                    @searchResult.registeredDate.getDayOfMonth
+                    @searchResult.registeredDate.monthOfYear.getAsText
+                    @searchResult.registeredDate.getYear
+                    @searchResult.lastActivityDate.toLocalTime
+
+                <p></div>
                 <div class="col-sm-1">
                     <button class="btn btn-primary" type="button">Edit</button>
                 </div>
