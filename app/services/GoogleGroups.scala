@@ -21,11 +21,13 @@ object GoogleGroups {
     GoogleCredential.fromStream(fileInputStream.get)
   }
 
-  def isAuthorised(email: String): Future[Either[String, Set[String]]] = {
+  def userGroups(email: String): Future[Either[String, Set[String]]] = {
     val checker = new GoogleGroupChecker(serviceAccount)
     val f = checker.retrieveGroupsFor(email)
     f.map(Right(_)) recover {
       case e => Left("Future failed" + e.getMessage)
     }
   }
+
+  def isAuthorised(required: Set[String], groups: Set[String]): Boolean = (required & groups) == required
 }
