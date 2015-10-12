@@ -4,12 +4,14 @@ import java.io.FileInputStream
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.gu.googleauth.{GoogleServiceAccount, GoogleGroupChecker}
+import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import util.Logging
 
 import scala.concurrent.Future
 import scala.util.Try
 
-object GoogleGroups {
+object GoogleGroups extends Logging {
 
   lazy val serviceAccount = GoogleServiceAccount(
     credentials.getServiceAccountId,
@@ -36,7 +38,10 @@ object GoogleGroups {
   def isUserAdmin(email: String): Future[Boolean] = {
     userGroups(email).map( _ match {
       case Right(groups) => isAuthorised(requiredGroups, groups)
-      case Left(_) => false
+      case Left(_) => {
+        logger.info("{} is not in correct groups", email)
+        false
+      }
     })
   }
 }

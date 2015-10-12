@@ -11,6 +11,9 @@ import com.gu.googleauth._
 import play.api.Play.current
 import services.GoogleGroups
 
+import scala.concurrent.Future
+import scala.util.Try
+
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
   val authConfig = Login.googleAuthConfig
@@ -50,8 +53,15 @@ object Login extends Controller with AuthActions {
   def oauth2Callback = CSRFAction.async { implicit request =>
     val session = request.session
 
+    val safeValidatedUserIdentity: Future[UserIdentity] = {
+      val t = Try(GoogleAuth.validatedUserIdentity(googleAuthConfig, request.csrfToken)) recover {
+        case e: IllegalArgumentException => Future.failed(e)
+      }
+      t.get
+    }
+
     val result = for {
-      identity <- GoogleAuth.validatedUserIdentity(googleAuthConfig, request.csrfToken)
+      identity <- safeValidatedUserIdentity
       admin <- GoogleGroups.isUserAdmin(identity.email)
     } yield User(identity, admin)
 
@@ -67,9 +77,9 @@ object Login extends Controller with AuthActions {
           .flashing("error" -> Messages("groups.failure"))
       }
     }} recover {
-      case t => {
+      case ex => {
         Redirect(loginCall).withSession(session - ANTI_FORGERY_KEY)
-          .flashing("error" -> Messages("login.failure", t.getMessage))
+          .flashing("error" -> Messages("login.failure", ex.getMessage))
       }
     }
   }
