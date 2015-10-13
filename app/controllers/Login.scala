@@ -9,29 +9,17 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.googleauth._
 import play.api.Play.current
-import services.GoogleGroups
-
-import scala.concurrent.Future
-import scala.util.Try
+import services.{SafeGoogleAuth, GoogleAuthConf, GoogleGroups}
 
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
-  val authConfig = Login.googleAuthConfig
+  val authConfig = GoogleAuthConf.googleAuthConfig
   val loginCall = routes.Login.login()
 }
 
 object Login extends Controller with AuthActions {
-  val clientId = current.configuration.getString("identity-admin.google.clientId").get
-  val clientSecret = current.configuration.getString("identity-admin.google.clientSecret").get
-  val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
+
   val indexCall = routes.Application.index()
-  val googleAuthConfig =
-    GoogleAuthConfig(
-      clientId = clientId,
-      clientSecret = clientSecret,
-      redirectUrl = redirectUrl,
-      domain = Some("guardian.co.uk")
-    )
 
   def login = Action { request =>
     val error = request.flash.get("error")
@@ -40,7 +28,7 @@ object Login extends Controller with AuthActions {
 
   def loginAction = Action.async { implicit request =>
     val antiForgeryToken = GoogleAuth.generateAntiForgeryToken()
-    GoogleAuth.redirectToGoogle(googleAuthConfig, antiForgeryToken).map {
+    GoogleAuth.redirectToGoogle(authConfig, antiForgeryToken).map {
       _.withSession {
         request.session + (ANTI_FORGERY_KEY -> antiForgeryToken)
       }
@@ -50,15 +38,8 @@ object Login extends Controller with AuthActions {
   def oauth2Callback = CSRFAction.async { implicit request =>
     val session = request.session
 
-    val safeValidatedUserIdentity: Future[UserIdentity] = {
-      val t = Try(GoogleAuth.validatedUserIdentity(googleAuthConfig, request.csrfToken)) recover {
-        case e: IllegalArgumentException => Future.failed(e)
-      }
-      t.get
-    }
-
     val result = for {
-      identity <- safeValidatedUserIdentity
+      identity <- SafeGoogleAuth.validatedUserIdentity
       admin <- GoogleGroups.isUserAdmin(identity.email)
     } yield if (admin) identity
 
