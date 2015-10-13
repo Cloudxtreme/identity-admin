@@ -4,7 +4,6 @@ import java.io.FileInputStream
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.gu.googleauth.{GoogleServiceAccount, GoogleGroupChecker}
-import play.api.Play._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import util.Logging
 
@@ -13,19 +12,17 @@ import scala.util.Try
 
 object GoogleGroups extends Logging {
 
-  val certFile = "/etc/gu/identity-admin-cert.json"
+  val requiredGroups = Set("2FA_enforce","useradmin")
 
-  private lazy val serviceAccount = GoogleServiceAccount(
+  private val serviceAccount = GoogleServiceAccount(
     credentials.getServiceAccountId,
     credentials.getServiceAccountPrivateKey,
     credentials.getServiceAccountUser)
 
   private lazy val credentials: GoogleCredential = {
-    val fileInputStream = Try(new FileInputStream(certFile))
+    val fileInputStream = Try(new FileInputStream("/etc/gu/identity-admin-cert.json"))
     GoogleCredential.fromStream(fileInputStream.get)
   }
-
-  val requiredGroups = Set("2FA_enforce","useradmin")
 
   def userGroups(email: String): Future[Either[String, Set[String]]] = {
     val checker = new GoogleGroupChecker(serviceAccount)
