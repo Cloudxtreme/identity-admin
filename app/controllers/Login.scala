@@ -25,7 +25,6 @@ object Login extends Controller with AuthActions {
   val clientSecret = current.configuration.getString("identity-admin.google.clientSecret").get
   val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
   val indexCall = routes.Application.index()
-  val requiredGroups = Set("2FA_enforce", "useradmin")
   val googleAuthConfig =
     GoogleAuthConfig(
       clientId = clientId,
