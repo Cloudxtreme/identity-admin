@@ -4,7 +4,7 @@ import java.io.FileInputStream
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.gu.googleauth.{GoogleServiceAccount, GoogleGroupChecker}
-import play.api.Logger
+import play.api.Play._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import util.Logging
 
@@ -13,13 +13,15 @@ import scala.util.Try
 
 object GoogleGroups extends Logging {
 
-  lazy val serviceAccount = GoogleServiceAccount(
+  val certFile = "/etc/gu/identity-admin-cert.json"
+
+  private lazy val serviceAccount = GoogleServiceAccount(
     credentials.getServiceAccountId,
     credentials.getServiceAccountPrivateKey,
     credentials.getServiceAccountUser)
 
-  private val credentials: GoogleCredential = {
-    val fileInputStream = Try(new FileInputStream("/etc/gu/identity-admin-cert.json"))
+  private lazy val credentials: GoogleCredential = {
+    val fileInputStream = Try(new FileInputStream(certFile))
     GoogleCredential.fromStream(fileInputStream.get)
   }
 
@@ -33,15 +35,17 @@ object GoogleGroups extends Logging {
     }
   }
 
-  def isAuthorised(required: Set[String], groups: Set[String]): Boolean = (required & groups) == required
-
   def isUserAdmin(email: String): Future[Boolean] = {
     userGroups(email).map( _ match {
-      case Right(groups) => isAuthorised(requiredGroups, groups)
+      case Right(groups) => Authorisation.isAuthorised(requiredGroups, groups)
       case Left(_) => {
         logger.info("{} is not in correct groups", email)
         false
       }
     })
   }
+}
+
+object Authorisation {
+  def isAuthorised(required: Set[String], groups: Set[String]): Boolean = (required & groups) == required
 }
