@@ -34,7 +34,7 @@ object GoogleGroups extends Logging {
 
   def isUserAdmin(email: String): Future[Boolean] = {
     userGroups(email).map( _ match {
-      case Right(groups) => Authorisation.isAuthorised(requiredGroups, groups)
+      case Right(groups) => Authorisation.isAuthorised(required = requiredGroups, groups = groups)
       case Left(_) => {
         logger.info("{} is not in correct groups", email)
         false
