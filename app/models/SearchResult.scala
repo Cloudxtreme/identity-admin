@@ -7,9 +7,14 @@ case class SearchResult(email: String, username: String, name: String,
 
 object SearchResult {
 
-  def all(): List[SearchResult] =
-    Nil
+  def mockData(): SearchResult = {
 
-  def mockData(): SearchResult = new SearchResult("email@email.com", "myUsername", "FirstName Surname", new DateTime(2015, 4, 15, 16, 12, 0),
-    new DateTime(2015, 4, 15, 16, 12, 0))
+    val mockDate = new DateTime(2015, 4, 15, 16, 12, 0)
+
+    SearchResult("email@email.com",
+                 "myUsername",
+                 "FirstName Surname",
+                 mockDate,
+                 mockDate)
+  }
 }

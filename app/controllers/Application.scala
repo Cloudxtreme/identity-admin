@@ -11,7 +11,7 @@ object Application extends Controller with AuthActions with Logging {
     Ok(views.html.index())
   }
 
-  def userSearch(input: String) = Action {
-    Ok(views.html.searchForUser(input, SearchResult.mockData()))
+  def search(searchQuery: String) = Action {
+    Ok(views.html.searchForUser(searchQuery, SearchResult.mockData()))
   }
 }
