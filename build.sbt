@@ -21,4 +21,4 @@ riffRaffUploadManifestBucket := "riffraff-builds"
 
 play.PlayImport.PlayKeys.playDefaultPort := 8852
 
-addCommandAlias("devrun", "run -Dconfig.resource=dev.conf -Dlogs.home=logs/")
+addCommandAlias("devrun", "run -Dconfig.resource=dev.conf -Dlogs.home=logs")
