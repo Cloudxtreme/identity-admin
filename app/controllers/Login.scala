@@ -47,8 +47,6 @@ object Login extends Controller with AuthActions {
     }
   }
 
-  case class User(userIdentity: UserIdentity, isAdmin: Boolean)
-
   def oauth2Callback = CSRFAction.async { implicit request =>
     val session = request.session
 
@@ -62,10 +60,10 @@ object Login extends Controller with AuthActions {
     val result = for {
       identity <- safeValidatedUserIdentity
       admin <- GoogleGroups.isUserAdmin(identity.email)
-    } yield User(identity, admin)
+    } yield if (admin) identity
 
     result map { _ match {
-      case User(identity, true) => {
+      case identity: UserIdentity => {
         val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
         redirect.withSession {
           session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
@@ -73,7 +71,7 @@ object Login extends Controller with AuthActions {
       }
       case _ => {
         Redirect(loginCall).withSession(session - ANTI_FORGERY_KEY)
-          .flashing("error" -> Messages("groups.failure"))
+          .flashing("error" -> Messages("groups.failure", GoogleGroups.requiredGroups.mkString(", ")))
       }
     }} recover {
       case ex => {
