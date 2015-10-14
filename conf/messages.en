@@ -1,3 +1,4 @@
 login.missingAntiForgeryToken=Anti forgery token missing in session
 login.failure=Login failure: {0}
-index.header=Welcome to Passport Control
+index.mainHeader=Welcome to Passport Control
+index.subHeader=Search for an Identity using the search bar above
