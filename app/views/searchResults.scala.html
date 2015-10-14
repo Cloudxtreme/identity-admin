@@ -1,0 +1,42 @@
+@(searchBarText: String, searchResult : SearchResult)
+    @main("User Search")(searchBarText){
+        <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12">
+                  <h1><small>Accounts matching your search criteria...</small></h1>
+              </div>
+            </div>
+            <div class="row search-headers">
+                <div class="col-sm-3"><h5>Email</h5></div>
+                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>Username</h5></div>
+                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>Name</h5></div>
+                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>Registered Date</h5></div>
+                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>Last Activity Date</h5></div>
+                <div class="col-sm-1 hidden-xs visible-sm visible-md visible-lg visible-xl"></div>
+            </div>
+            <div class="row search-grid-padding">
+                <div class="col-sm-3"><p>@searchResult.email<p></div>
+                <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Username</h5></div>
+                <div class="col-sm-2"><p>@searchResult.username<p></div>
+                <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Name</h5></div>
+                <div class="col-sm-2"><p>@searchResult.name<p></div>
+                <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Registered Date</h5></div>
+                <div class="col-sm-2"><p>
+                    @searchResult.registeredDate.getDayOfMonth
+                    @searchResult.registeredDate.monthOfYear.getAsText
+                    @searchResult.registeredDate.getYear
+                <p></div>
+                <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>Last Activity Date</h5></div>
+                <div class="col-sm-2"><p>
+                    @searchResult.registeredDate.getDayOfMonth
+                    @searchResult.registeredDate.monthOfYear.getAsText
+                    @searchResult.registeredDate.getYear
+                    @searchResult.lastActivityDate.toLocalTime
+
+                <p></div>
+                <div class="col-sm-1">
+                    <button class="btn btn-primary" type="button">Edit</button>
+                </div>
+            </div>
+        </div>
+    }
