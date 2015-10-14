@@ -1,5 +1,6 @@
 @import play.i18n._
-@main("User Admin")("Search by username, email, postcode or IP address..."){
+@(pageTitle: String, searchBarDescription: String)
+@main(pageTitle)(searchBarDescription){
     <div class="col-sm-6 col-sm-push-6">
         <div class="hidden-xs">
             <img src="@routes.Assets.at("images/ArrowLargeScreen.svg")">
