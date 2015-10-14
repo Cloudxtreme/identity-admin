@@ -1,3 +1,6 @@
+@(lang: Lang)
+@import play.i18n._
+@Messages.get("key")
 @main("User Admin")("Search by username, email, postcode or IP address..."){
     <div class="col-sm-6 col-sm-push-6">
         <div class="hidden-xs">
@@ -8,7 +11,7 @@
         </div>
     </div>
     <div class="col-sm-6 col-sm-pull-6 index-view-padding">
-        <h1>Welcome to Passport Control</h1>
+        <h1>Messages.get("index.header")</h1>
         <h2>Search for an Identity using the search bar above</h2>
     </div>
 }
