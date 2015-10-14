@@ -1,6 +1,6 @@
 @import play.i18n._
-@(searchBarText: String, searchResult : SearchResult)
-    @main("User Search")(searchBarText){
+@(pageTitle: String, searchBarText: String, searchResult : SearchResult)
+    @main(pageTitle)(searchBarText){
         <div class="container-fluid">
             <div class="row">
               <div class="col-md-12">
