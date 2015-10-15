@@ -11,11 +11,11 @@ object Application extends Controller with AuthActions with Logging {
 
   def index = AuthAction {
     logger.info("Index page hit.")
-    Ok(views.html.index())
+    Ok(views.html.index(Messages("index.title"), Messages("index.searchBarText")))
   }
 
   def search(searchQuery: String) = Action {
-    Ok(views.html.searchResults(searchQuery, SearchResult.mockData()))
+    Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, SearchResult.mockData()))
   }
 
   def getEditUserPage(searchQuery: String, userId: String) = Action {
