@@ -132,7 +132,11 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-1">
-                        <input type="checkbox" class="checkbox"/>
+                        <input type="checkbox" class="checkbox" name="GNMMarketing"
+                            @if(user.receiveGNMMarketing){
+                                checked="checked"
+                            }
+                        />
                     </div>
                     <div class="col-xs-11">
                         <p>Receive GNM marketing</p>
@@ -140,7 +144,11 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-1">
-                        <input type="checkbox" class="checkbox"/>
+                        <input type="checkbox" class="checkbox" name="3rdPartyMarketing"
+                            @if(user.receive3rdPartyMarketing){
+                                checked="checked"
+                            }
+                        />
                     </div>
                     <div class="col-xs-11">
                         <p>Receive 3rd party marketing</p>
