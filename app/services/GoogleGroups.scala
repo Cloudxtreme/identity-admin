@@ -12,12 +12,12 @@ import scala.util.Try
 
 object GoogleGroups extends Logging {
 
-  val requiredGroups = Set("2FA_enforce","useradmin")
+  val requiredGroups = Set("2fa_enforce@guardian.co.uk")
 
   private val serviceAccount = GoogleServiceAccount(
     credentials.getServiceAccountId,
     credentials.getServiceAccountPrivateKey,
-    credentials.getServiceAccountUser)
+    GoogleAuthConf.impersonatedUser)
 
   private lazy val credentials: GoogleCredential = {
     val fileInputStream = Try(new FileInputStream("/etc/gu/identity-admin-cert.json"))
