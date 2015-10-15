@@ -1,4 +1,26 @@
 @(pageTitle: String, searchQuery: String, user: User)
     @main(pageTitle)(searchQuery){
-        <h1>@searchQuery</h1>
+        <div class="row">
+            <div class="col-md-10">
+                <h1>@user.firstName @user.lastName</h1>
+                <p>@user.id</p>
+                <p>
+                    @user.registeredDate.dayOfWeek.getAsText
+                    @user.registeredDate.getDayOfMonth/@user.registeredDate.monthOfYear.getAsText/@user.registeredDate.getYear
+                    @user.registeredDate.toLocalTime
+                </p>
+                <p>
+                    @user.lastActivityDate.dayOfWeek.getAsText
+                    @user.lastActivityDate.getDayOfMonth/@user.lastActivityDate.monthOfYear.getAsText/@user.lastActivityDate.getYear
+                    @user.lastActivityDate.toLocalTime
+                </p>
+                <p>
+                    @if(user.emailValidated) {
+                        Yes
+                    } else {
+                        No
+                    }
+                </p>
+            </div>
+        </div>
     }
