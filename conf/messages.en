@@ -1,2 +1,15 @@
 login.missingAntiForgeryToken=Anti forgery token missing in session
 login.failure=Login failure: {0}
+
+index.title=User Admin
+index.searchBarText=Search by username, email, postcode or IP address...
+index.mainHeader=Welcome to Passport Control
+index.subHeader=Search for an Identity using the search bar above
+
+searchResults.title=Search Results
+searchResults.mainHeader=Accounts matching your search criteria...
+searchResults.emailHeader=Email
+searchResults.usernameHeader=Username
+searchResults.nameHeader=Name
+searchResults.registeredDateHeader=Registered Date
+searchResults.lastActivityDateHeader=Last Activity Date
