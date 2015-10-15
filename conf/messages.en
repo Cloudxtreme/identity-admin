@@ -1,2 +1,4 @@
 login.missingAntiForgeryToken=Anti forgery token missing in session
 login.failure=Login failure: {0}
+
+editUser.title=Edit User
