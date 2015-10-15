@@ -2,8 +2,8 @@
 @(pageTitle: String, searchQuery: String, user: User)
     @main(pageTitle)(searchQuery){
         <div class="row">
-            <div class="col-sm-10">
-                <div class="row uneditableFields">
+            <div class="col-md-10">
+                <div class="row uneditable-fields">
                     <div class="col-sm-2">
                         <img src="@routes.Assets.at("images/darkUserIcon.svg")" />
                     </div>
@@ -24,7 +24,7 @@
                             <div class="col-sm-10">
                                 <p>
                                     @user.registeredDate.dayOfWeek.getAsText
-                                    @user.registeredDate.getDayOfMonth/@user.registeredDate.monthOfYear.getAsText/@user.registeredDate.getYear
+                                    @user.registeredDate.getDayOfMonth/@user.registeredDate.getMonthOfYear/@user.registeredDate.getYear
                                     @user.registeredDate.toLocalTime
                                 </p>
                             </div>
@@ -36,7 +36,7 @@
                             <div class="col-sm-10">
                                 <p>
                                     @user.lastActivityDate.dayOfWeek.getAsText
-                                    @user.lastActivityDate.getDayOfMonth/@user.lastActivityDate.monthOfYear.getAsText/@user.lastActivityDate.getYear
+                                    @user.lastActivityDate.getDayOfMonth/@user.lastActivityDate.getMonthOfYear/@user.lastActivityDate.getYear
                                     @user.lastActivityDate.toLocalTime
                                 </p>
                             </div>
@@ -47,9 +47,9 @@
                             </div>
                             <div class="col-sm-10">
                                 @if(user.emailValidated) {
-                                    <p class="emailValidated">Yes</p>
+                                    <p class="email-validated">Yes</p>
                                 } else {
-                                    <p class="emailNotValidated">No</p>
+                                    <p class="email-not-validated">No</p>
                                 }
 
                             </div>
@@ -58,20 +58,10 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <div class="row">
-                    <div class="col-md-12 center-block">
-                        <button class="btn">View public profile</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 center-block">
-                        <button class="btn btn-danger">Delete account</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 center-block">
-                        <button class="btn btn-warning">Validate email</button>
-                    </div>
+                <div class="btn-group-vertical center-block">
+                    <button class="btn btn-default">View public profile</button>
+                    <button class="btn btn-danger">Delete account</button>
+                    <button class="btn btn-warning">Validate email</button>
                 </div>
             </div>
         </div>
