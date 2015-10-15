@@ -1,6 +1,6 @@
 package controllers
 
-import models.SearchResult
+import models._
 import play.api.mvc._
 import util.Logging
 
@@ -16,6 +16,6 @@ object Application extends Controller with AuthActions with Logging {
   }
 
   def getEditUserPage(searchQuery: String, userId: String) = Action {
-    Ok(views.html.editUser(searchQuery))
+    Ok(views.html.editUser(searchQuery, User.mockData()))
   }
 }

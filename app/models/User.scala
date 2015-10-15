@@ -38,7 +38,7 @@ object User {
   def mockData(): User = {
 
     val mockDate = new DateTime(2015, 4, 15, 16, 12, 0)
-    val mockDOB = new DateTime(1990, 1, 10)
+    val mockDOB = new DateTime(1990, 1, 10, 0, 0, 0)
 
     User("11111111",
         mockDate,
