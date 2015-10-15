@@ -1,3 +1,4 @@
+@import play.i18n._
 @(pageTitle: String, searchQuery: String, user: User)
     @main(pageTitle)(searchQuery){
         <div class="row">
@@ -5,7 +6,7 @@
                 <h1>@user.firstName @user.lastName</h1>
                 <div class="row">
                     <div class="col-md-2">
-                        <p>ID #</p>
+                        <p>@Messages.get("editUser.idHeader")</p>
                     </div>
                     <div class="col-md-10">
                         <p>@user.id</p>
@@ -13,7 +14,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <p>Registered</p>
+                        <p>@Messages.get("editUser.registeredHeader")</p>
                     </div>
                     <div class="col-md-10">
                         <p>
@@ -25,7 +26,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <p>Last activity</p>
+                        <p>@Messages.get("editUser.lastActivityHeader")</p>
                     </div>
                     <div class="col-md-10">
                         <p>
@@ -37,7 +38,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <p>Email validated</p>
+                        <p>@Messages.get("editUser.emailValidatedHeader")</p>
                     </div>
                     <div class="col-md-10">
                         <p>
