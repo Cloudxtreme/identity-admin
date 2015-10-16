@@ -164,6 +164,30 @@
             <div class="row">
                 <div class="col-md-2">
                     <h4>@Messages.get("editUser.personalDetailsHeader")</h4>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.genderHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.gender</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.dobHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.dob.getDayOfMonth/@user.dob.getMonthOfYear/@user.dob.getYear</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.locationHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.location</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <h4>@Messages.get("editUser.deliveryAddressHeader")</h4>

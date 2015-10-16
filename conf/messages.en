@@ -36,3 +36,7 @@ editUser.saveBtn=Save
 editUser.personalDetailsHeader=Personal Details
 editUser.deliveryAddressHeader=Delivery Address
 editUser.billingAddressHeader=Billing Address
+editUser.genderHeader=Gender
+editUser.dobHeader=DOB
+editUser.locationHeader=Location
+
