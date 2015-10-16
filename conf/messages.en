@@ -33,4 +33,6 @@ editUser.profileBtn=View public profile
 editUser.deleteBtn=Delete account
 editUser.validateBtn=Validate email
 editUser.saveBtn=Save
-
+editUser.personalDetailsHeader=Personal Details
+editUser.deliveryAddressHeader=Delivery Address
+editUser.billingAddressHeader=Billing Address
