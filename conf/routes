@@ -13,5 +13,5 @@ GET        /oauth2callback                controllers.Login.oauth2Callback
 
 GET        /assets/*file                  controllers.Assets.at(path="/public", file)
 
-GET        /search                        controllers.Application.search(searchQuery: String)
+GET        /search                        controllers.Search.search(searchQuery: String)
 

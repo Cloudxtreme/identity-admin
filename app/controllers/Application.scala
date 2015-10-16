@@ -1,6 +1,6 @@
 package controllers
 
-import models.SearchResult
+import models._
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
@@ -14,7 +14,9 @@ object Application extends Controller with AuthActions with Logging {
     Ok(views.html.index(Messages("index.title"), Messages("index.searchBarText")))
   }
 
-  def search(searchQuery: String) = Action {
-    Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, SearchResult.mockData()))
+
+
+  def getEditUserPage(searchQuery: String, userId: String) = Action {
+    Ok(views.html.editUser(Messages("editUser.title"), searchQuery, User.mockData()))
   }
 }
