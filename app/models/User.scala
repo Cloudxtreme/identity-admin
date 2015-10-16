@@ -2,6 +2,8 @@ package models
 
 import org.joda.time.DateTime
 
+case class UserGroup (name: String, joinDate: DateTime)
+
 case class User (
                 id: String,
                 registeredDate: DateTime,
@@ -30,7 +32,7 @@ case class User (
                 billingCountyState: String,
                 billingPostcodeZip: String,
                 billingCountry: String,
-                userGroups: String
+                userGroups: UserGroup
                   )
 
 object User {
@@ -67,7 +69,7 @@ object User {
         "London",
         "SW12 4ER",
         "UK",
-        "Teachers"
+        UserGroup("Teachers", mockDate)
     )
   }
 }
