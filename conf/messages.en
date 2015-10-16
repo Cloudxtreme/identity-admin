@@ -39,4 +39,9 @@ editUser.billingAddressHeader=Billing Address
 editUser.genderHeader=Gender
 editUser.dobHeader=DOB
 editUser.locationHeader=Location
-
+editUser.addressLine1Header=Address line 1
+editUser.addressLine2Header=Address line 2
+editUser.townHeader=Town
+editUser.countyStateHeader=County or State
+editUser.postcodeZipHeader=Postcode/Zipcode
+editUser.countryHeader=Country
