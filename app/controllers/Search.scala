@@ -10,6 +10,11 @@ import util.Logging
 object Search extends Controller with AuthActions with Logging{
 
   def search(searchQuery: String) = AuthAction {
+
+    // take searchquery pass it into our Business Logic
+
+    // Pass result of search into view
+
     Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, SearchResult.mockData()))
   }
 
