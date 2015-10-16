@@ -45,3 +45,4 @@ editUser.townHeader=Town
 editUser.countyStateHeader=County or State
 editUser.postcodeZipHeader=Postcode/Zipcode
 editUser.countryHeader=Country
+editUser.userGroupsHeader=User Groups
