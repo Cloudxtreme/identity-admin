@@ -300,6 +300,17 @@
                     <h4>@Messages.get("editUser.userGroupsHeader")</h4>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <p>@user.userGroups.name</p>
+                </div>
+                <div class="col-xs-4">
+                    <p>
+                        @user.userGroups.joinDate.getDayOfMonth/@user.userGroups.joinDate.getMonthOfYear/@user.userGroups.joinDate.getYear
+                        @user.userGroups.joinDate.toLocalTime
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
     }
