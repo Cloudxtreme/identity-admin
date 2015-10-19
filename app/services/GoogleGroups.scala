@@ -11,8 +11,9 @@ import scala.concurrent.Future
 import scala.util.Try
 
 object GoogleGroups extends Logging {
+  import Authorisation._
 
-  val requiredGroups = Set("2fa_enforce@guardian.co.uk")
+  val requiredGroups = Set(TWO_FACTOR_AUTH_GROUP, USER_ADMIN_GROUP)
 
   private val serviceAccount = GoogleServiceAccount(
     credentials.getServiceAccountId,
@@ -34,7 +35,7 @@ object GoogleGroups extends Logging {
 
   def isUserAdmin(email: String): Future[Boolean] = {
     userGroups(email).map( _ match {
-      case Right(groups) => Authorisation.isAuthorised(required = requiredGroups, groups = groups)
+      case Right(groups) => isAuthorised(required = requiredGroups, groups = groups)
       case Left(_) => {
         logger.info("{} is not in correct groups", email)
         false
@@ -44,5 +45,8 @@ object GoogleGroups extends Logging {
 }
 
 object Authorisation {
+  val TWO_FACTOR_AUTH_GROUP = "2fa_enforce@guardian.co.uk"
+  val USER_ADMIN_GROUP = "identity.userhelp@guardian.co.uk"
+
   def isAuthorised(required: Set[String], groups: Set[String]): Boolean = (required & groups) == required
 }
