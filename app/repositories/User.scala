@@ -3,16 +3,17 @@ package repositories
 import org.joda.time.DateTime
 import play.api.libs.json._
 import play.api.mvc.{Result, Results}
+import models.CustomFormats._
 
 import scala.language.implicitConversions
 
-//case class SocialLink(socialId: String,
-//                      network: String,
-//                      profileData: Map[String, Any] = Map.empty)
-//
-//object SocialLink {
-//  implicit val format = Json.format[SocialLink]
-//}
+case class SocialLink(socialId: String,
+                      network: String,
+                      profileData: Map[String, Any] = Map.empty)
+
+object SocialLink {
+  implicit val format = Json.format[SocialLink]
+}
 
 case class GroupMembership(path: String,
                            packageCode: String,
@@ -94,9 +95,9 @@ case class User(primaryEmailAddress: String,
                 statusFields: Option[StatusFields] = None,
                 dates: Option[UserDates] = Some(new UserDates()),
                 password: Option[String] = None,
-                userGroups: Option[Set[GroupMembership]] = None
-//                socialLinks: Option[Set[SocialLink]] = None,
-//                adData: Option[Map[String, Any]] = None
+                userGroups: Option[Set[GroupMembership]] = None,
+                socialLinks: Option[Set[SocialLink]] = None,
+                adData: Option[Map[String, Any]] = None
                  )
 
 object User {
