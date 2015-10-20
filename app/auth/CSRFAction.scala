@@ -1,4 +1,4 @@
-package csrf
+package auth
 
 import controllers.routes
 import play.api.i18n.Messages

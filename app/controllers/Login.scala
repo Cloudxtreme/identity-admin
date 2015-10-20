@@ -1,7 +1,8 @@
 package controllers
 
-import csrf.CSRFAction
-import csrf.CSRF.ANTI_FORGERY_KEY
+import auth.CSRFAction
+import auth.CSRF.ANTI_FORGERY_KEY
+import auth.LoginSession.SessionOps
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
@@ -43,22 +44,26 @@ object Login extends Controller with AuthActions {
       admin <- GoogleGroups.isUserAdmin(identity.email)
     } yield if (admin) identity
 
-    result map { _ match {
+    result map {
       case identity: UserIdentity => {
-        val redirect = session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
-        redirect.withSession {
-          session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
-        }
+        val redirect = successfulLoginRedirect(session)
+        redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY) }
       }
       case _ => {
-        Redirect(loginCall).withSession(session - ANTI_FORGERY_KEY)
-          .flashing("error" -> Messages("groups.failure", GoogleGroups.requiredGroups.mkString(", ")))
+        val redirect = loginErrorRedirect("groups.failure", GoogleGroups.requiredGroupsMsg)
+        redirect.withSession { session.loginError }
       }
-    }} recover {
+    } recover {
       case ex => {
-        Redirect(loginCall).withSession(session - ANTI_FORGERY_KEY)
-          .flashing("error" -> Messages("login.failure", ex.getMessage))
+        val redirect = loginErrorRedirect("login.failure", ex.getMessage)
+        redirect.withSession { session.loginError }
       }
     }
   }
+
+  private def successfulLoginRedirect(session: Session): Result =
+    session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
+
+  private def loginErrorRedirect(errorType: String, additionalMessage: String): Result =
+    Redirect(loginCall).flashing("error" -> Messages(errorType, additionalMessage))
 }

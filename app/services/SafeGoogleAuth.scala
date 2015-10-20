@@ -1,7 +1,7 @@
 package services
 
 import com.gu.googleauth.{UserIdentity, GoogleAuth}
-import csrf.CSRFRequest
+import auth.CSRFRequest
 import play.api.mvc.RequestHeader
 
 import scala.concurrent.Future
