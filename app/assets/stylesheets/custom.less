@@ -1,3 +1,8 @@
+@valid: green;
+@invalid: red;
+@uneditable-background: #f5f5f5;
+@searchHeaderBackground: #DCDCDC;
+
 .navbar-form {
   border-top: 0px;
   border-bottom: 0px;
@@ -18,11 +23,11 @@
 }
 
 .search-headers {
-  background-color: #DCDCDC;
+  background-color: @searchHeaderBackground;
 }
 
 .search-headers-mobile {
-  background-color: #DCDCDC;
+  background-color: @searchHeaderBackground;
   padding:1%;
   padding-left: 2%;
 }
@@ -32,15 +37,15 @@
 }
 
 .uneditable-fields {
-  background: #f5f5f5;
+  background: @uneditable-background;
 }
 
 .email-validated {
-  color: green;
+  color: @valid;
 }
 
 .email-not-validated {
-  color: red;
+  color: @invalid;
 }
 
 .full-width-input{
