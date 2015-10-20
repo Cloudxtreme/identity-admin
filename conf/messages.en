@@ -13,6 +13,7 @@ searchResults.usernameHeader=Username
 searchResults.nameHeader=Name
 searchResults.registeredDateHeader=Registered Date
 searchResults.lastActivityDateHeader=Last Activity Date
+searchResults.errorMessage=Your search query did not match any records.
 
 editUser.title=Edit User
 editUser.idHeader=# ID
