@@ -17,10 +17,7 @@ object Search extends Controller with AuthActions with Logging {
 
     AdminApi.getUsers(searchQuery).map{response =>
       val json = Json.parse(response.body)
-      val total = (json\"total").as[Int]
-      val hasMore = (json\"hasMore").as[Boolean]
-      val results = (json\"results").as[Seq[UserSummary]]
-      val searchResponse = SearchResponse(total, hasMore, results)
+      val searchResponse = SearchResponse.create(json)
       Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery,SearchResult.mockData(), searchResponse.toString))
   }
   }
