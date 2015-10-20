@@ -1,0 +1,316 @@
+@import play.i18n._
+@(pageTitle: String, searchQuery: String, user: UserMock)
+    @main(pageTitle)(searchQuery){
+        <div class="row">
+            <div class="col-md-10">
+                <div class="row uneditable-fields">
+                    <div class="col-sm-2">
+                        <img src="@routes.Assets.at("images/darkUserIcon.svg")" />
+                    </div>
+                    <div class="col-sm-10">
+                        <h1>@user.firstName @user.lastName</h1>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <p>@Messages.get("editUser.idHeader")</p>
+                            </div>
+                            <div class="col-sm-10">
+                                <p>@user.id</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <p>@Messages.get("editUser.registeredHeader")</p>
+                            </div>
+                            <div class="col-sm-10">
+                                <p>
+                                    @user.registeredDate.dayOfWeek.getAsText
+                                    @user.registeredDate.getDayOfMonth/@user.registeredDate.getMonthOfYear/@user.registeredDate.getYear
+                                    @user.registeredDate.toLocalTime
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <p>@Messages.get("editUser.lastActivityHeader")</p>
+                            </div>
+                            <div class="col-sm-10">
+                                <p>
+                                    @user.lastActivityDate.dayOfWeek.getAsText
+                                    @user.lastActivityDate.getDayOfMonth/@user.lastActivityDate.getMonthOfYear/@user.lastActivityDate.getYear
+                                    @user.lastActivityDate.toLocalTime
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <p>@Messages.get("editUser.emailValidatedHeader")</p>
+                            </div>
+                            <div class="col-sm-10">
+                                @if(user.emailValidated) {
+                                    <p class="email-validated">Yes</p>
+                                } else {
+                                    <p class="email-not-validated">No</p>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="btn-group-vertical center-block">
+                    <button class="btn btn-default">@Messages.get("editUser.profileBtn")</button>
+                    <button class="btn btn-danger">@Messages.get("editUser.deleteBtn")</button>
+                    <button class="btn btn-warning">@Messages.get("editUser.validateBtn")</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>@Messages.get("editUser.accountDetails")</h4>
+            </div>
+            <div class="col-md-4 hidden-xs hidden-sm visible-md visible-lg visible-xl">
+                <h4>@Messages.get("editUser.marketingPrefsHeader")</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>@Messages.get("editUser.emailHeader")</p>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="full-width-input" type="text" name="emailAddress" placeholder="@user.email"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>@Messages.get("editUser.firstNameHeader")</p>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="full-width-input" type="text" name="firstName" placeholder="@user.firstName"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>@Messages.get("editUser.lastNameHeader")</p>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="full-width-input" type="text" name="lastName" placeholder="@user.lastName"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>@Messages.get("editUser.displayNameHeader")</p>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="full-width-input" type="text" name="displayName" placeholder="@user.displayName"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>@Messages.get("editUser.usernameHeader")</p>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="full-width-input" type="text" name="username" placeholder="@user.userName"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>@Messages.get("editUser.vanityUrlHeader")</p>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="full-width-input" type="text" name="vanityUrl" placeholder="@user.vanityURL"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-4 visible-xs visible-sm hidden-md hidden-lg hidden-xl">
+                        <h4>@Messages.get("editUser.marketingPrefsHeader")</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-1">
+                        <input type="checkbox" class="checkbox" name="GNMMarketing"
+                            @if(user.receiveGNMMarketing){
+                                checked="checked"
+                            }
+                        />
+                    </div>
+                    <div class="col-xs-11">
+                        <p>@Messages.get("editUser.GNMMarketing")</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-1">
+                        <input type="checkbox" class="checkbox" name="3rdPartyMarketing"
+                            @if(user.receive3rdPartyMarketing){
+                                checked="checked"
+                            }
+                        />
+                    </div>
+                    <div class="col-xs-11">
+                        <p>@Messages.get("editUser.3rdPartyMarketing")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2">
+            <button class="pull-right btn btn-success btn-block center-block">@Messages.get("editUser.saveBtn")</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 uneditable-fields">
+            <div class="row">
+                <div class="col-md-2">
+                    <h4>@Messages.get("editUser.personalDetailsHeader")</h4>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.genderHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.gender</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.dobHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.dob.getDayOfMonth/@user.dob.getMonthOfYear/@user.dob.getYear</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.locationHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.location</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h4>@Messages.get("editUser.deliveryAddressHeader")</h4>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.addressLine1Header")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.deliveryLine1</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.addressLine2Header")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.deliveryLine2</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.townHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.deliveryTown</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.countyStateHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.deliveryCountyState</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.postcodeZipHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.deliveryPostcodeZip</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.countryHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.deliveryCountry</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h4>@Messages.get("editUser.billingAddressHeader")</h4>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.addressLine1Header")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.billingLine1</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.addressLine2Header")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.billingLine2</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.townHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.billingTown</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.countyStateHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.billingCountyState</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.postcodeZipHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.billingPostcodeZip</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages.get("editUser.countryHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@user.billingCountry</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <h4>@Messages.get("editUser.userGroupsHeader")</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <p>@user.userGroups.name</p>
+                </div>
+                <div class="col-xs-4">
+                    <p>
+                        @user.userGroups.joinDate.getDayOfMonth/@user.userGroups.joinDate.getMonthOfYear/@user.userGroups.joinDate.getYear
+                        @user.userGroups.joinDate.toLocalTime
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    }

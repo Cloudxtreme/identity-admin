@@ -28,19 +28,22 @@
                         @response.creationDate.map(o => o.getDayOfMonth).getOrElse("None")
                         @response.creationDate.map(o => o.monthOfYear.getAsText).getOrElse("None")
                         @response.creationDate.map(o => o.getYear).getOrElse("None")
-                    <p></div>
+                        <p></div>
                     <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
                         @response.lastActivityDate.map(o => o.getDayOfMonth).getOrElse("None")
                         @response.lastActivityDate.map(o => o.monthOfYear.getAsText).getOrElse("None")
                         @response.lastActivityDate.map(o => o.getYear).getOrElse("None")
                         @response.lastActivityDate.map(o => o.toLocalTime).getOrElse("None")
-                    <p></div>
+                        <p></div>
                     <div class="col-sm-1">
-                        <button class="btn btn-primary btn-block" type="button">Edit</button>
+                        <form action="edit">
+                            <input type="hidden" value=@searchBarText name="searchQuery"/>
+                            <input type="hidden" value=@response.id name="userId"/>
+                            <button class="btn btn-primary btn-block" type="submit">Edit</button>
+                        </form>
                     </div>
                 </div>
             }
         </div>
     }
-    

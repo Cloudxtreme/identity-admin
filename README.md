@@ -6,6 +6,7 @@ Configuration files:
 - Environment-specific configuration (`conf/<ENV>.conf`)
 - Application configuration (`conf/application.conf`)
 - System file with additional properties (`/etc/gu/identity-admin.conf`)
+- Service account certificate (`/etc/gu/identity-admin-cert.json`)
 
 # Setting up Identity Admin locally
 
@@ -64,7 +65,10 @@ You should now be able to start the application (`sbt run`), go to [https://user
 
 Install the local configuration file from s3:
 
-```aws s3 cp --profile identity s3://gu-identity-admin-private/DEV/identity-admin.conf /etc/gu```
+```
+aws s3 cp --profile identity s3://gu-identity-admin-private/DEV/identity-admin.conf /etc/gu
+aws s3 cp --profile identity s3://gu-identity-admin-private/identity-admin-cert.json /etc/gu
+```
 
 ## Running the application
 
