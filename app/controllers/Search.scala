@@ -15,8 +15,7 @@ object Search extends Controller with AuthActions with Logging {
   def search(searchQuery: String) = AuthAction.async {
 
     AdminApi.getUsers(searchQuery).map{response =>
-      val json = Json.parse(response.body)
-      val searchResponse = SearchResponse.create(json)
+      val searchResponse = Json.parse(response.body).as[SearchResponse]
       if (searchResponse.total < 1) {
         Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, searchResponse, Some(Messages("searchResults.errorMessage"))))
       } else {

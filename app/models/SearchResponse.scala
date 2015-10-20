@@ -12,13 +12,6 @@ case class SearchResponse(total: Int,
 object SearchResponse {
   implicit val format = Json.format[SearchResponse]
 
-  def create(json: JsValue): SearchResponse = {
-    val total = (json\"total").as[Int]
-    val hasMore = (json\"hasMore").as[Boolean]
-    val results = (json\"results").as[Seq[UserSummary]]
-    SearchResponse(total, hasMore, results)
-  }
-
   implicit def searchResponseToResult(searchResponse: SearchResponse): Result =
     Results.Ok(Json.toJson(searchResponse))
 
