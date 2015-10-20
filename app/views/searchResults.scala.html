@@ -29,14 +29,18 @@
                 <p></div>
                 <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
                 <div class="col-sm-2"><p>
-                    @searchResult.registeredDate.getDayOfMonth
-                    @searchResult.registeredDate.monthOfYear.getAsText
-                    @searchResult.registeredDate.getYear
+                    @searchResult.lastActivityDate.getDayOfMonth
+                    @searchResult.lastActivityDate.monthOfYear.getAsText
+                    @searchResult.lastActivityDate.getYear
                     @searchResult.lastActivityDate.toLocalTime
 
                 <p></div>
                 <div class="col-sm-1">
-                    <button class="btn btn-primary" type="button">Edit</button>
+                    <form action="edit">
+                        <input type="hidden" value=@searchBarText name="searchQuery"/>
+                        <input type="hidden" value=@searchResult.id name="userId"/>
+                        <button class="btn btn-primary" type="submit">Edit</button>
+                    </form>
                 </div>
             </div>
         </div>
