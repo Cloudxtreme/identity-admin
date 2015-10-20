@@ -1,5 +1,6 @@
 login.missingAntiForgeryToken=Anti forgery token missing in session
 login.failure=Login failure: {0}
+groups.failure=User must be in groups: {0}
 
 index.title=User Admin
 index.searchBarText=Search by username, email, postcode or IP address...
