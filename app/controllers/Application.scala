@@ -16,5 +16,5 @@ object Application extends Controller with AuthActions with Logging {
 
   def getEditUserPage(searchQuery: String, userId: String) = Action {
     Ok(views.html.editUser(Messages("editUser.title"), searchQuery, User.mockData()))
-  } 
+  }
 }
