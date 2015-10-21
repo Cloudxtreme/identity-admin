@@ -1,11 +1,12 @@
 @import play.i18n._
-@(pageTitle: String, searchBarText: String,searchResponse: SearchResponse,errorMessage: Option[String])
+@(pageTitle: String, searchBarText: String,searchResponse: SearchResponse)
     @main(pageTitle)(searchBarText){
         <div class="container-fluid">
             <div class="row">
               <div class="col-md-12">
-                  @errorMessage.map(error => <div class="alert alert-danger" role="alert"> {error} </div>)
-
+                  @if(searchResponse.total < 1){
+                      <div class="alert alert-danger" role="alert">@Messages.get("searchResults.errorMessage")</div>
+                  }
                   <h1><small>@Messages.get("searchResults.mainHeader")</small></h1>
               </div>
             </div>

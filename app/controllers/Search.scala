@@ -12,13 +12,8 @@ import play.api.libs.concurrent.Execution.Implicits._
 class Search @Inject() (adminApi: AdminApi) extends Controller with AuthActions with Logging {
 
   def search(searchQuery: String) = AuthAction.async {
-    adminApi.getUsers(searchQuery).map(
-      response =>
-        if (response.total < 1) {
-          Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, response, Some(Messages("searchResults.errorMessage"))))
-        } else {
-          Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, response, None))
-      }
+    adminApi.getUsers(searchQuery).map(response =>
+      Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, response))
     )
   }
 }
