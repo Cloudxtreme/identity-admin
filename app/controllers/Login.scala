@@ -1,5 +1,7 @@
 package controllers
 
+import javax.inject.Inject
+
 import auth.CSRFAction
 import auth.CSRF.ANTI_FORGERY_KEY
 import auth.LoginSession.SessionOps
@@ -18,7 +20,7 @@ trait AuthActions extends Actions {
   val loginCall = routes.Login.login()
 }
 
-object Login extends Controller with AuthActions {
+class Login @Inject() extends Controller with AuthActions {
 
   val indexCall = routes.Application.index()
 
