@@ -4,7 +4,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 
-class Authorisation$Test extends FlatSpec with Matchers with ScalaFutures with IntegrationPatience {
+class Authorisation$Test extends FlatSpec with Matchers {
 
   it should "determine if user is in correct groups" in {
     val required = Set("2FA_enforce","useradmin")
