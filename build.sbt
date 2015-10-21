@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   "com.gu" %% "play-googleauth" % "0.3.0",
   "org.scalatestplus" %% "play" % "1.4.0-M3",
   "org.webjars" % "bootstrap" % "3.3.5",
-  ws
+  ws,
+  filters
 )
 
 riffRaffPackageType := (packageZipTarball in Universal).value
