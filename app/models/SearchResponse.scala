@@ -13,5 +13,5 @@ object SearchResponse {
 
   implicit def searchResponseToResult(searchResponse: SearchResponse): Result =
     Results.Ok(Json.toJson(searchResponse))
-  
+
 }

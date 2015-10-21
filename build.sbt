@@ -20,5 +20,6 @@ riffRaffUploadArtifactBucket := "riffraff-artifact"
 riffRaffUploadManifestBucket := "riffraff-builds"
 
 play.PlayImport.PlayKeys.playDefaultPort := 8852
+routesGenerator := InjectedRoutesGenerator
 
 addCommandAlias("devrun", "run -Dconfig.resource=dev.conf -Dlogs.home=logs")
