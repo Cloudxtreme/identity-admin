@@ -23,16 +23,18 @@ class AdminApi{
 
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     WS.url(searchUrl).withQueryString("query" -> searchQuery).get.map {
-      response => checkResponse(response)
+      response => AdminApi.checkResponse(response.status, response.body)
     }
   }
+}
 
-  def checkResponse(response: WSResponse): Either[CustomError, SearchResponse] =
+object AdminApi {
+  def checkResponse(status: Int, body: String): Either[CustomError, SearchResponse] =
     Try(
-      if (response.status == 200) {
-        Right(Json.parse(response.body).as[SearchResponse])
+      if (status == 200) {
+        Right(Json.parse(body).as[SearchResponse])
       } else {
-        Left(Json.parse(response.body).as[CustomError])
+        Left(Json.parse(body).as[CustomError])
       }
     ).getOrElse(Left(CustomError("Fatal Error", "Contact identity team.")))
 }
