@@ -1,6 +1,7 @@
 package controllers
 
 import javax.inject.Inject
+import models.SearchResponse
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
@@ -13,7 +14,12 @@ class Search @Inject() (adminApi: AdminApi) extends Controller with AuthActions 
 
   def search(searchQuery: String) = AuthAction.async {
     adminApi.getUsers(searchQuery).map(response =>
-      Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, response))
+      response match {
+        case Right(searchResult) =>
+          Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, searchResult, None))
+        case Left(error) =>
+          Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, SearchResponse(0, false), Some(error)))
+      }
     )
   }
 }
