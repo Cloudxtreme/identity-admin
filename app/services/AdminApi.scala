@@ -8,6 +8,7 @@ import play.api.libs.ws.{WSResponse, WS}
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import scala.language.implicitConversions
+import scala.util.Try
 
 case class CustomError(message: String, details: String)
 
@@ -26,16 +27,12 @@ class AdminApi{
     }
   }
 
-  def checkResponse(response: WSResponse): Either[CustomError, SearchResponse] = {
-    try {
+  def checkResponse(response: WSResponse): Either[CustomError, SearchResponse] =
+    Try(
       if (response.status == 200) {
         Right(Json.parse(response.body).as[SearchResponse])
       } else {
         Left(Json.parse(response.body).as[CustomError])
       }
-    } catch {
-        case _ => Left(CustomError("Fatal Error", "Contact identity team."))
-    }
-
-  }
+    ).getOrElse(Left(CustomError("Fatal Error", "Contact identity team.")))
 }
