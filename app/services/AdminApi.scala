@@ -3,8 +3,8 @@ package services
 import javax.inject.Singleton
 import models.SearchResponse
 import play.api.Play._
-import play.api.libs.json.{JsResultException, Json}
-import play.api.libs.ws.{WSResponse, WS}
+import play.api.libs.json.Json
+import play.api.libs.ws.WS
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import scala.language.implicitConversions
@@ -22,9 +22,9 @@ class AdminApi{
   private val searchUrl = baseUrl + "/user/search"
 
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
-    WS.url(searchUrl).withQueryString("query" -> searchQuery).get.map {
+    WS.url(searchUrl).withQueryString("query" -> searchQuery).get.map(
       response => AdminApi.checkResponse(response.status, response.body)
-    }
+    ).recover { case e: Any => Left(CustomError("Fatal Error", "Contact identity team."))}
   }
 }
 
