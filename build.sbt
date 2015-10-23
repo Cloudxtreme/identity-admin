@@ -8,7 +8,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtNativePackage
 
 libraryDependencies ++= Seq(
   "com.gu" %% "play-googleauth" % "0.3.0",
-  "org.scalatestplus" %% "play" % "1.4.0-M3",
+  "org.scalatestplus" %% "play" % "1.4.0-M3" % "test",
+  "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "org.webjars" % "bootstrap" % "3.3.5",
   ws,
   filters
