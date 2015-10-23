@@ -1,6 +1,6 @@
 package services
 
-import javax.inject.Singleton
+import javax.inject.Inject
 import models.SearchResponse
 import play.api.Play._
 import play.api.libs.json.Json
@@ -17,12 +17,11 @@ object CustomError {
   implicit val format = Json.format[CustomError]
 }
 
-@Singleton
-class AdminApi extends Logging{
+class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
 
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     val searchUrl = getSearchUrl
-    WS.url(searchUrl).withQueryString("query" -> searchQuery).get.map(
+    requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get.map(
       response => checkResponse(response.status, response.body)
     ).recover { case e: Any =>
       {
