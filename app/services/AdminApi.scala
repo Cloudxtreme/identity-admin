@@ -19,21 +19,23 @@ object CustomError {
 
 @Singleton
 class AdminApi extends Logging{
-  private val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
-  private val searchUrl = baseUrl + "/user/search"
 
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
+    val searchUrl = getSearchUrl
     WS.url(searchUrl).withQueryString("query" -> searchQuery).get.map(
-      response => AdminApi.checkResponse(response.status, response.body)
+      response => checkResponse(response.status, response.body)
     ).recover { case e: Any =>
       {
         logger.error(e.getMessage)
         Left(CustomError("Fatal Error", "Contact identity team."))
       }}
   }
-}
 
-object AdminApi {
+  def getSearchUrl = {
+    val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
+    baseUrl + "/user/search"
+  }
+
   def checkResponse(status: Int, body: String): Either[CustomError, SearchResponse] =
     Try(
       if (status == 200) {
