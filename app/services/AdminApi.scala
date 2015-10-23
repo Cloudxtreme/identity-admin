@@ -6,6 +6,7 @@ import play.api.Play._
 import play.api.libs.json.Json
 import play.api.libs.ws.WS
 import play.api.libs.concurrent.Execution.Implicits._
+import util.Logging
 import scala.concurrent.Future
 import scala.language.implicitConversions
 import scala.util.Try
@@ -17,14 +18,18 @@ object CustomError {
 }
 
 @Singleton
-class AdminApi{
+class AdminApi extends Logging{
   private val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
   private val searchUrl = baseUrl + "/user/search"
 
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     WS.url(searchUrl).withQueryString("query" -> searchQuery).get.map(
       response => AdminApi.checkResponse(response.status, response.body)
-    ).recover { case e: Any => Left(CustomError("Fatal Error", "Contact identity team."))}
+    ).recover { case e: Any =>
+      {
+        logger.error(e.getMessage)
+        Left(CustomError("Fatal Error", "Contact identity team."))
+      }}
   }
 }
 
