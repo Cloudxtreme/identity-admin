@@ -26,7 +26,7 @@ class AdminApi extends Logging{
       response => checkResponse(response.status, response.body)
     ).recover { case e: Any =>
       {
-        logger.error(e.getMessage)
+        logger.error("Future Failed: could not connect to API",e.getMessage)
         Left(CustomError("Fatal Error", "Contact identity team."))
       }}
   }
@@ -43,5 +43,8 @@ class AdminApi extends Logging{
       } else {
         Left(Json.parse(body).as[CustomError])
       }
-    ).getOrElse(Left(CustomError("Fatal Error", "Contact identity team.")))
+    ).getOrElse{
+      logger.error("Invalid Json file returned from API could not be parsed as a SearchResponse or CustomError.")
+      Left(CustomError("Fatal Error", "Contact identity team."))
+    }
 }
