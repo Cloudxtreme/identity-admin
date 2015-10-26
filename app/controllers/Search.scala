@@ -16,9 +16,9 @@ class Search @Inject() (adminApi: AdminApi) extends Controller with AuthActions 
     adminApi.getUsers(searchQuery).map(response =>
       response match {
         case Right(searchResult) =>
-          Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, searchResult, None))
+          Ok(views.html.searchResults(Messages("searchResults.title"),Some(searchQuery), searchResult, None))
         case Left(error) =>
-          Ok(views.html.searchResults(Messages("searchResults.title"),searchQuery, SearchResponse(0, false), Some(error)))
+          Ok(views.html.searchResults(Messages("searchResults.title"),Some(searchQuery), SearchResponse(0, false), Some(error)))
       }
     )
   }

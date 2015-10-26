@@ -13,10 +13,10 @@ class Application @Inject() extends Controller with AuthActions with Logging {
 
   def index = AuthAction {
     logger.info("Index page hit.")
-    Ok(views.html.index(Messages("index.title"), Messages("index.searchBarText")))
+    Ok(views.html.index(Messages("index.title"), None))
   }
 
   def getEditUserPage(searchQuery: String, userId: String) = Action {
-    Ok(views.html.editUser(Messages("editUser.title"), searchQuery, UserMock.mockData()))
+    Ok(views.html.editUser(Messages("editUser.title"), Some(searchQuery), UserMock.mockData()))
   }
 }

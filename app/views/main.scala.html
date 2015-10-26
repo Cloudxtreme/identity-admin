@@ -1,4 +1,5 @@
-@(title: String)(searchBarText: String)(content: Html)
+@import play.i18n._
+@(title: String)(searchBarText: Option[String])(content: Html)
 
 <!DOCTYPE html>
 
@@ -23,7 +24,12 @@
                     <div class="col-md-11">
                         <form class="search-bar-width navbar-form navbar-left" action="search" role="search">
                             <div class="search-bar-width form-group">
-                                <input class="form-control" type="text" name="searchQuery" placeholder="@searchBarText">
+                                <input
+                                    class="form-control" type="text"
+                                    name="searchQuery"
+                                    placeholder="@Messages.get("main.placeholderSearchBarText")"
+                                    value=@searchBarText.map(o => o)
+                                >
                             </div>
                         </form>
                     </div>

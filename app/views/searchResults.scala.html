@@ -1,6 +1,6 @@
 @import play.i18n._
 @import services.CustomError
-@(pageTitle: String, searchBarText: String,searchResponse: SearchResponse, error: Option[CustomError])
+@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, error: Option[CustomError])
     @main(pageTitle)(searchBarText){
         <div class="container-fluid">
             <div class="row">
