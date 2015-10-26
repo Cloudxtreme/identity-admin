@@ -1,47 +1,55 @@
 @import play.i18n._
-@(pageTitle: String, searchBarText: String, searchResult : SearchResult)
+@import services.CustomError
+@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, error: Option[CustomError])
     @main(pageTitle)(searchBarText){
         <div class="container-fluid">
             <div class="row">
               <div class="col-md-12">
+                  @if(searchResponse.total < 1){
+                      <div class="alert alert-danger" role="alert">
+                        @error.map(o => o.message + ": " + o.details).getOrElse(Messages.get("searchResults.errorMessage"))
+                      </div>
+                  }
                   <h1><small>@Messages.get("searchResults.mainHeader")</small></h1>
               </div>
             </div>
             <div class="row search-headers">
-                <div class="col-sm-3"><h5>@Messages.get("searchResults.emailHeader")</h5></div>
+                <div class="col-sm-3 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.emailHeader")</h5></div>
                 <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.usernameHeader")</h5></div>
                 <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.nameHeader")</h5></div>
                 <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.registeredDateHeader")</h5></div>
                 <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
                 <div class="col-sm-1 hidden-xs visible-sm visible-md visible-lg visible-xl"></div>
             </div>
-            <div class="row search-grid-padding">
-                <div class="col-sm-3"><p>@searchResult.email<p></div>
-                <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.usernameHeader")</h5></div>
-                <div class="col-sm-2"><p>@searchResult.username<p></div>
-                <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.nameHeader")</h5></div>
-                <div class="col-sm-2"><p>@searchResult.name<p></div>
-                <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.registeredDateHeader")</h5></div>
-                <div class="col-sm-2"><p>
-                    @searchResult.registeredDate.getDayOfMonth
-                    @searchResult.registeredDate.monthOfYear.getAsText
-                    @searchResult.registeredDate.getYear
-                <p></div>
-                <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
-                <div class="col-sm-2"><p>
-                    @searchResult.lastActivityDate.getDayOfMonth
-                    @searchResult.lastActivityDate.monthOfYear.getAsText
-                    @searchResult.lastActivityDate.getYear
-                    @searchResult.lastActivityDate.toLocalTime
-
-                <p></div>
-                <div class="col-sm-1">
-                    <form action="edit">
-                        <input type="hidden" value=@searchBarText name="searchQuery"/>
-                        <input type="hidden" value=@searchResult.id name="userId"/>
-                        <button class="btn btn-primary" type="submit">Edit</button>
-                    </form>
+            @for(response <- searchResponse.results) {
+                <div class="row search-grid-padding">
+                    <div class="col-sm-3 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.emailHeader")</h5></div>
+                    <div class="col-sm-3"><p>@response.email<p></div>
+                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.usernameHeader")</h5></div>
+                    <div class="col-sm-2"><p>@response.username<p></div>
+                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.nameHeader")</h5></div>
+                    <div class="col-sm-2"><p>@response.firstName @response.lastName<p></div>
+                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.registeredDateHeader")</h5></div>
+                    <div class="col-sm-2"><p>
+                        @response.creationDate.map(o => o.getDayOfMonth)
+                        @response.creationDate.map(o => o.monthOfYear.getAsText)
+                        @response.creationDate.map(o => o.getYear)
+                        <p></div>
+                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
+                    <div class="col-sm-2"><p>
+                        @response.lastActivityDate.map(o => o.getDayOfMonth)
+                        @response.lastActivityDate.map(o => o.monthOfYear.getAsText)
+                        @response.lastActivityDate.map(o => o.getYear)
+                        @response.lastActivityDate.map(o => o.toLocalTime)
+                        <p></div>
+                    <div class="col-sm-1">
+                        <form action="edit">
+                            <input type="hidden" value=@searchBarText name="searchQuery"/>
+                            <input type="hidden" value=@response.id name="userId"/>
+                            <button class="btn btn-primary btn-block" type="submit">Edit</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     }

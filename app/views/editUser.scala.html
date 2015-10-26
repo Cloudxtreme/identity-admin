@@ -1,5 +1,5 @@
 @import play.i18n._
-@(pageTitle: String, searchQuery: String, user: User)
+@(pageTitle: String, searchQuery: Option[String], user: UserMock)
     @main(pageTitle)(searchQuery){
         <div class="row">
             <div class="col-md-10">
@@ -80,7 +80,7 @@
                         <p>@Messages.get("editUser.emailHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="emailAddress" placeholder="@user.email"/>
+                        <input class="full-width-input" type="text" name="emailAddress" value="@user.email"/>
                     </div>
                 </div>
                 <div class="row">
@@ -88,7 +88,7 @@
                         <p>@Messages.get("editUser.firstNameHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="firstName" placeholder="@user.firstName"/>
+                        <input class="full-width-input" type="text" name="firstName" value="@user.firstName"/>
                     </div>
                 </div>
                 <div class="row">
@@ -96,7 +96,7 @@
                         <p>@Messages.get("editUser.lastNameHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="lastName" placeholder="@user.lastName"/>
+                        <input class="full-width-input" type="text" name="lastName" value="@user.lastName"/>
                     </div>
                 </div>
                 <div class="row">
@@ -104,7 +104,7 @@
                         <p>@Messages.get("editUser.displayNameHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="displayName" placeholder="@user.displayName"/>
+                        <input class="full-width-input" type="text" name="displayName" value="@user.displayName"/>
                     </div>
                 </div>
                 <div class="row">
@@ -112,7 +112,7 @@
                         <p>@Messages.get("editUser.usernameHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="username" placeholder="@user.userName"/>
+                        <input class="full-width-input" type="text" name="username" value="@user.userName"/>
                     </div>
                 </div>
                 <div class="row">
@@ -120,7 +120,7 @@
                         <p>@Messages.get("editUser.vanityUrlHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="vanityUrl" placeholder="@user.vanityURL"/>
+                        <input class="full-width-input" type="text" name="vanityUrl" value="@user.vanityURL"/>
                     </div>
                 </div>
             </div>

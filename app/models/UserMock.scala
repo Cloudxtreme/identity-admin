@@ -2,9 +2,10 @@ package models
 
 import org.joda.time.DateTime
 
-case class UserGroup (name: String, joinDate: DateTime)
+case class 
+UserGroupMock (name: String, joinDate: DateTime)
 
-case class User (
+case class UserMock(
                 id: String,
                 registeredDate: DateTime,
                 lastActivityDate: DateTime,
@@ -32,17 +33,16 @@ case class User (
                 billingCountyState: String,
                 billingPostcodeZip: String,
                 billingCountry: String,
-                userGroups: UserGroup
+                userGroups: UserGroupMock
                   )
 
-object User {
+object UserMock{
 
-  def mockData(): User = {
-
+    def mockData(): UserMock  = {
     val mockDate = new DateTime(2015, 4, 15, 16, 12, 0)
     val mockDOB = new DateTime(1990, 1, 10, 0, 0, 0)
-
-    User("11111111",
+    UserMock(
+        "11111111",
         mockDate,
         mockDate,
         false,
@@ -69,7 +69,7 @@ object User {
         "London",
         "SW12 4ER",
         "UK",
-        UserGroup("Teachers", mockDate)
+        UserGroupMock("Teachers", mockDate)
     )
   }
 }
