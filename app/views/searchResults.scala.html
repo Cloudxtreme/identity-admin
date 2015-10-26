@@ -31,16 +31,16 @@
                     <div class="col-sm-2"><p>@response.firstName @response.lastName<p></div>
                     <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.registeredDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
-                        @response.creationDate.map(o => o.getDayOfMonth).getOrElse("None")
-                        @response.creationDate.map(o => o.monthOfYear.getAsText).getOrElse("None")
-                        @response.creationDate.map(o => o.getYear).getOrElse("None")
+                        @response.creationDate.map(o => o.getDayOfMonth)
+                        @response.creationDate.map(o => o.monthOfYear.getAsText)
+                        @response.creationDate.map(o => o.getYear)
                         <p></div>
                     <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
-                        @response.lastActivityDate.map(o => o.getDayOfMonth).getOrElse("None")
-                        @response.lastActivityDate.map(o => o.monthOfYear.getAsText).getOrElse("None")
-                        @response.lastActivityDate.map(o => o.getYear).getOrElse("None")
-                        @response.lastActivityDate.map(o => o.toLocalTime).getOrElse("None")
+                        @response.lastActivityDate.map(o => o.getDayOfMonth)
+                        @response.lastActivityDate.map(o => o.monthOfYear.getAsText)
+                        @response.lastActivityDate.map(o => o.getYear)
+                        @response.lastActivityDate.map(o => o.toLocalTime)
                         <p></div>
                     <div class="col-sm-1">
                         <form action="edit">
