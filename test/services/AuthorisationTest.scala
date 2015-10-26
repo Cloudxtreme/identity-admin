@@ -2,7 +2,6 @@ package services
 
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 
 class AuthorisationTest extends FlatSpec with Matchers {
 
