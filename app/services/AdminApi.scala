@@ -21,13 +21,12 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
 
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     val searchUrl = getSearchUrl
-    requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get.map(
+    requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get().map(
       response => checkResponse(response.status, response.body)
     ).recover { case e: Any =>
-      {
         logger.error("Future Failed: could not connect to API",e.getMessage)
         Left(CustomError("Fatal Error", "Contact identity team."))
-      }}
+      }
   }
 
   def getSearchUrl = {
