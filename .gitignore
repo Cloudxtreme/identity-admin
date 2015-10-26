@@ -22,3 +22,4 @@ project/plugins/project/
 # log files
 *.log
 logs/*
+logs.*
