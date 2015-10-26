@@ -28,3 +28,4 @@ class AuthorisationTest extends FlatSpec with Matchers {
     Authorisation.isAuthorised(required, Set("2FA_enforce")) should be (false)
   }
 }
+
