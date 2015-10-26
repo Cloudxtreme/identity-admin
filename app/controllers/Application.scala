@@ -16,7 +16,7 @@ class Application @Inject() extends Controller with AuthActions with Logging {
     Ok(views.html.index(Messages("index.title"), None))
   }
 
-  def getEditUserPage(searchQuery: String, userId: String) = Action {
-    Ok(views.html.editUser(Messages("editUser.title"), Some(searchQuery), UserMock.mockData()))
+  def getEditUserPage(searchQuery: String, userId: String) = Action { request =>
+    Ok(views.html.editUser(Messages("editUser.title"), Some(searchQuery), UserMock.mockData(), request.flash.get("error")))
   }
 }

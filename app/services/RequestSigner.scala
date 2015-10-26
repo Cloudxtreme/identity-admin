@@ -27,7 +27,8 @@ trait RequestSigner extends Logging {
 
   def sign(request: WSRequest): WSRequest = {
     val uri = request.uri
-    val path = s"${uri.getPath}?${uri.getRawQuery}"
+    val queryString = uri.getRawQuery
+    val path = if(queryString == null || queryString.isEmpty) uri.getPath else s"${uri.getPath}?$queryString"
     val dateHeaderValue = getDateHeaderValue
     val hmacToken = sign(dateHeaderValue, path)
     logger.debug(s"path: $path, date: $dateHeaderValue, hmac: $hmacToken")
