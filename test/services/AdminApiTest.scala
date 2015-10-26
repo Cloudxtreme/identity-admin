@@ -10,4 +10,3 @@ class AdminApiTest extends FlatSpec with Matchers{
     response should be (Left(CustomError("Fatal Error", "Contact identity team.")))
   }
 }
-
