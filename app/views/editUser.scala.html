@@ -1,5 +1,5 @@
 @import play.i18n._
-@(pageTitle: String, searchQuery: Option[String], user: UserMock)
+@(pageTitle: String, searchQuery: Option[String], user: User)
     @main(pageTitle)(searchQuery){
         <div class="row">
             <div class="col-md-10">
@@ -8,7 +8,7 @@
                         <img src="@routes.Assets.at("images/darkUserIcon.svg")" />
                     </div>
                     <div class="col-sm-10">
-                        <h1>@user.firstName @user.lastName</h1>
+                        <h1>@user.personalDetails.firstName @user.personalDetails.lastName</h1>
                         <div class="row">
                             <div class="col-sm-2">
                                 <p>@Messages.get("editUser.idHeader")</p>
@@ -23,9 +23,11 @@
                             </div>
                             <div class="col-sm-10">
                                 <p>
-                                    @user.registeredDate.dayOfWeek.getAsText
-                                    @user.registeredDate.getDayOfMonth/@user.registeredDate.getMonthOfYear/@user.registeredDate.getYear
-                                    @user.registeredDate.toLocalTime
+                                    @user.registrationDate.map(o => o.dayOfWeek.getAsText)
+                                    @user.registrationDate.map(o => o.getDayOfMonth + "/")
+                                    @user.registrationDate.map(o => o.getMonthOfYear + "/")
+                                    @user.registrationDate.map(o => o.getYear)
+                                    @user.registrationDate.map(o => o.toLocalTime)
                                 </p>
                             </div>
                         </div>
@@ -35,9 +37,11 @@
                             </div>
                             <div class="col-sm-10">
                                 <p>
-                                    @user.lastActivityDate.dayOfWeek.getAsText
-                                    @user.lastActivityDate.getDayOfMonth/@user.lastActivityDate.getMonthOfYear/@user.lastActivityDate.getYear
-                                    @user.lastActivityDate.toLocalTime
+                                    @user.lastActivityDate.map(o => o.dayOfWeek.getAsText)
+                                    @user.lastActivityDate.map(o => o.getDayOfMonth + "/")
+                                    @user.lastActivityDate.map(o => o.getMonthOfYear + "/")
+                                    @user.lastActivityDate.map(o => o.getYear)
+                                    @user.lastActivityDate.map(o => o.toLocalTime)
                                 </p>
                             </div>
                         </div>
@@ -46,7 +50,7 @@
                                 <p>@Messages.get("editUser.emailValidatedHeader")</p>
                             </div>
                             <div class="col-sm-10">
-                                @if(user.emailValidated) {
+                                @if(user.status.userEmailValidated) {
                                     <p class="email-validated">Yes</p>
                                 } else {
                                     <p class="email-not-validated">No</p>
@@ -88,7 +92,7 @@
                         <p>@Messages.get("editUser.firstNameHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="firstName" value="@user.firstName"/>
+                        <input class="full-width-input" type="text" name="firstName" value="@user.personalDetails.firstName"/>
                     </div>
                 </div>
                 <div class="row">
@@ -96,7 +100,7 @@
                         <p>@Messages.get("editUser.lastNameHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="lastName" value="@user.lastName"/>
+                        <input class="full-width-input" type="text" name="lastName" value="@user.personalDetails.lastName"/>
                     </div>
                 </div>
                 <div class="row">
@@ -112,7 +116,7 @@
                         <p>@Messages.get("editUser.usernameHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="username" value="@user.userName"/>
+                        <input class="full-width-input" type="text" name="username" value="@user.username"/>
                     </div>
                 </div>
                 <div class="row">
@@ -120,7 +124,7 @@
                         <p>@Messages.get("editUser.vanityUrlHeader")</p>
                     </div>
                     <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="vanityUrl" value="@user.vanityURL"/>
+                        <input class="full-width-input" type="text" name="vanityUrl" value="@user.vanityUrl"/>
                     </div>
                 </div>
             </div>
@@ -133,7 +137,7 @@
                 <div class="row">
                     <div class="col-xs-1">
                         <input type="checkbox" class="checkbox" name="GNMMarketing"
-                            @if(user.receiveGNMMarketing){
+                            @if(user.status.receiveGnmMarketing){
                                 checked="checked"
                             }
                         />
@@ -145,7 +149,7 @@
                 <div class="row">
                     <div class="col-xs-1">
                         <input type="checkbox" class="checkbox" name="3rdPartyMarketing"
-                            @if(user.receive3rdPartyMarketing){
+                            @if(user.status.receive3rdPartyMarketing){
                                 checked="checked"
                             }
                         />
@@ -172,7 +176,7 @@
                             <p>@Messages.get("editUser.genderHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.gender</p>
+                            <p>@user.personalDetails.gender</p>
                         </div>
                     </div>
                     <div class="row">
@@ -180,7 +184,11 @@
                             <p>@Messages.get("editUser.dobHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.dob.getDayOfMonth/@user.dob.getMonthOfYear/@user.dob.getYear</p>
+                            <p>
+                                @user.personalDetails.dateOfBirth.map(o => o.getDayOfMonth + "/")
+                                @user.personalDetails.dateOfBirth.map(o => o.getMonthOfYear + "/")
+                                @user.personalDetails.dateOfBirth.map(o => o.getYear)
+                            </p>
                         </div>
                     </div>
                     <div class="row">
@@ -188,7 +196,7 @@
                             <p>@Messages.get("editUser.locationHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.location</p>
+                            <p>@user.personalDetails.location</p>
                         </div>
                     </div>
                 </div>
@@ -199,7 +207,7 @@
                             <p>@Messages.get("editUser.addressLine1Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryLine1</p>
+                            <p>@user.deliveryAddress.addressLine1</p>
                         </div>
                     </div>
                     <div class="row">
@@ -207,7 +215,7 @@
                             <p>@Messages.get("editUser.addressLine2Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryLine2</p>
+                            <p>@user.deliveryAddress.addressLine2</p>
                         </div>
                     </div>
                     <div class="row">
@@ -215,7 +223,7 @@
                             <p>@Messages.get("editUser.townHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryTown</p>
+                            <p>@user.deliveryAddress.addressLine3</p>
                         </div>
                     </div>
                     <div class="row">
@@ -223,7 +231,7 @@
                             <p>@Messages.get("editUser.countyStateHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryCountyState</p>
+                            <p>@user.deliveryAddress.addressLine4</p>
                         </div>
                     </div>
                     <div class="row">
@@ -231,7 +239,7 @@
                             <p>@Messages.get("editUser.postcodeZipHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryPostcodeZip</p>
+                            <p>@user.deliveryAddress.postcode</p>
                         </div>
                     </div>
                     <div class="row">
@@ -239,7 +247,7 @@
                             <p>@Messages.get("editUser.countryHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryCountry</p>
+                            <p>@user.deliveryAddress.country</p>
                         </div>
                     </div>
                 </div>
@@ -250,7 +258,7 @@
                             <p>@Messages.get("editUser.addressLine1Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingLine1</p>
+                            <p>@user.billingAddress.addressLine1</p>
                         </div>
                     </div>
                     <div class="row">
@@ -258,7 +266,7 @@
                             <p>@Messages.get("editUser.addressLine2Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingLine2</p>
+                            <p>@user.billingAddress.addressLine2</p>
                         </div>
                     </div>
                     <div class="row">
@@ -266,7 +274,7 @@
                             <p>@Messages.get("editUser.townHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingTown</p>
+                            <p>@user.billingAddress.addressLine3</p>
                         </div>
                     </div>
                     <div class="row">
@@ -274,7 +282,7 @@
                             <p>@Messages.get("editUser.countyStateHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingCountyState</p>
+                            <p>@user.billingAddress.addressLine4</p>
                         </div>
                     </div>
                     <div class="row">
@@ -282,7 +290,7 @@
                             <p>@Messages.get("editUser.postcodeZipHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingPostcodeZip</p>
+                            <p>@user.billingAddress.postcode</p>
                         </div>
                     </div>
                     <div class="row">
@@ -290,7 +298,7 @@
                             <p>@Messages.get("editUser.countryHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingCountry</p>
+                            <p>@user.billingAddress.country</p>
                         </div>
                     </div>
                 </div>
@@ -300,17 +308,21 @@
                     <h4>@Messages.get("editUser.userGroupsHeader")</h4>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xs-2">
-                    <p>@user.userGroups.name</p>
+            @for(userGroup <- user.groups) {
+                <div class="row">
+                    <div class="col-xs-2">
+                        <p>@userGroup.name</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>
+                            @userGroup.joinDate.map(o => o.getDayOfMonth + "/")
+                            @userGroup.joinDate.map(o => o.getMonthOfYear + "/")
+                            @userGroup.joinDate.map(o => o.getYear)
+                            @userGroup.joinDate.map(o => o.toLocalTime)
+                        </p>
+                    </div>
                 </div>
-                <div class="col-xs-4">
-                    <p>
-                        @user.userGroups.joinDate.getDayOfMonth/@user.userGroups.joinDate.getMonthOfYear/@user.userGroups.joinDate.getYear
-                        @user.userGroups.joinDate.toLocalTime
-                    </p>
-                </div>
-            </div>
+            }
         </div>
     </div>
     }
