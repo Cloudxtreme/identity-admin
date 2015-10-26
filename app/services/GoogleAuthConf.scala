@@ -1,6 +1,7 @@
 package services
 
 import com.gu.googleauth.GoogleAuthConfig
+import org.joda.time.Duration
 import play.api.Play._
 import play.api.Play.current
 
@@ -16,6 +17,7 @@ object GoogleAuthConf {
       clientId = clientId,
       clientSecret = clientSecret,
       redirectUrl = redirectUrl,
-      domain = Some("guardian.co.uk")
+      domain = Some("guardian.co.uk"),
+      maxAuthAge = Some(Duration.standardMinutes(15))
     )
 }

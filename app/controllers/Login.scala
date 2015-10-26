@@ -10,7 +10,7 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.googleauth._
 import play.api.Play.current
-import services.{SafeGoogleAuth, GoogleAuthConf, GoogleGroups}
+import services.{GoogleRedirect, SafeGoogleAuth, GoogleAuthConf, GoogleGroups}
 
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
@@ -29,7 +29,7 @@ object Login extends Controller with AuthActions {
 
   def loginAction = Action.async { implicit request =>
     val antiForgeryToken = GoogleAuth.generateAntiForgeryToken()
-    GoogleAuth.redirectToGoogle(authConfig, antiForgeryToken).map {
+    GoogleRedirect.redirectToGoogle(authConfig, antiForgeryToken).map {
       _.withSession {
         request.session + (ANTI_FORGERY_KEY -> antiForgeryToken)
       }
