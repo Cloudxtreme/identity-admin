@@ -42,4 +42,18 @@ class RequestSignerTest extends WordSpec with Matchers with MockitoSugar {
       token.toSeq.headOption shouldEqual Some(expected)
     }
   }
+
+  "getPath" should {
+    "include query string when provided" in {
+      val request = WS.url("http://localhost/path/to/resource").withQueryString("param" -> "value")
+      val path = signer.getPath(request)
+      path shouldEqual "/path/to/resource?param=value"
+    }
+
+    "not include query string when not provided" in {
+      val request = WS.url("http://localhost/path/to/resource")
+      val path = signer.getPath(request)
+      path shouldEqual "/path/to/resource"
+    }
+  }
 }
