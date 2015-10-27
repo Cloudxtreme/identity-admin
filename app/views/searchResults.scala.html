@@ -1,6 +1,6 @@
 @import play.i18n._
 @import services.CustomError
-@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, error: Option[CustomError])
+@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, error: Option[CustomError], message: Option[String])
     @main(pageTitle)(searchBarText){
         <div class="container-fluid">
             <div class="row">
@@ -9,6 +9,9 @@
                       <div class="alert alert-danger" role="alert">
                         @error.map(o => o.message + ": " + o.details).getOrElse(Messages.get("searchResults.errorMessage"))
                       </div>
+                  }
+                  @message.map { msg =>
+                      <div class="alert alert-danger" role="alert">@msg</div>
                   }
                   <h1><small>@Messages.get("searchResults.mainHeader")</small></h1>
               </div>

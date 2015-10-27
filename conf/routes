@@ -15,4 +15,5 @@ GET        /assets/*file                  @controllers.Assets.at(path="/public",
 
 GET        /search                        @controllers.Search.search(searchQuery: String)
 
+GET        /delete                        @controllers.Delete.delete(searchQuery: String, userId: String)
 GET        /edit                          @controllers.AccessUser.getUser(searchQuery: String, userId: String)

@@ -11,6 +11,8 @@ import scala.concurrent.Future
 import scala.language.implicitConversions
 import scala.util.Try
 
+import models.User
+
 case class CustomError(message: String, details: String)
 
 object CustomError {
@@ -19,30 +21,46 @@ object CustomError {
 
 class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
 
+  lazy val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
+  lazy val searchUrl = s"$baseUrl/user/search"
+  def deleteUrl(id: String) = s"$baseUrl/user/$id"
+  def getFullUserUrl(id: String) = s"$baseUrl/user/$id"
+
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
-    val searchUrl = getSearchUrl
     requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get().map(
-      response => checkResponse(response.status, response.body)
+      response => checkResponse[SearchResponse](response.status, response.body, 200, x => Json.parse(x).as[SearchResponse])
     ).recover { case e: Any =>
         logger.error("Future Failed: could not connect to API",e.getMessage)
         Left(CustomError("Fatal Error", "Contact identity team."))
       }
   }
 
-  def getSearchUrl = {
-    val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
-    baseUrl + "/user/search"
+  def getFullUser(userId: String): Future[User] = {
+    requestSigner.sign(WS.url(getFullUserUrl(userId))).get().map {
+      response =>
+        Json.parse(response.body).as[User]
+    }
   }
 
-  def checkResponse(status: Int, body: String): Either[CustomError, SearchResponse] =
+
+  def checkResponse[T](status: Int, body: String, successStatus: Int, successMapper: String => T): Either[CustomError, T] =
     Try(
-      if (status == 200) {
-        Right(Json.parse(body).as[SearchResponse])
+      if (status == successStatus) {
+        Right(successMapper(body))
       } else {
         Left(Json.parse(body).as[CustomError])
       }
     ).getOrElse{
-      logger.error("Invalid Json file returned from API could not be parsed as a SearchResponse or CustomError.")
+      logger.error(s"Invalid response from API could not be parsed. Status: $status, Body: $body.")
       Left(CustomError("Fatal Error", "Contact identity team."))
     }
+
+  def delete(id: String): Future[Either[CustomError, Boolean]] = {
+    requestSigner.sign(WS.url(deleteUrl(id))).delete().map(response =>
+      checkResponse[Boolean](response.status, response.body, 204, x => true)
+    ).recover { case e: Throwable =>
+      logger.error("Future Failed: could not connect to API", e.getMessage)
+      Left(CustomError("Fatal Error", "Contact identity team."))
+    }
+  }
 }
