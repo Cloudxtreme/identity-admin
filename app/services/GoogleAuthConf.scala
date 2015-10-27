@@ -1,7 +1,6 @@
 package services
 
 import com.gu.googleauth.GoogleAuthConfig
-import org.joda.time.Duration
 import play.api.Play._
 import play.api.Play.current
 
