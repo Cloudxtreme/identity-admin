@@ -3,6 +3,7 @@ package models
 import org.joda.time.{DateTime, LocalDate}
 import play.api.libs.json.Json
 import scala.language.implicitConversions
+import CustomFormats._
 
 
 case class PersonalDetails(firstName: Option[String] = None,

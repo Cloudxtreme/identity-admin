@@ -14,7 +14,7 @@ import scala.language.implicitConversions
 class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActions with Logging {
 
   def getUser(searchQuery: String, userId: String) = AuthAction.async { request =>
-    adminApi.getFullUser("10000001").map {
+    adminApi.getFullUser(userId).map {
       user =>
         Ok(views.html.editUser(Messages("editUser.title"), Some(searchQuery),
           user, request.flash.get("error")))
