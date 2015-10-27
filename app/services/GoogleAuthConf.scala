@@ -18,6 +18,6 @@ object GoogleAuthConf {
       clientSecret = clientSecret,
       redirectUrl = redirectUrl,
       domain = Some("guardian.co.uk"),
-      maxAuthAge = Some(Duration.standardMinutes(15))
+      prompt = Some("login")
     )
 }
