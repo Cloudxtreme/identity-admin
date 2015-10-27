@@ -4,15 +4,18 @@ import javax.inject.Inject
 
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.mvc.Controller
+import play.api.mvc.{Result, Controller}
 import services.AdminApi
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import util.Logging
 
-class Delete @Inject() (adminApi: AdminApi) extends Controller with AuthActions with Logging {
+import scala.concurrent.Future
 
-  def delete(searchQuery: String, userId: String) = AuthAction.async {
+trait DeleteAction extends Controller with Logging{
+  val adminApi: AdminApi
+
+  private[controllers] def doDelete(searchQuery: String, userId: String): Future[Result] = {
     logger.info(s"Deleting user with id: $userId")
     adminApi.delete(userId).map {
       case Right(result) =>
@@ -22,5 +25,12 @@ class Delete @Inject() (adminApi: AdminApi) extends Controller with AuthActions 
         logger.error(s"Failed to delete user. error: $error")
         Redirect(routes.Application.getEditUserPage(searchQuery, userId)).flashing("error" -> error.message)
     }
+  }
+}
+
+class Delete @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with DeleteAction {
+
+  def delete(searchQuery: String, userId: String) = AuthAction.async {
+    doDelete(searchQuery, userId)
   }
 }
