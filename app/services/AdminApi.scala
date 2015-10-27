@@ -13,7 +13,11 @@ import scala.util.Try
 
 import models.User
 
-case class CustomError(message: String, details: String)
+case class CustomError(message: String, details: String){
+  override def toString: String ={
+    s"$message : $details"
+  }
+}
 
 object CustomError {
   implicit val format = Json.format[CustomError]
@@ -35,10 +39,13 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
       }
   }
 
-  def getFullUser(userId: String): Future[User] = {
-    requestSigner.sign(WS.url(getFullUserUrl(userId))).get().map {
-      response =>
-        Json.parse(response.body).as[User]
+  def getFullUser(userId: String): Future[Either[CustomError, User]] = {
+    requestSigner.sign(WS.url(getFullUserUrl(userId))).get().map(
+      response => checkResponse[User](response.status, response.body, 200, x => Json.parse(x).as[User])
+    ).recover {
+      case e: Any =>
+        logger.error("Future Failed: could not connect to API",e.getMessage)
+        Left(CustomError("Fatal Error", "Contact identity team."))
     }
   }
 
