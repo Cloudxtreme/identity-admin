@@ -13,7 +13,7 @@ import scala.util.Try
 object GoogleGroups extends Logging {
   import Authorisation._
 
-  val requiredGroups = Set(TWO_FACTOR_AUTH_GROUP, USER_ADMIN_GROUP)
+  val requiredGroups = Set(TWO_FACTOR_AUTH_GROUP, GoogleAuthConf.userAdminGroup)
   val requiredGroupsMsg = requiredGroups.mkString(", ")
 
   private val serviceAccount = GoogleServiceAccount(
@@ -47,7 +47,5 @@ object GoogleGroups extends Logging {
 
 object Authorisation {
   val TWO_FACTOR_AUTH_GROUP = "2fa_enforce@guardian.co.uk"
-  val USER_ADMIN_GROUP = "identity.userhelp@guardian.co.uk"
-
   def isAuthorised(required: Set[String], groups: Set[String]): Boolean = (required & groups) == required
 }
