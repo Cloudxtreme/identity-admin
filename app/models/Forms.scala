@@ -5,25 +5,22 @@ import play.api.data.Forms._
 
 object Forms {
 
-  case class UserData(
-                       userId: String,
-                       emailAddress: String,
-                       firstName: String,
-                       lastName: String,
-                       username: String,
-                       receiveGnmMarketing: Boolean,
-                       receive3rdPartyMarketing: Boolean
-                     )
+  case class UserUpdateRequest(
+                                email: String,
+                                username: String,
+                                firstName: Option[String] = None,
+                                lastName: Option[String] = None,
+                                receiveGnmMarketing: Option[Boolean] = None,
+                                receive3rdPartyMarketing: Option[Boolean] = None)
 
   val userForm = Form(
     mapping(
-      "userId" -> text,
-      "emailAddress" -> text,
-      "firstName" -> text,
-      "lastName" -> text,
+      "email" -> text,
       "username" -> text,
-      "receiveGnmMarketing" -> boolean,
-      "receive3rdPartyMarketing" -> boolean
-    )(UserData.apply)(UserData.unapply)
+      "firstName" -> optional(text),
+      "lastName" -> optional(text),
+      "receiveGnmMarketing" -> optional(boolean),
+      "receive3rdPartyMarketing" -> optional(boolean)
+    )(UserUpdateRequest.apply)(UserUpdateRequest.unapply)
   )
 }

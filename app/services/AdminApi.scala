@@ -10,6 +10,7 @@ import util.Logging
 import scala.concurrent.Future
 import scala.language.implicitConversions
 import scala.util.Try
+import models.Forms._
 
 import models.User
 
@@ -49,6 +50,9 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
     }
   }
 
+  def updateUserData(userData :UserUpdateRequest) = {
+    ???
+  }
 
   def checkResponse[T](status: Int, body: String, successStatus: Int, successMapper: String => T): Either[CustomError, T] =
     Try(

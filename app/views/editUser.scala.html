@@ -1,6 +1,6 @@
 @import play.i18n._
 @import models.Forms._
-@(pageTitle: String, searchQuery: Option[String], user: User,form: Form[UserData], error: Option[String])
+@(pageTitle: String, searchQuery: Option[String], user: User,form: Form[UserUpdateRequest], error: Option[String])
     @main(pageTitle)(searchQuery){
         <div class="row">
             <div class="col-md-10">
@@ -110,7 +110,7 @@
                             <p>@Messages.get("editUser.emailHeader")</p>
                         </div>
                         <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="@form("emailAddress").name" value="@form("emailAddress").value"/>
+                            <input class="full-width-input" type="text" name="@form("email").name" value="@form("email").value"/>
                         </div>
                     </div>
                     <div class="row">

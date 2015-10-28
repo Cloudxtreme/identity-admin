@@ -17,6 +17,7 @@ class UpdateUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
           Ok("201")},
         userData => {
           println(userData)
+//          adminApi.updateUserData(userData)
           Ok("200")}
       )
 

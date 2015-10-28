@@ -1,18 +1,16 @@
 package controllers
 
 import javax.inject.Inject
-import models.Forms.UserData
+import models.Forms._
 import models.{Forms, User}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import play.api.libs.json.Json
 import play.api.mvc.Controller
-import services.{CustomError, AdminApi}
+import services.AdminApi
 import util.Logging
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.data.Forms._
 
 import scala.language.implicitConversions
 
@@ -31,15 +29,14 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
       }
     }
 
-  def createForm(user: User): Form[UserData] = {
-    Forms.userForm.fill(UserData(
-      user.id,
+  def createForm(user: User): Form[UserUpdateRequest] = {
+    Forms.userForm.fill(UserUpdateRequest(
       user.email,
-      user.personalDetails.firstName.getOrElse(""),
-      user.personalDetails.lastName.getOrElse(""),
       user.username.getOrElse(""),
-      user.status.receiveGnmMarketing.getOrElse(false),
-      user.status.receive3rdPartyMarketing.getOrElse(false))
+      Some(user.personalDetails.firstName.getOrElse("")),
+      Some(user.personalDetails.lastName.getOrElse("")),
+      Some(user.status.receiveGnmMarketing.getOrElse(false)),
+      Some(user.status.receive3rdPartyMarketing.getOrElse(false)))
     )
   }
 }
