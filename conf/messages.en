@@ -49,5 +49,6 @@ editUser.countyStateHeader=County or State
 editUser.postcodeZipHeader=Postcode/Zipcode
 editUser.countryHeader=Country
 editUser.userGroupsHeader=User Groups
+editUser.invalidSubmission=Invalid form submission
 
 deleteUser.success=User {0} has been deleted
