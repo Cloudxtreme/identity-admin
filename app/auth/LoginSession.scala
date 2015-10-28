@@ -8,8 +8,8 @@ import services.GoogleAuthConf
 
 object LoginSession {
   implicit class SessionOps(session: Session) {
-    def loggedIn(identity: UserIdentity, loginOriginKey: String) = {
-      val shortLivedIdentity = identity.copy(exp = (System.currentTimeMillis + GoogleAuthConf.sessionMaxAge) / 1000)
+    def loggedIn(identity: UserIdentity, loginOriginKey: String, expiry: Long) = {
+      val shortLivedIdentity = identity.copy(exp = expiry)
       session + (UserIdentity.KEY -> Json.toJson(shortLivedIdentity).toString) - ANTI_FORGERY_KEY - loginOriginKey
     }
 
