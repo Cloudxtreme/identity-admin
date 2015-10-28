@@ -118,7 +118,7 @@
                             <p>@Messages.get("editUser.firstNameHeader")</p>
                         </div>
                         <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="firstName" value="@user.personalDetails.firstName"/>
+                            <input class="full-width-input" type="text" name="@form("firstName").name" value="@form("firstname").value"/>
                         </div>
                     </div>
                     <div class="row">
@@ -126,7 +126,7 @@
                             <p>@Messages.get("editUser.lastNameHeader")</p>
                         </div>
                         <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="lastName" value="@user.personalDetails.lastName"/>
+                            <input class="full-width-input" type="text" name="@form("lastName").name" value="@form("lastName").value"/>
                         </div>
                     </div>
                     <div class="row">
@@ -134,7 +134,7 @@
                             <p>@Messages.get("editUser.usernameHeader")</p>
                         </div>
                         <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="lastName" value="@user.username"/>
+                            <input class="full-width-input" type="text" name="@form("username").name" value="@form("username").value"/>
                         </div>
                     </div>
                 </div>
@@ -146,9 +146,12 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-1">
-                            <input type="checkbox" class="checkbox" name="GNMMarketing"
-                                @if(user.status.receiveGnmMarketing){
-                                    checked="checked"
+                            <input
+                                type="checkbox"
+                                class="checkbox"
+                                name="@form("receiveGnmMarketing").name"
+                                @if(form("receiveGnmMarketing").value.getOrElse("false") == "true"){
+                                    checked = "checked"
                                 }
                             />
                         </div>
@@ -158,9 +161,12 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-1">
-                            <input type="checkbox" class="checkbox" name="3rdPartyMarketing"
-                                @if(user.status.receive3rdPartyMarketing){
-                                    checked="checked"
+                            <input
+                                type="checkbox"
+                                class="checkbox"
+                                name="@form("receive3rdPartyMarketing").name"
+                                @if(form("receive3rdPartyMarketing").value.getOrElse("false") == "true"){
+                                    checked = "checked"
                                 }
                             />
                         </div>
