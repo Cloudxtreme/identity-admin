@@ -1,5 +1,6 @@
 @import play.i18n._
-@(pageTitle: String, searchQuery: Option[String], user: User, error: Option[String])
+@import models.Forms._
+@(pageTitle: String, searchQuery: Option[String], user: User,form: Form[UserData], error: Option[String])
     @main(pageTitle)(searchQuery){
         <div class="row">
             <div class="col-md-10">
@@ -18,6 +19,22 @@
                             </div>
                             <div class="col-sm-10">
                                 <p>@user.id</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <p>@Messages.get("editUser.displayNameHeader")</p>
+                            </div>
+                            <div class="col-sm-10">
+                                <p>@user.displayName</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <p>@Messages.get("editUser.vanityUrlHeader")</p>
+                            </div>
+                            <div class="col-sm-10">
+                                <p>@user.vanityUrl</p>
                             </div>
                         </div>
                         <div class="row">
@@ -67,7 +84,7 @@
             <div class="col-md-2">
                 <div class="btn-group-vertical center-block">
                     <button class="btn btn-default">@Messages.get("editUser.profileBtn")</button>
-                    <form action="delete">
+                    <form action="delete" class="btn-group">
                         <input type="hidden" value=@searchQuery name="searchQuery"/>
                         <input type="hidden" value=@user.id name="userId"/>
                         <button class="btn btn-danger" type="submit">@Messages.get("editUser.deleteBtn")</button>
@@ -76,7 +93,8 @@
                 </div>
             </div>
         </div>
-        <form action="save">
+        <form method="post" action="save">
+            <input type="hidden" name="userId" value="@user.id">
             <div class="row">
                 <div class="col-md-6">
                     <h4>@Messages.get("editUser.accountDetails")</h4>
@@ -92,7 +110,7 @@
                             <p>@Messages.get("editUser.emailHeader")</p>
                         </div>
                         <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="emailAddress" value="@user.email"/>
+                            <input class="full-width-input" type="text" name="@form("emailAddress").name" value="@form("emailAddress").value"/>
                         </div>
                     </div>
                     <div class="row">
@@ -113,26 +131,10 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <p>@Messages.get("editUser.displayNameHeader")</p>
-                        </div>
-                        <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="displayName" value="@user.displayName"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
                             <p>@Messages.get("editUser.usernameHeader")</p>
                         </div>
                         <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="username" value="@user.username"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p>@Messages.get("editUser.vanityUrlHeader")</p>
-                        </div>
-                        <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="vanityUrl" value="@user.vanityUrl"/>
+                            <input class="full-width-input" type="text" name="lastName" value="@user.username"/>
                         </div>
                     </div>
                 </div>
@@ -171,7 +173,7 @@
         <div class="row">
             <div class="col-md-10"></div>
             <div class="col-md-2">
-                <button class="pull-right btn btn-success btn-block center-block">@Messages.get("editUser.saveBtn")</button>
+                <button type="submit" class="pull-right btn btn-success btn-block center-block">@Messages.get("editUser.saveBtn")</button>
             </div>
         </div>
     </form>
