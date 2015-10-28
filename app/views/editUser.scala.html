@@ -79,7 +79,7 @@
             <div class="col-md-2">
                 <div class="btn-group-vertical center-block">
                     <button class="btn btn-default">@Messages.get("editUser.profileBtn")</button>
-                    <form action="delete">
+                    <form action="delete" class="btn-group">
                         <input type="hidden" value=@searchQuery name="searchQuery"/>
                         <input type="hidden" value=@user.id name="userId"/>
                         <button class="btn btn-danger" type="submit">@Messages.get("editUser.deleteBtn")</button>
