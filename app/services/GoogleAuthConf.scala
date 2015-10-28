@@ -11,6 +11,7 @@ object GoogleAuthConf {
   val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
   val impersonatedUser = current.configuration.getString("identity-admin.google.impersonatedUser").get
   val sessionMaxAge = current.configuration.getString("session.maxAge").get.toLong
+  val userAdminGroup = current.configuration.getString("identity-admin.groups.useradmin").get
 
   val googleAuthConfig =
     GoogleAuthConfig(
