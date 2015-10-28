@@ -22,6 +22,22 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
+                                <p>@Messages.get("editUser.displayNameHeader")</p>
+                            </div>
+                            <div class="col-sm-10">
+                                <p>@user.displayName</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <p>@Messages.get("editUser.vanityUrlHeader")</p>
+                            </div>
+                            <div class="col-sm-10">
+                                <p>@user.vanityURL</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
                                 <p>@Messages.get("editUser.registeredHeader")</p>
                             </div>
                             <div class="col-sm-10">
@@ -108,26 +124,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <p>@Messages.get("editUser.displayNameHeader")</p>
-                    </div>
-                    <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="displayName" value="@user.displayName"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
                         <p>@Messages.get("editUser.usernameHeader")</p>
                     </div>
                     <div class="col-md-8">
                         <input class="full-width-input" type="text" name="username" value="@user.userName"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <p>@Messages.get("editUser.vanityUrlHeader")</p>
-                    </div>
-                    <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="vanityUrl" value="@user.vanityURL"/>
                     </div>
                 </div>
             </div>
