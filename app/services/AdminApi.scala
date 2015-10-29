@@ -28,8 +28,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
 
   lazy val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
   lazy val searchUrl = s"$baseUrl/user/search"
-  def deleteUrl(id: String) = s"$baseUrl/user/$id"
-  def getFullUserUrl(id: String) = s"$baseUrl/user/$id"
+  def  accessUserUrl(id: String) = s"$baseUrl/user/$id"
 
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get().map(
@@ -41,7 +40,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
   }
 
   def getFullUser(userId: String): Future[Either[CustomError, User]] = {
-    requestSigner.sign(WS.url(getFullUserUrl(userId))).get().map(
+    requestSigner.sign(WS.url(accessUserUrl(userId))).get().map(
       response => checkResponse[User](response.status, response.body, 200, x => Json.parse(x).as[User])
     ).recover {
       case e: Any =>
@@ -67,7 +66,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
     }
 
   def delete(id: String): Future[Either[CustomError, Boolean]] = {
-    requestSigner.sign(WS.url(deleteUrl(id))).delete().map(response =>
+    requestSigner.sign(WS.url(accessUserUrl(id))).delete().map(response =>
       checkResponse[Boolean](response.status, response.body, 204, x => true)
     ).recover { case e: Throwable =>
       logger.error("Future Failed: could not connect to API", e.getMessage)
