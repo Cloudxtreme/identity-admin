@@ -1,14 +1,11 @@
 @import play.i18n._
 @import models.Forms._
-@(pageTitle: String, searchQuery: Option[String], user: User,form: Form[UserUpdateRequest], error: Option[String], success: Option[String])
+@(pageTitle: String, searchQuery: Option[String], user: User,form: Form[UserUpdateRequest], error: Option[String])
     @main(pageTitle)(searchQuery){
         <div class="row">
             <div class="col-md-10">
                 @error.map { err =>
                     <div class="alert alert-danger" role="alert">@err</div>
-                }
-                @success.map { succ =>
-                    <div class="alert alert-success" role="alert">@succ</div>
                 }
                 <div class="row uneditable-fields">
                     <div class="col-sm-2">

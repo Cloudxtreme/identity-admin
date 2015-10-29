@@ -22,10 +22,26 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
     adminApi.getFullUser(userId).map {
       case Right(user) =>
         val form = createForm(user)
-        Ok(views.html.editUser(Messages("editUser.title"), Some(searchQuery), user,form, request.flash.get("error"), request.flash.get("success")))
+        Ok(
+          views.html.editUser(
+            Messages("editUser.title"),
+            Some(searchQuery),
+            user,
+            form,
+            request.flash.get("error")
+          )
+        )
       case Left(error) =>
         val blankForm = createForm(blankUser)
-        Ok(views.html.editUser(Messages("editUser.title"), Some(searchQuery), blankUser,blankForm, Some(error.toString), None))
+        Ok(
+          views.html.editUser(
+            Messages("editUser.title"),
+            Some(searchQuery),
+            blankUser,
+            blankForm,
+            Some(error.toString)
+          )
+        )
       }
     }
 

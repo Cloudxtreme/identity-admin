@@ -4,7 +4,7 @@ import javax.inject.Inject
 import models.SearchResponse
 import play.api.Play._
 import play.api.libs.json.Json
-import play.api.libs.ws.WS
+import play.api.libs.ws.{WSResponse, WS}
 import play.api.libs.concurrent.Execution.Implicits._
 import util.Logging
 import scala.concurrent.Future
@@ -49,8 +49,15 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
     }
   }
 
-  def updateUserData(userData :UserUpdateRequest) = {
-    ???
+  def updateUserData(userId: String, userData :UserUpdateRequest): Future[Either[CustomError, User]] = {
+    val userDataAsJson = UserUpdateRequest.convertUserUpdateRequestToJson(userData)
+    requestSigner.sign(WS.url(accessUserUrl(userId))).put(userDataAsJson).map(
+      response => checkResponse[User](response.status, response.body, 200, x => Json.parse(x).as[User])
+    ).recover {
+      case e: Any =>
+        logger.error("Future Failed: could not connect to API",e.getMessage)
+        Left(CustomError("Fatal Error", "Contact identity team."))
+    }
   }
 
   def checkResponse[T](status: Int, body: String, successStatus: Int, successMapper: String => T): Either[CustomError, T] =

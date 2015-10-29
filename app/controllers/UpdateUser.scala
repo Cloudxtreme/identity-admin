@@ -25,15 +25,15 @@ class UpdateUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
           println(formWithErrors)
           adminApi.getFullUser(userId).map {
             case Right(user) =>
-              BadRequest(views.html.editUser(Messages("editUser.title"), Some(searchQuery), user,formWithErrors, Some(Messages("editUser.invalidSubmission")), None))
+              BadRequest(views.html.editUser(Messages("editUser.title"), Some(searchQuery), user,formWithErrors, Some(Messages("editUser.invalidSubmission"))))
             case Left(error) =>
-              BadRequest(views.html.editUser(Messages("editUser.title"), Some(searchQuery), blankUser,formWithErrors, Some(error.toString), None))
+              BadRequest(views.html.editUser(Messages("editUser.title"), Some(searchQuery), blankUser,formWithErrors, Some(error.toString)))
           }
-          },
+        },
         userData => {
-          println(userData)
-//          adminApi.updateUserData(userData)
-          Future.successful(Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("success" -> "User has been updated"))
+          adminApi.updateUserData(userId, userData).map(
+            x => Redirect(routes.Search.search(searchQuery)).flashing("success" -> "User has been updated")
+          )
         }
       )
 

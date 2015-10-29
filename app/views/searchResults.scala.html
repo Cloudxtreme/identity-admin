@@ -1,10 +1,13 @@
 @import play.i18n._
 @import services.CustomError
-@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, error: Option[CustomError], message: Option[String])
+@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, error: Option[CustomError], message: Option[String], success: Option[String])
     @main(pageTitle)(searchBarText){
         <div class="container-fluid">
             <div class="row">
               <div class="col-md-12">
+                  @success.map { succ =>
+                      <div class="alert alert-success" role="alert">@succ</div>
+                  }
                   @if(searchResponse.total < 1){
                       <div class="alert alert-danger" role="alert">
                         @error.map(o => o.toString).getOrElse(Messages.get("searchResults.errorMessage"))

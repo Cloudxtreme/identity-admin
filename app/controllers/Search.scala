@@ -14,10 +14,28 @@ class Search @Inject() (adminApi: AdminApi) extends Controller with AuthActions 
 
   def search(searchQuery: String) = AuthAction.async { request =>
     adminApi.getUsers(searchQuery) map {
-        case Right(searchResult) =>
-          Ok(views.html.searchResults(Messages("searchResults.title"),Some(searchQuery), searchResult, None, request.flash.get("message")))
-        case Left(error) =>
-          Ok(views.html.searchResults(Messages("searchResults.title"),Some(searchQuery), SearchResponse(0, false), Some(error), request.flash.get("message")))
+      case Right(searchResult) =>
+        Ok(
+            views.html.searchResults(
+              Messages("searchResults.title"),
+              Some(searchQuery),
+              searchResult,
+              None,
+              request.flash.get("message"),
+              request.flash.get("success")
+          )
+        )
+      case Left(error) =>
+        Ok(
+          views.html.searchResults(
+            Messages("searchResults.title"),
+            Some(searchQuery),
+            SearchResponse(0, false),
+            Some(error),
+            request.flash.get("message"),
+            request.flash.get("success")
+          )
+        )
     }
   }
 }
