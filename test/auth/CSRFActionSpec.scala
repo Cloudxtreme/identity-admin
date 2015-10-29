@@ -1,4 +1,4 @@
-package csrf
+package auth
 
 import play.api.test.{FakeApplication, FakeRequest}
 import org.scalatestplus.play.PlaySpec

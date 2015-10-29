@@ -11,6 +11,8 @@ src_managed/
 project/boot/
 project/plugins/project/
 
+.idea
+
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
@@ -22,3 +24,4 @@ project/plugins/project/
 # log files
 *.log
 logs/*
+logs.*

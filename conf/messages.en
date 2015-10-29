@@ -1,8 +1,10 @@
 login.missingAntiForgeryToken=Anti forgery token missing in session
 login.failure=Login failure: {0}
+groups.failure=User must be in groups: {0}
+
+main.placeholderSearchBarText=Search by username, email, postcode or IP address...
 
 index.title=User Admin
-index.searchBarText=Search by username, email, postcode or IP address...
 index.mainHeader=Welcome to Passport Control
 index.subHeader=Search for an Identity using the search bar above
 
@@ -13,6 +15,7 @@ searchResults.usernameHeader=Username
 searchResults.nameHeader=Name
 searchResults.registeredDateHeader=Registered Date
 searchResults.lastActivityDateHeader=Last Activity Date
+searchResults.errorMessage=Your search query did not match any records.
 
 editUser.title=Edit User
 editUser.idHeader=# ID
@@ -46,3 +49,5 @@ editUser.countyStateHeader=County or State
 editUser.postcodeZipHeader=Postcode/Zipcode
 editUser.countryHeader=Country
 editUser.userGroupsHeader=User Groups
+
+deleteUser.success=User {0} has been deleted

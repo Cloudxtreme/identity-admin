@@ -4,7 +4,8 @@ import javax.inject.Inject
 
 import play.api.http.HttpFilters
 import play.filters.csrf.CSRFFilter
+import play.filters.headers.SecurityHeadersFilter
 
-class Filters @Inject() (csrfFilter: CSRFFilter) extends HttpFilters {
-  def filters = Seq(csrfFilter)
+class Filters @Inject() (securityHeadersFilter: SecurityHeadersFilter, csrfFilter: CSRFFilter) extends HttpFilters {
+  def filters = Seq(securityHeadersFilter, csrfFilter)
 }

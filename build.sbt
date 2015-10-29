@@ -8,7 +8,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtNativePackage
 
 libraryDependencies ++= Seq(
   "com.gu" %% "play-googleauth" % "0.3.0",
-  "org.scalatestplus" %% "play" % "1.4.0-M3",
+  "org.scalatestplus" %% "play" % "1.4.0-M3" % "test",
+  "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "org.webjars" % "bootstrap" % "3.3.5",
   ws,
   filters
@@ -21,5 +22,6 @@ riffRaffUploadArtifactBucket := "riffraff-artifact"
 riffRaffUploadManifestBucket := "riffraff-builds"
 
 play.PlayImport.PlayKeys.playDefaultPort := 8852
+routesGenerator := InjectedRoutesGenerator
 
 addCommandAlias("devrun", "run -Dconfig.resource=dev.conf -Dlogs.home=logs")
