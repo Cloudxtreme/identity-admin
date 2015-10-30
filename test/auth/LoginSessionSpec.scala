@@ -10,7 +10,7 @@ class LoginSessionSpec extends FlatSpec with Matchers {
   val identity = UserIdentity("sub","email","firstName","lastName",1234,None)
 
   "loggedIn session" should "only contain the user's identity" in {
-    session.loggedIn(identity, "loginOriginUrl") should be (Session(Map("identity" -> identity.asJson)))
+    session.loggedIn(identity, "loginOriginUrl", 1234) should be (Session(Map("identity" -> identity.asJson)))
   }
   "loginError session" should "only contain the login origin key" in {
     session.loginError should be (Session(Map("loginOriginUrl" -> "loginUrl")))
