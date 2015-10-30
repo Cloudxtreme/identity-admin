@@ -45,9 +45,10 @@ class UpdateUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
         }
       },
       userData => {
-        adminApi.updateUserData(userId, userData).map(
-          x => Redirect(routes.Search.search(searchQuery)).flashing("success" -> "User has been updated")
-        )
+        adminApi.updateUserData(userId, userData).map {
+          case Right(_) => Redirect(routes.Search.search(searchQuery)).flashing("success" -> "User has been updated")
+          case Left(error) => Redirect(routes.Search.search(searchQuery)).flashing("error" -> error.toString)
+        }
       }
     )
   }
