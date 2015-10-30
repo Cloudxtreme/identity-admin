@@ -49,7 +49,8 @@ class Login @Inject() extends Controller with AuthActions {
     result map {
       case identity: UserIdentity => {
         val redirect = successfulLoginRedirect(session)
-        redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY, (System.currentTimeMillis + GoogleAuthConf.sessionMaxAge) / 1000)}
+        val sessionLengthInSeconds = (System.currentTimeMillis + GoogleAuthConf.sessionMaxAge) / 1000
+        redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
       }
       case _ => {
         val redirect = loginErrorRedirect("groups.failure", GoogleGroups.requiredGroupsMsg)
