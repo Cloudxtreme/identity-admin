@@ -14,3 +14,4 @@ object StrictTransportSecurityHeaderFilter extends Filter {
     nextFilter(request).map(_.withHeaders(Header))
   }
 }
+

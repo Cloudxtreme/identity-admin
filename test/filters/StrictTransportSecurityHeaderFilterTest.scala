@@ -20,3 +20,4 @@ class StrictTransportSecurityHeaderFilterTest extends FunSuite with Matchers {
   }
 
 }
+
