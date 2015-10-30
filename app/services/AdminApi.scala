@@ -21,14 +21,28 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
 
 
   lazy val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
+  lazy val baseRootUrl = current.configuration.getString("identity-admin.adminApi.baseRootUrl").get
+
   lazy val searchUrl = s"$baseUrl/user/search"
+  lazy val authHealthCheckUrl = s"$baseRootUrl/authHealthcheck"
+
+  def authHealthCheck: Future[Either[CustomError, String]] = {
+    requestSigner.sign(WS.url(authHealthCheckUrl)).get().map ( response => response.status match {
+      case 200 => Right("OK 200")
+      case status@_  => Left(CustomError("API auth failed", s"API status code: $status"))
+    }
+    ).recover { case e: Throwable =>
+        Left(CustomError("API connection failed", e.getMessage))
+    }
+  }
+
   def deleteUrl(id: String) = s"$baseUrl/user/$id"
 
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get().map(
       response => checkResponse[SearchResponse](response.status, response.body, 200, x => Json.parse(x).as[SearchResponse])
     ).recover { case e: Any =>
-        logger.error("Future Failed: could not connect to API",e.getMessage)
+        logger.error("Future Failed: could not connect to API: {}",e.getMessage)
         Left(CustomError("Fatal Error", "Contact identity team."))
       }
   }

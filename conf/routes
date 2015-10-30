@@ -6,6 +6,7 @@
 GET        /                    @controllers.Application.index
 
 GET        /management/healthcheck        @controllers.HealthCheck.healthCheck
+GET        /management/adminApiHealthcheck   @controllers.HealthCheck.adminApiHealthCheck
 
 GET        /login                         @controllers.Login.login
 GET        /loginAction                   @controllers.Login.loginAction
