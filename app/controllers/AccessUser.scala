@@ -45,8 +45,8 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
       }
     }
 
-  def createForm(user: User): Form[UserUpdateRequest] = {
-    Forms.userForm.fill(UserUpdateRequest(
+  def createForm(user: User): Form[UserForm] = {
+    Forms.userForm.fill(UserForm(
       user.email,
       user.username.getOrElse(""),
       Some(user.personalDetails.firstName.getOrElse("")),

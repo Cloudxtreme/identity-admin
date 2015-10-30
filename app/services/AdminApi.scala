@@ -1,7 +1,7 @@
 package services
 
 import javax.inject.Inject
-import models.SearchResponse
+import models.{UserUpdateRequest, SearchResponse, User}
 import play.api.Play._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSResponse, WS}
@@ -10,9 +10,6 @@ import util.Logging
 import scala.concurrent.Future
 import scala.language.implicitConversions
 import scala.util.Try
-import models.Forms._
-
-import models.User
 
 case class CustomError(message: String, details: String){
   override def toString: String ={
@@ -50,7 +47,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
   }
 
   def updateUserData(userId: String, userData :UserUpdateRequest): Future[Either[CustomError, User]] = {
-    val userDataAsJson = UserUpdateRequest.convertUserUpdateRequestToJson(userData)
+    val userDataAsJson = UserUpdateRequest.convertToJson(userData)
     requestSigner.sign(WS.url(accessUserUrl(userId))).put(userDataAsJson).map(
       response => checkResponse[User](response.status, response.body, 200, x => Json.parse(x).as[User])
     ).recover {
