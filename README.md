@@ -75,12 +75,3 @@ aws s3 cp --profile identity s3://gu-identity-admin-private/identity-admin-cert.
 ```
 sbt devrun
 ```
-
-## Testing - Lines in the sand
-
-- All tests should be included in this repo and executed before deployment. 
-- Failing tests will block deployment.
-- Prefer unit tests to integration/functional tests.
-- Browser tests should only be written if the functionality cannot be tested any other way.
-- Tests should always complete in under five minutes.
-- Unstable tests are not acceptable.

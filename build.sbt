@@ -11,6 +11,7 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "com.gu" %% "play-googleauth" % "0.3.2",
   "org.webjars" % "bootstrap" % "3.3.5",
+  "org.seleniumhq.selenium" % "selenium-java" % "2.48.2" % "test",
   ws,
   filters
 )
@@ -25,3 +26,9 @@ play.PlayImport.PlayKeys.playDefaultPort := 8852
 routesGenerator := InjectedRoutesGenerator
 
 addCommandAlias("devrun", "run -Dconfig.resource=dev.conf -Dlogs.home=logs")
+
+javaOptions in Test += "-Dconfig.file=conf/test.conf"
+addCommandAlias("test", "small-test")
+addCommandAlias("small-test", "testOnly -- -l Large")
+addCommandAlias("large-test", "testOnly -- -n Large")
+addCommandAlias("test-all", "testOnly --")
