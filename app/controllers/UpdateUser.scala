@@ -3,18 +3,30 @@ package controllers
 import play.api.mvc.Action
 import javax.inject.Inject
 import models.Forms._
-import models.User
+import models.{UserUpdateRequest, User}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import play.api.mvc.Controller
+import play.api.mvc.Result
 import services.AdminApi
-import util.Logging
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
 
-class UpdateUser @Inject() (adminApi: AdminApi) extends Controller with AuthActions with Logging {
+trait SaveAction extends Controller{
+
+  val adminApi: AdminApi
+
+  private[controllers] def doSave(userId: String, userRequest: UserUpdateRequest, searchQuery: String): Future[Result] = {
+    adminApi.updateUserData(userId, userRequest).map {
+      case Right(_) => Redirect(routes.Search.search(searchQuery)).flashing("success" -> "User has been updated")
+      case Left(error) => Redirect(routes.Search.search(searchQuery)).flashing("error" -> error.toString)
+    }
+  }
+}
+
+class UpdateUser @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SaveAction {
 
   val blankUser = User("","")
 
@@ -29,10 +41,7 @@ class UpdateUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
       userData => {
         val userRequest = userData.convertToUserUpdateRequest
         val userId = userData.id
-        adminApi.updateUserData(userId, userRequest).map {
-          case Right(_) => Redirect(routes.Search.search(searchQuery)).flashing("success" -> "User has been updated")
-          case Left(error) => Redirect(routes.Search.search(searchQuery)).flashing("error" -> error.toString)
-        }
+        doSave(userId, userRequest, searchQuery)
       }
     )
   }
