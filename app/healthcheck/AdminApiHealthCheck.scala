@@ -26,6 +26,13 @@ class AdminApiHealthCheck @Inject() (adminApi: AdminApi, actorSystem: ActorSyste
     }
   }
 
+  private def checkAdminApiHealthy(): Unit = {
+    if (!get) {
+      SNS.notifyAdminApiUnhealthy()
+    }
+
+  }
+
   def start() {
     // trigger immediately
     triggerUpdate()
@@ -33,6 +40,10 @@ class AdminApiHealthCheck @Inject() (adminApi: AdminApi, actorSystem: ActorSyste
     // trigger every minute
     actorSystem.scheduler.schedule(1 minute, 1 minute) {
       triggerUpdate()
+    }
+
+    actorSystem.scheduler.schedule(1 minute, 6 hour) {
+      checkAdminApiHealthy()
     }
   }
 
