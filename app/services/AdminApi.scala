@@ -46,7 +46,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
     }
   }
 
-  def updateUserData(userId: String, userData :UserUpdateRequest): Future[Either[CustomError, User]] = {
+  def updateUserData(userId: String, userData: UserUpdateRequest): Future[Either[CustomError, User]] = {
     val userDataAsJson = UserUpdateRequest.convertToJson(userData)
     requestSigner.sign(WS.url(accessUserUrl(userId))).put(userDataAsJson).map(
       response => checkResponse[User](response.status, response.body, 200, x => Json.parse(x).as[User])
