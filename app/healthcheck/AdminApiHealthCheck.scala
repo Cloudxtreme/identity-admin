@@ -7,6 +7,7 @@ import javax.inject.Inject
 import util.Logging
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
+
 class AdminApiHealthCheck @Inject() (adminApi: AdminApi, actorSystem: ActorSystem) extends Logging {
 
   private val healthy = Agent[Boolean](false)(actorSystem.dispatcher)
