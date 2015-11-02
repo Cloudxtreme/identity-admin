@@ -26,7 +26,6 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
           views.html.editUser(
             Messages("editUser.title"),
             Some(searchQuery),
-            user,
             form,
             request.flash.get("error")
           )
@@ -37,7 +36,6 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
           views.html.editUser(
             Messages("editUser.title"),
             Some(searchQuery),
-            blankUser,
             blankForm,
             Some(error.toString)
           )
