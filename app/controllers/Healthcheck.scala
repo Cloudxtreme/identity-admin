@@ -13,11 +13,4 @@ class HealthCheck @Inject() (adminApi: AdminApi) extends Controller {
   def healthCheck = Action {
     Ok("200 OK")
   }
-
-  def adminApiHealthCheck = Action.async {
-    adminApi.authHealthCheck.map {
-      case Right(_) => Ok("200 OK")
-      case Left(err) => ServiceUnavailable(Json.obj("message" -> err.message, "details" -> err.details))
-    }
-  }
 }
