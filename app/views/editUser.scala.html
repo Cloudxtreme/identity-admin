@@ -343,12 +343,10 @@
                 </div>
             </div>
 
-            @helper.repeat(form("groups"), min=1) {userGroup =>  @helper.textarea(userGroup)
+            @helper.repeat(form("groups"), min=1) {userGroup =>
+                @form(userGroup.name + ".name").value
+                @form(userGroup.name + ".joinDate").value
             }
-
-
-
-
 
         </div>
     </div>
