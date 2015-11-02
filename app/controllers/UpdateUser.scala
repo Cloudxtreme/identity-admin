@@ -17,7 +17,7 @@ class UpdateUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
   val blankUser = User("","")
 
   def save = Action.async { request =>
-    val userId = request.body.asFormUrlEncoded.get("userId").head
+    val userId = "10000001"
     val searchQuery = request.body.asFormUrlEncoded.get("searchQuery").head
     userForm.bindFromRequest()(request).fold(
       formWithErrors => {
@@ -46,6 +46,7 @@ class UpdateUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
       },
       userData => {
         val userRequest = userData.convertToUserUpdateRequest
+        val userId = userData.id
         adminApi.updateUserData(userId, userRequest).map {
           case Right(_) => Redirect(routes.Search.search(searchQuery)).flashing("success" -> "User has been updated")
           case Left(error) => Redirect(routes.Search.search(searchQuery)).flashing("error" -> error.toString)

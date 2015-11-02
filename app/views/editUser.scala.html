@@ -1,5 +1,6 @@
 @import play.i18n._
 @import models.Forms._
+@import org.joda.time.format.DateTimeFormat
 @(pageTitle: String, searchQuery: Option[String], user: User,form: Form[UserForm], error: Option[String])
     @main(pageTitle)(searchQuery){
         <div class="row">
@@ -12,13 +13,13 @@
                         <img src="@routes.Assets.at("images/darkUserIcon.svg")" />
                     </div>
                     <div class="col-sm-10">
-                        <h1>@user.personalDetails.firstName @user.personalDetails.lastName</h1>
+                        <h1>@form("personalDetails.firstName").value @form("personalDetails.lastName").value</h1>
                         <div class="row">
                             <div class="col-sm-2">
                                 <p>@Messages.get("editUser.idHeader")</p>
                             </div>
                             <div class="col-sm-10">
-                                <p>@user.id</p>
+                                <p>@form("id").value</p>
                             </div>
                         </div>
                         <div class="row">
@@ -26,7 +27,7 @@
                                 <p>@Messages.get("editUser.displayNameHeader")</p>
                             </div>
                             <div class="col-sm-10">
-                                <p>@user.displayName</p>
+                                <p>@form("displayName").value</p>
                             </div>
                         </div>
                         <div class="row">
@@ -34,7 +35,7 @@
                                 <p>@Messages.get("editUser.vanityUrlHeader")</p>
                             </div>
                             <div class="col-sm-10">
-                                <p>@user.vanityUrl</p>
+                                <p>@form("vanityUrl").value</p>
                             </div>
                         </div>
                         <div class="row">
@@ -43,11 +44,7 @@
                             </div>
                             <div class="col-sm-10">
                                 <p>
-                                    @user.registrationDate.map(o => o.dayOfWeek.getAsText)
-                                    @user.registrationDate.map(o => o.getDayOfMonth + "/")
-                                    @user.registrationDate.map(o => o.getMonthOfYear + "/")
-                                    @user.registrationDate.map(o => o.getYear)
-                                    @user.registrationDate.map(o => o.toLocalTime)
+                                    @form("registeredDate").value
                                 </p>
                             </div>
                         </div>
@@ -57,11 +54,7 @@
                             </div>
                             <div class="col-sm-10">
                                 <p>
-                                    @user.lastActivityDate.map(o => o.dayOfWeek.getAsText)
-                                    @user.lastActivityDate.map(o => o.getDayOfMonth + "/")
-                                    @user.lastActivityDate.map(o => o.getMonthOfYear + "/")
-                                    @user.lastActivityDate.map(o => o.getYear)
-                                    @user.lastActivityDate.map(o => o.toLocalTime)
+                                    @form("lastActivityDate").value
                                 </p>
                             </div>
                         </div>
@@ -86,7 +79,7 @@
                     <button class="btn btn-default">@Messages.get("editUser.profileBtn")</button>
                     <form action="delete" class="btn-group">
                         <input type="hidden" value=@searchQuery name="searchQuery"/>
-                        <input type="hidden" value=@user.id name="userId"/>
+                        <input type="hidden" value="@form("id").value" name="userId"/>
                         <button class="btn btn-danger" type="submit">@Messages.get("editUser.deleteBtn")</button>
                     </form>
                     <button class="btn btn-warning">@Messages.get("editUser.validateBtn")</button>
@@ -94,8 +87,31 @@
             </div>
         </div>
         <form method="post" action="save">
-            <input type="hidden" name="userId" value="@user.id">
+            <input type="hidden" name="@form("id").name" value="@form("id").value">
             <input type="hidden" name="searchQuery" value="@searchQuery">
+            <input type="hidden" name="@form("personalDetails.gender").name" value="@form("personalDetails.gender").value"/>
+            <input type="hidden" name="@form("personalDetails.dateOfBirth").name" value="@form("personalDetails.dateOfBirth").value"/>
+            <input type="hidden" name="@form("personalDetails.location").name" value="@form("personalDetails.location").value"/>
+            <input type="hidden" name="@form("displayName").name" value="@form("displayName").value"/>
+            <input type="hidden" name="@form("vanityUrl").name" value="@form("vanityUrl").value"/>
+            <input type="hidden" name="@form("deliveryAddress.addressLine1").name" value="@form("deliveryAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("deliveryAddress.addressLine2").name" value="@form("deliveryAddress.addressLine2").value"/>
+            <input type="hidden" name="@form("deliveryAddress.addressLine3").name" value="@form("deliveryAddress.addressLine3").value"/>
+            <input type="hidden" name="@form("deliveryAddress.addressLine4").name" value="@form("deliveryAddress.addressLine4").value"/>
+            <input type="hidden" name="@form("deliveryAddress.country").name" value="@form("deliveryAddress.country").value"/>
+            <input type="hidden" name="@form("deliveryAddress.postcode").name" value="@form("deliveryAddress.postcode").value"/>
+            <input type="hidden" name="@form("billingAddress.addressLine1").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.addressLine2").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.addressLine3").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.addressLine4").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.country").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.postcode").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("lastActivityDate").name" value="@form("lastActivityDate").value"/>
+            <input type="hidden" name="@form("lastActivityIp").name" value="@form("lastActivityIp").value"/>
+            <input type="hidden" name="@form("registrationDate").name" value="@form("registrationDate").value"/>
+            <input type="hidden" name="@form("registrationIp").name" value="@form("registrationIp").value"/>
+            <input type="hidden" name="@form("status.userEmailValidated").name" value="@form("status.userEmailValidated").value"/>
+
             <div class="row">
                 <div class="col-md-6">
                     <h4>@Messages.get("editUser.accountDetails")</h4>
@@ -119,7 +135,7 @@
                             <p>@Messages.get("editUser.firstNameHeader")</p>
                         </div>
                         <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="@form("firstName").name" value="@form("firstName").value"/>
+                            <input class="full-width-input" type="text" name="@form("personalDetails.firstName").name" value="@form("personalDetails.firstName").value"/>
                         </div>
                     </div>
                     <div class="row">
@@ -127,7 +143,7 @@
                             <p>@Messages.get("editUser.lastNameHeader")</p>
                         </div>
                         <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="@form("lastName").name" value="@form("lastName").value"/>
+                            <input class="full-width-input" type="text" name="@form("personalDetails.lastName").name" value="@form("personalDetails.lastName").value"/>
                         </div>
                     </div>
                     <div class="row">
@@ -150,7 +166,7 @@
                             <input
                                 type="checkbox"
                                 class="checkbox"
-                                name="@form("receiveGnmMarketing").name"
+                                name="@form("receiveMarketing").name"
                                 value="true"
                                 @if(form("receiveGnmMarketing").value.getOrElse("false") == "true"){
                                     checked = "checked"
@@ -196,7 +212,7 @@
                             <p>@Messages.get("editUser.genderHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.personalDetails.gender</p>
+                            <p>@form("personalDetails.gender").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -205,9 +221,7 @@
                         </div>
                         <div class="col-xs-6">
                             <p>
-                                @user.personalDetails.dateOfBirth.map(o => o.getDayOfMonth + "/")
-                                @user.personalDetails.dateOfBirth.map(o => o.getMonthOfYear + "/")
-                                @user.personalDetails.dateOfBirth.map(o => o.getYear)
+                                @form("personalDetails.dateOfBirth").value
                             </p>
                         </div>
                     </div>
@@ -216,7 +230,7 @@
                             <p>@Messages.get("editUser.locationHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.personalDetails.location</p>
+                            <p>@form("personalDetails.location").value</p>
                         </div>
                     </div>
                 </div>
@@ -227,7 +241,7 @@
                             <p>@Messages.get("editUser.addressLine1Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryAddress.addressLine1</p>
+                            <p>@form("deliveryAddress.addressLine1").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -235,7 +249,7 @@
                             <p>@Messages.get("editUser.addressLine2Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryAddress.addressLine2</p>
+                            <p>@form("deliveryAddress.addressLine2").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -243,7 +257,7 @@
                             <p>@Messages.get("editUser.townHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryAddress.addressLine3</p>
+                            <p>@form("deliveryAddress.addressLine3").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -251,7 +265,7 @@
                             <p>@Messages.get("editUser.countyStateHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryAddress.addressLine4</p>
+                            <p>@form("deliveryAddress.addressLine4").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -259,7 +273,7 @@
                             <p>@Messages.get("editUser.postcodeZipHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryAddress.postcode</p>
+                            <p>@form("deliveryAddress.postcode").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -267,7 +281,7 @@
                             <p>@Messages.get("editUser.countryHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryAddress.country</p>
+                            <p>@form("deliveryAddress.country").value</p>
                         </div>
                     </div>
                 </div>
@@ -278,7 +292,7 @@
                             <p>@Messages.get("editUser.addressLine1Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingAddress.addressLine1</p>
+                            <p>@form("billingAddress.addressLine1").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -286,7 +300,7 @@
                             <p>@Messages.get("editUser.addressLine2Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingAddress.addressLine2</p>
+                            <p>@form("billingAddress.addressLine2").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -294,7 +308,7 @@
                             <p>@Messages.get("editUser.townHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingAddress.addressLine3</p>
+                            <p>@form("billingAddress.addressLine3").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -302,7 +316,7 @@
                             <p>@Messages.get("editUser.countyStateHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingAddress.addressLine4</p>
+                            <p>@form("billingAddress.addressLine4").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -310,7 +324,7 @@
                             <p>@Messages.get("editUser.postcodeZipHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingAddress.postcode</p>
+                            <p>@form("billingAddress.postcode").value</p>
                         </div>
                     </div>
                     <div class="row">
@@ -318,7 +332,7 @@
                             <p>@Messages.get("editUser.countryHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingAddress.country</p>
+                            <p>@form("billingAddress.country").value</p>
                         </div>
                     </div>
                 </div>
@@ -328,21 +342,14 @@
                     <h4>@Messages.get("editUser.userGroupsHeader")</h4>
                 </div>
             </div>
-            @for(userGroup <- user.groups) {
-                <div class="row">
-                    <div class="col-xs-2">
-                        <p>@userGroup.name</p>
-                    </div>
-                    <div class="col-xs-4">
-                        <p>
-                            @userGroup.joinDate.map(o => o.getDayOfMonth + "/")
-                            @userGroup.joinDate.map(o => o.getMonthOfYear + "/")
-                            @userGroup.joinDate.map(o => o.getYear)
-                            @userGroup.joinDate.map(o => o.toLocalTime)
-                        </p>
-                    </div>
-                </div>
+
+            @helper.repeat(form("groups"), min=1) {userGroup =>  @helper.textarea(userGroup)
             }
+
+
+
+
+
         </div>
     </div>
     }
