@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   "org.scalatestplus" %% "play" % "1.4.0-M3" % "test",
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "org.webjars" % "bootstrap" % "3.3.5",
-  ws,
+  "com.typesafe.akka" %% "akka-agent" % "2.4.0",
+   ws,
   filters
 )
 
