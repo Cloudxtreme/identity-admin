@@ -19,4 +19,5 @@ GET        /delete                        @controllers.Delete.delete(searchQuery
 
 GET        /edit                          @controllers.AccessUser.getUser(searchQuery: String, userId: String)
 
-POST /save @controllers.UpdateUser.save
+POST /save @controllers.UpdateUser.save(searchQuery: String)
+

@@ -85,9 +85,8 @@
                 </div>
             </div>
         </div>
-        <form method="post" action="save">
-            <input type="hidden" name="@form("id").name" value="@form("id").value">
-            <input type="hidden" name="searchQuery" value="@searchQuery">
+        <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse("")).url">
+            <input type="hidden" name="@form("id").name" value="@form("id").value"/>
             <input type="hidden" name="@form("personalDetails.gender").name" value="@form("personalDetails.gender").value"/>
             <input type="hidden" name="@form("personalDetails.dateOfBirth").name" value="@form("personalDetails.dateOfBirth").value"/>
             <input type="hidden" name="@form("personalDetails.location").name" value="@form("personalDetails.location").value"/>

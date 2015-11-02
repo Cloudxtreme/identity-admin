@@ -12,36 +12,20 @@ import services.AdminApi
 import util.Logging
 import play.api.libs.concurrent.Execution.Implicits._
 
+import scala.concurrent.Future
+
 class UpdateUser @Inject() (adminApi: AdminApi) extends Controller with AuthActions with Logging {
 
   val blankUser = User("","")
 
-  def save = Action.async { request =>
-    val userId = "10000001"
-    val searchQuery = request.body.asFormUrlEncoded.get("searchQuery").head
+  def save(searchQuery: String) = Action.async { request =>
     userForm.bindFromRequest()(request).fold(
-      formWithErrors => {
-        adminApi.getFullUser(userId).map {
-          case Right(user) =>
-            BadRequest(
-              views.html.editUser(
-                Messages("editUser.title"),
-                Some(searchQuery),
-                formWithErrors,
-                Some(Messages("editUser.invalidSubmission"))
-              )
-            )
-          case Left(error) =>
-            BadRequest(
-              views.html.editUser(
-                Messages("editUser.title"),
-                Some(searchQuery),
-                formWithErrors,
-                Some(error.toString)
-              )
-            )
-        }
-      },
+      errorForm => Future(BadRequest(views.html.editUser(
+        Messages("editUser.title"),
+        Some(searchQuery),
+        errorForm,
+        Some(Messages("editUser.invalidSubmission"))
+      ))),
       userData => {
         val userRequest = userData.convertToUserUpdateRequest
         val userId = userData.id
