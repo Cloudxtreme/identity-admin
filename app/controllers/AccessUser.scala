@@ -16,8 +16,6 @@ import scala.language.implicitConversions
 
 class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActions with Logging {
 
-  val blankUser = User("", "")
-
   def getUser(searchQuery: String, userId: String) = AuthAction.async { request =>
     adminApi.getFullUser(userId).map {
       case Right(user) =>
@@ -27,19 +25,12 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
             Messages("editUser.title"),
             Some(searchQuery),
             form,
-            request.flash.get("error")
+            request.flash.get("message")
           )
         )
       case Left(error) =>
-        val blankForm = createForm(blankUser)
-        Ok(
-          views.html.editUser(
-            Messages("editUser.title"),
-            Some(searchQuery),
-            blankForm,
-            Some(error.toString)
-          )
-        )
+        logger.error(s"Failed to find user. error: $error")
+        Redirect(routes.Search.search(searchQuery)).flashing("message" -> error.toString)
       }
     }
 
