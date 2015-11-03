@@ -48,7 +48,7 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
       user.id,
       user.email,
       user.displayName,
-      user.username.getOrElse(""),
+      user.username,
       user.vanityUrl,
       user.personalDetails,
       user.deliveryAddress,
