@@ -52,7 +52,7 @@ object LastActiveLocation {
 case class User(id: String,
                 email: String,
                 displayName: Option[String] = None,
-                username: Option[String] = None,
+                username: String,
                 vanityUrl: Option[String] = None,
                 personalDetails: PersonalDetails = PersonalDetails(),
                 deliveryAddress: Address = Address(),

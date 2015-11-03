@@ -10,7 +10,7 @@ object Forms {
     id: String,
     email: String,
     displayName: Option[String] = None,
-    username: Option[String] = None,
+    username: String,
     vanityUrl: Option[String] = None,
     personalDetails: PersonalDetails = PersonalDetails(),
     deliveryAddress: Address = Address(),
@@ -32,12 +32,16 @@ object Forms {
     )
   }
 
+  private val username: Mapping[String] = text.verifying(
+    "Invalid display name, ", name => name.matches("[A-z0-9]+") && name.length > 5 && name.length < 21
+  )
+
   val userForm = Form(
     mapping(
       "id" -> text,
       "email" -> email,
       "displayName" -> optional(text),
-      "username" -> optional(text),
+      "username" -> username,
       "vanityUrl" -> optional(text),
       "personalDetails" -> mapping(
         "firstName" -> optional(text),
