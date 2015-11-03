@@ -23,7 +23,7 @@ trait SendEmailValidationAction extends Controller with Logging{
         Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("message" -> Messages("sendEmailValidation.success", userId))
       case Left(error) =>
         logger.error(s"Failed to send email validation for user with id: $userId. error: $error")
-        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("message" -> error.message)
+        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("error" -> error.message)
     }
   }
 }

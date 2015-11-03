@@ -20,7 +20,7 @@ trait SaveAction extends Controller with Logging{
     adminApi.updateUserData(userId, userRequest).map {
       case Right(_) =>
         logger.info("Successfully updated user in database. Redirecting to search.")
-        Redirect(routes.Search.search(searchQuery)).flashing("success" -> "User has been updated")
+        Redirect(routes.Search.search(searchQuery)).flashing("message" -> "User has been updated")
       case Left(error) =>
         logger.error(s"Failed to update user. error: $error")
         Redirect(routes.Search.search(searchQuery)).flashing("error" -> error.toString)
@@ -36,6 +36,7 @@ class UpdateUser @Inject() (val adminApi: AdminApi) extends Controller with Auth
         Messages("editUser.title"),
         Some(searchQuery),
         errorForm,
+        None,
         Some(Messages("editUser.invalidSubmission"))
       ))),
       userData => {

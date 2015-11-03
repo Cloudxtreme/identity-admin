@@ -25,12 +25,13 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
             Messages("editUser.title"),
             Some(searchQuery),
             form,
-            request.flash.get("message")
+            request.flash.get("message"),
+            None
           )
         )
       case Left(error) =>
         logger.error(s"Failed to find user. error: $error")
-        Redirect(routes.Search.search(searchQuery)).flashing("message" -> error.toString)
+        Redirect(routes.Search.search(searchQuery)).flashing("error" -> error.toString)
       }
     }
 

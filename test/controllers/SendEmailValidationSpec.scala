@@ -28,13 +28,13 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
       flash(result).get("message") mustEqual Some(s"Email validation for user $userId has been sent")
     }
 
-    "redirect to edit user with error message on failure" in {
-      val error = CustomError("Fatal error", "Boom")
+    "redirect to edit user with customerror message on failure" in {
+      val error = CustomError("Fatal customerror", "Boom")
       when(adminApiMock.sendEmailValidation(userId)).thenReturn(Future.successful(Left(error)))
       val result = controller.doSendEmailValidation(searchQuery, userId)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(searchQuery, userId).url)
-      flash(result).get("message") mustEqual Some(error.message)
+      flash(result).get("error") mustEqual Some(error.message)
     }
   }
 

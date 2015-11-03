@@ -20,9 +20,8 @@ class Search @Inject() (adminApi: AdminApi) extends Controller with AuthActions 
               Messages("searchResults.title"),
               Some(searchQuery),
               searchResult,
-              None,
               request.flash.get("message"),
-              request.flash.get("success")
+              request.flash.get("error")
           )
         )
       case Left(error) =>
@@ -31,9 +30,8 @@ class Search @Inject() (adminApi: AdminApi) extends Controller with AuthActions 
             Messages("searchResults.title"),
             Some(searchQuery),
             SearchResponse(0, false),
-            Some(error),
             request.flash.get("message"),
-            request.flash.get("success")
+            Some(error.toString)
           )
         )
     }

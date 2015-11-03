@@ -28,7 +28,7 @@ class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
       )
       val result = controller.doSave(userId, userUpdateData, searchQuery)
       redirectLocation(result) mustEqual Some(routes.Search.search(searchQuery).url)
-      flash(result).get("success") mustEqual Some("User has been updated")
+      flash(result).get("message") mustEqual Some("User has been updated")
     }
 
     "redirect to search results with error message on failure" in {
