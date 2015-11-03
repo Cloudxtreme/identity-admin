@@ -32,11 +32,6 @@ object Forms {
     )
   }
 
-//  Experimentation with validation
-  private val alphaText: Mapping[String] = text.verifying("First name must be characters only." , name => name.matches("[A-z]+"))
-  private val username: Mapping[String] = text.verifying("Invalid display name, ", name => name.matches("[A-z0-9]+") && name.length > 5 && name.length < 21)
-  private val email1: Mapping[String] = text.verifying("valid", name => name.length > 4)
-
   val userForm = Form(
     mapping(
       "id" -> text,
