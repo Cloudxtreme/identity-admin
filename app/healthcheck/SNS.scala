@@ -6,9 +6,10 @@ import com.amazonaws.services.sns.model.{Topic, PublishRequest}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import util.Logging
 import scala.collection.JavaConversions._
 
-object SNS {
+object SNS extends Logging {
 
   private lazy val sns = {
     val client = new AmazonSNSAsyncClient(AWSConfig.credentials)
@@ -20,6 +21,7 @@ object SNS {
   }
 
   def notifyAdminApiUnhealthy(): Unit = {
+    logger.info("Admin Api Unhealthy... About to send notification to SNS topic")
     val topics = sns.listTopics.getTopics.toList
     val topicPattern = AWSConfig.topicPattern
     val topic = retrieveAdminApiTopic(topics, topicPattern)

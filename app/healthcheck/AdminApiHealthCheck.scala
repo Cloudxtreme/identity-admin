@@ -18,8 +18,9 @@ class AdminApiHealthCheck @Inject() (adminApi: AdminApi, actorSystem: ActorSyste
     logger.debug("Updating healthcheck")
 
     adminApi.authHealthCheck.map {
-      case Right(_) => logger.debug("Admin API Auth service is available")
-      healthy send { _ => true }
+      case Right(_) =>
+        logger.debug("Admin API Auth service is available")
+        healthy send { _ => true }
       case Left(err) =>
         logger.error("Admin API Auth service is unavailable: {}", err.details)
         healthy send { _ => false }
@@ -30,7 +31,6 @@ class AdminApiHealthCheck @Inject() (adminApi: AdminApi, actorSystem: ActorSyste
     if (!get) {
       SNS.notifyAdminApiUnhealthy()
     }
-
   }
 
   def start() {
@@ -38,11 +38,11 @@ class AdminApiHealthCheck @Inject() (adminApi: AdminApi, actorSystem: ActorSyste
     triggerUpdate()
 
     // trigger every minute
-    actorSystem.scheduler.schedule(1 minute, 1 minute) {
+    actorSystem.scheduler.schedule(1 minute, 10 minute) {
       triggerUpdate()
     }
 
-    actorSystem.scheduler.schedule(1 minute, 6 hour) {
+    actorSystem.scheduler.schedule(2 minute, 6 hour) {
       checkAdminApiHealthy()
     }
   }

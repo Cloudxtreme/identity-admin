@@ -19,7 +19,6 @@ object CustomError {
 
 class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
 
-
   lazy val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
   lazy val baseRootUrl = current.configuration.getString("identity-admin.adminApi.baseRootUrl").get
 
