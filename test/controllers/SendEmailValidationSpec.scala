@@ -24,7 +24,7 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
       when(adminApiMock.sendEmailValidation(userId)).thenReturn(Future.successful(Right(true)))
       val result = controller.doSendEmailValidation(searchQuery, userId)
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustEqual Some(routes.Application.getEditUserPage(searchQuery, userId).url)
+      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(searchQuery, userId).url)
       flash(result).get("message") mustEqual Some(s"Email validation for user $userId has been sent")
     }
 
@@ -33,7 +33,7 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
       when(adminApiMock.sendEmailValidation(userId)).thenReturn(Future.successful(Left(error)))
       val result = controller.doSendEmailValidation(searchQuery, userId)
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustEqual Some(routes.Application.getEditUserPage(searchQuery, userId).url)
+      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(searchQuery, userId).url)
       flash(result).get("message") mustEqual Some(error.message)
     }
   }
