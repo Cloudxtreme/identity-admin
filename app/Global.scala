@@ -10,8 +10,7 @@ object Global extends GlobalSettings with Logging {
   override def onStart(app: Application) {
     if (Play.mode == Mode.Prod) {
       logger.info("Starting Admin API HealthCheck agent...")
-      val requestSigner = new RequestSignerWithSecret
-      val adminApi = new AdminApi(requestSigner)
+      val adminApi = app.injector.instanceOf(classOf[AdminApi])
       new AdminApiHealthCheck(adminApi, system).start()
     }
   }
