@@ -16,7 +16,7 @@ class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
   val controller = new SaveAction {override val adminApi: AdminApi = adminApiMock}
   val searchQuery = "search query"
   val userId = "1234"
-  val userUpdateData = UserUpdateRequest("email@email.com", "username")
+  val userUpdateData = UserUpdateRequest("email@email.com", Some("username"))
   val blankUser = User("","")
   val customError = CustomError("Test Error", "There is an error")
 
