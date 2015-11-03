@@ -7,6 +7,7 @@ import javax.inject.Inject
 import util.Logging
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
+import scala.language.postfixOps
 
 class AdminApiHealthCheck @Inject() (adminApi: AdminApi, actorSystem: ActorSystem) extends Logging {
 
