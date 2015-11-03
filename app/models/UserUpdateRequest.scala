@@ -1,6 +1,6 @@
 package models
 
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.Json
 
 case class UserUpdateRequest(
                               email: String,
@@ -11,14 +11,5 @@ case class UserUpdateRequest(
                               receive3rdPartyMarketing: Option[Boolean] = None)
 
 object UserUpdateRequest {
-  def convertToJson(userData: UserUpdateRequest): JsValue = {
-    Json.obj(
-      "email" -> userData.email,
-      "username" -> userData.username,
-      "firstName" -> userData.firstName,
-      "lastName" -> userData.lastName,
-      "receiveGnmMarketing" -> userData.receiveGnmMarketing,
-      "receive3rdPartyMarketing" -> userData.receive3rdPartyMarketing
-    )
-  }
+  implicit val format = Json.format[UserUpdateRequest]
 }
