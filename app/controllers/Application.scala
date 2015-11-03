@@ -10,7 +10,6 @@ import util.Logging
 class Application @Inject() extends Controller with AuthActions with Logging {
 
   def index = AuthAction {
-    logger.info("Index page hit.")
     Ok(views.html.index(Messages("index.title"), None))
   }
 }
