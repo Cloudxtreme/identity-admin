@@ -34,7 +34,7 @@ class DeleteSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
       val result = controller.doDelete(searchQuery, userId)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustEqual Some(routes.Application.getEditUserPage(searchQuery, userId).url)
-      flash(result).get("error") mustEqual Some(error.message)
+      flash(result).get("message") mustEqual Some(error.message)
     }
   }
 
