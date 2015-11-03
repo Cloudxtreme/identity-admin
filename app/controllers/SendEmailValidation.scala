@@ -28,9 +28,9 @@ trait SendEmailValidationAction extends Controller with Logging{
   }
 }
 
-class SendEmailValidation @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with DeleteAction {
+class SendEmailValidation @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SendEmailValidationAction {
 
   def sendEmailValidation(searchQuery: String, userId: String) = AuthAction.async {
-    doDelete(searchQuery, userId)
+    doSendEmailValidation(searchQuery, userId)
   }
 }
