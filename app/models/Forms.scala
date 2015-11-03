@@ -10,7 +10,7 @@ object Forms {
     id: String,
     email: String,
     displayName: Option[String] = None,
-    username: String,
+    username: Option[String] = None,
     vanityUrl: Option[String] = None,
     personalDetails: PersonalDetails = PersonalDetails(),
     deliveryAddress: Address = Address(),
@@ -42,7 +42,7 @@ object Forms {
       "id" -> text,
       "email" -> email,
       "displayName" -> optional(text),
-      "username" -> text,
+      "username" -> optional(text),
       "vanityUrl" -> optional(text),
       "personalDetails" -> mapping(
         "firstName" -> optional(text),

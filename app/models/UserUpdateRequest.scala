@@ -4,7 +4,7 @@ import play.api.libs.json.{Json, JsValue}
 
 case class UserUpdateRequest(
                               email: String,
-                              username: String,
+                              username: Option[String] = None,
                               firstName: Option[String] = None,
                               lastName: Option[String] = None,
                               receiveGnmMarketing: Option[Boolean] = None,
