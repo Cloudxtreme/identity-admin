@@ -10,12 +10,15 @@ object GoogleAuthConf {
   val clientSecret = current.configuration.getString("identity-admin.google.clientSecret").get
   val redirectUrl = current.configuration.getString("identity-admin.google.authorisationCallback").get
   val impersonatedUser = current.configuration.getString("identity-admin.google.impersonatedUser").get
+  val sessionMaxAge = current.configuration.getString("session.maxAge").get.toLong
+  val userAdminGroup = current.configuration.getString("identity-admin.groups.useradmin").get
 
   val googleAuthConfig =
     GoogleAuthConfig(
       clientId = clientId,
       clientSecret = clientSecret,
       redirectUrl = redirectUrl,
-      domain = Some("guardian.co.uk")
+      domain = Some("guardian.co.uk"),
+      prompt = Some("login")
     )
 }

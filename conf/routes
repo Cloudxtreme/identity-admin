@@ -17,6 +17,8 @@ GET        /search                        @controllers.Search.search(searchQuery
 
 GET        /delete                        @controllers.Delete.delete(searchQuery: String, userId: String)
 
+GET        /validateEmail                 @controllers.SendEmailValidation.sendEmailValidation(searchQuery: String, userId: String)
+
 GET        /edit                          @controllers.AccessUser.getUser(searchQuery: String, userId: String)
 
 POST /save @controllers.UpdateUser.save(searchQuery: String)

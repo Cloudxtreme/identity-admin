@@ -7,9 +7,9 @@ version := "1.0.0-SNAPSHOT"
 lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtNativePackager, UniversalPlugin, RiffRaffArtifact)
 
 libraryDependencies ++= Seq(
-  "com.gu" %% "play-googleauth" % "0.3.0",
   "org.scalatestplus" %% "play" % "1.4.0-M3" % "test",
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
+  "com.gu" %% "play-googleauth" % "0.3.2",
   "org.webjars" % "bootstrap" % "3.3.5",
   ws,
   filters

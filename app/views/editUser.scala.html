@@ -1,11 +1,11 @@
 @import play.i18n._
 @import models.Forms._
-@(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], error: Option[String])
+@(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String])
     @main(pageTitle)(searchQuery){
         <div class="row">
             <div class="col-md-10">
-                @error.map { err =>
-                    <div class="alert alert-danger" role="alert">@err</div>
+                @message.map { msg =>
+                    <div class="alert alert-danger" role="alert">@msg</div>
                 }
                 <div class="row uneditable-fields">
                     <div class="col-sm-2">
@@ -81,7 +81,11 @@
                         <input type="hidden" value="@form("id").value" name="userId"/>
                         <button class="btn btn-danger" type="submit">@Messages.get("editUser.deleteBtn")</button>
                     </form>
-                    <button class="btn btn-warning">@Messages.get("editUser.validateBtn")</button>
+                    <form action="validateEmail" class="btn-group">
+                        <input type="hidden" value=@searchQuery name="searchQuery"/>
+                        <input type="hidden" value=@form("id").value name="userId"/>
+                        <button class="btn btn-warning" type="submit">@Messages.get("editUser.validateBtn")</button>
+                    </form>
                 </div>
             </div>
         </div>
