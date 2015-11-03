@@ -21,7 +21,7 @@ object SNS extends Logging {
   }
 
   def notifyAdminApiUnhealthy(): Unit = {
-    logger.info("Admin Api Unhealthy... About to send notification to SNS topic")
+    logger.error("Admin Api Unhealthy... About to send notification to SNS topic")
     val topics = sns.listTopics.getTopics.toList
     val topicPattern = AWSConfig.topicPattern
     val topic = retrieveAdminApiTopic(topics, topicPattern)

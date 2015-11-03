@@ -1,7 +1,7 @@
 import play.api._
 import play.api.Play.current
 import healthcheck.AdminApiHealthCheck
-import services.{RequestSignerWithSecret, RequestSigner, AdminApi}
+import services.{RequestSignerWithSecret, AdminApi}
 import play.api.libs.concurrent.Akka.system
 import util.Logging
 
