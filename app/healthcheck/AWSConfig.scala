@@ -5,10 +5,10 @@ import com.amazonaws.auth._
 import play.api.Play._
 
 object AWSConfig {
-  lazy val stage = current.configuration.getString("identity-admin.stage").get
-  lazy val topicPattern = s"IdentityAdmin-$stage-topicSendEmailToIdentityDev"
+  val stage = current.configuration.getString("identity-admin.stage").get
+  val topicPattern = s"IdentityAdmin-$stage-topicSendEmailToIdentityDev"
 
-  lazy val credentials: AWSCredentialsProvider = {
+  val credentials: AWSCredentialsProvider = {
     val provider = new AWSCredentialsProviderChain(
       new EnvironmentVariableCredentialsProvider(),
       new SystemPropertiesCredentialsProvider(),

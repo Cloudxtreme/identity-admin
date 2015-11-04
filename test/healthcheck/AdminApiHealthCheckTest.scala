@@ -20,10 +20,11 @@ class AdminApiHealthCheckTest extends FunSuite with MockitoSugar with Matchers w
 
   test("reports as unhealthy when admin api auth is unavailable") {
     val adminApi = mock[AdminApi]
+    val sns = mock[SNS]
     when(adminApi.authHealthCheck)
       .thenReturn(Future.successful(Right("OK")))
       .thenReturn(Future.successful(Left(CustomError("Service unavailable","401"))))
-    val hc = new AdminApiHealthCheck(adminApi, actorSystem)
+    val hc = new AdminApiHealthCheck(sns, adminApi, actorSystem)
 
     // if no successful future is returned, the agent will never become healthy
     hc.triggerUpdate()

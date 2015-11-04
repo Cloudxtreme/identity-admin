@@ -3,13 +3,12 @@ package healthcheck
 import akka.actor.ActorSystem
 import akka.agent.Agent
 import services.AdminApi
-import javax.inject.Inject
 import util.Logging
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.language.postfixOps
 
-class AdminApiHealthCheck @Inject() (adminApi: AdminApi, actorSystem: ActorSystem) extends Logging {
+class AdminApiHealthCheck(sns: SNS, adminApi: AdminApi, actorSystem: ActorSystem) extends Logging {
 
   private val healthy = Agent[Boolean](false)(actorSystem.dispatcher)
 
@@ -31,7 +30,7 @@ class AdminApiHealthCheck @Inject() (adminApi: AdminApi, actorSystem: ActorSyste
   private def checkAdminApiHealthy(): Unit = {
     logger.debug("Checking if Admin API HealthCheck agent is healthy")
     if (!get) {
-      SNS.notifyAdminApiUnhealthy()
+      sns.notifyAdminApiUnhealthy()
     }
   }
 

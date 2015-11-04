@@ -51,5 +51,3 @@ editUser.countryHeader=Country
 editUser.userGroupsHeader=User Groups
 
 deleteUser.success=User {0} has been deleted
-
-healthcheck.adminApiUnhealthy=The admin app just reported that the Admin API service is unavailable. Please check the logs for more details
