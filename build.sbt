@@ -28,7 +28,7 @@ routesGenerator := InjectedRoutesGenerator
 addCommandAlias("devrun", "run -Dconfig.resource=dev.conf -Dlogs.home=logs")
 
 javaOptions in Test += "-Dconfig.file=conf/test.conf"
-addCommandAlias("test", "small-test")
-addCommandAlias("small-test", "testOnly -- -l Large")
-addCommandAlias("large-test", "testOnly -- -n Large")
+addCommandAlias("test", "test-small")
+addCommandAlias("test-small", "testOnly -- -l Large")
+addCommandAlias("test-large", "testOnly -- -n Large")
 addCommandAlias("test-all", "testOnly --")

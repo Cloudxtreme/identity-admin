@@ -48,8 +48,8 @@ can be promoted.
 
 | Suite     | SBT command                    |
 | --------- | ------------------------------ |
-| Small     | `sbt test` or `sbt small-test` |
-| Large     | `sbt large-test`               |
+| Small     | `sbt test` or `sbt test-small` |
+| Large     | `sbt test-large`               |
 | All tests | `sbt test-all`                 |
 
 Tests are partitioned in the following tree structure in the project

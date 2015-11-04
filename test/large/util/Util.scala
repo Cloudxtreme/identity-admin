@@ -1,5 +1,6 @@
 package large.util
 
+import large.util.Config.baseUrl
 import java.util.concurrent.TimeUnit
 import org.openqa.selenium.support.ui.{ExpectedConditions, WebDriverWait}
 import org.openqa.selenium.{By, WebDriver}
@@ -32,6 +33,7 @@ trait Util { this: WebBrowser => implicit val driver: WebDriver
   }
 
   def hasSessionCookie: Boolean = {
-    Try { cookie("PLAY_SESSION") }.isSuccess
+    (Try { cookie("PLAY_SESSION") }.isSuccess
+       && (cookie("PLAY_SESSION").domain == baseUrl.substring("https://".length)))
   }
 }
