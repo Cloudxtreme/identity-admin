@@ -33,16 +33,12 @@ slow *OR* post-deployment *OR* non-blocking
 
 A test can be promoted from Large to Small if the team agrees it satisfies the requirements.
 
-*Note that this means a colossal (system end-to-end integration-with-3rd parties browser acceptance) 
-test might as well become a `Small` test.*
-
 ## Test Pyramid
 
 * Prefer writing `Small` tests.
 * `Small` test suite should complete within five minutes.
 * Write browser driving tests only for major critical paths.
-* All browser driving tests (Selenium) begin their life in `Large` category. However, they
-can be promoted.
+* All browser driving tests (Selenium) begin their life in `Large` category.
 
 ## Test execution
 
