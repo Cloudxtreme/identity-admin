@@ -50,6 +50,7 @@ editUser.postcodeZipHeader=Postcode/Zipcode
 editUser.countryHeader=Country
 editUser.userGroupsHeader=User Groups
 editUser.invalidSubmission=Invalid form submission
+editUser.provideUsername=You must supply a username before the user can be updated.
 
 deleteUser.success=User {0} has been deleted
 sendEmailValidation.success=Email validation for user {0} has been sent

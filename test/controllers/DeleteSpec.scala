@@ -28,8 +28,8 @@ class DeleteSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
       flash(result).get("message") mustEqual Some(s"User $userId has been deleted")
     }
 
-    "redirect to edit user with customerror message on failure" in {
-      val error = CustomError("Fatal customerror", "Boom")
+    "redirect to edit user with error message on failure" in {
+      val error = CustomError("Fatal error", "Boom")
       when(adminApiMock.delete(userId)).thenReturn(Future.successful(Left(error)))
       val result = controller.doDelete(searchQuery, userId)
       status(result) mustEqual SEE_OTHER

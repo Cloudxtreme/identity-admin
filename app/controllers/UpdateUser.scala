@@ -2,7 +2,8 @@ package controllers
 
 import javax.inject.Inject
 import models.Forms._
-import models.UserUpdateRequest
+import models.{Forms, UserUpdateRequest}
+import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
@@ -32,18 +33,27 @@ class UpdateUser @Inject() (val adminApi: AdminApi) extends Controller with Auth
 
   def save(searchQuery: String) = AuthAction.async { request =>
     userForm.bindFromRequest()(request).fold(
-      errorForm => Future(BadRequest(views.html.editUser(
-        Messages("editUser.title"),
-        Some(searchQuery),
-        errorForm,
-        None,
-        Some(Messages("editUser.invalidSubmission"))
-      ))),
+      errorForm => {
+        val errorMessage = getFormErrorMessage(errorForm)
+        Future(BadRequest(views.html.editUser(
+          Messages("editUser.title"),
+          Some(searchQuery),
+          errorForm,
+          None,
+          Some(errorMessage)
+        )))
+      },
       userData => {
         val userRequest = userData.convertToUserUpdateRequest
         val userId = userData.id
         doSave(userId, userRequest, searchQuery)
       }
+    )
+  }
+
+  private def getFormErrorMessage(form: Form[Forms.UserForm]): String = {
+    form.error("username").map(error =>
+      Messages("editUser.provideUsername")).getOrElse(Messages("editUser.invalidSubmission")
     )
   }
 }
