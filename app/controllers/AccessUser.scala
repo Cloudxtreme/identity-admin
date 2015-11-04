@@ -26,7 +26,7 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
             Some(searchQuery),
             form,
             request.flash.get("message"),
-            None
+            request.flash.get("error")
           )
         )
       case Left(error) =>
