@@ -83,4 +83,23 @@ object Forms {
       )
     )(UserForm.apply)(UserForm.unapply)
   )
+
+  def createForm(user: User): Form[UserForm] = {
+    Forms.userForm.fill(UserForm(
+      user.id,
+      user.email,
+      user.displayName,
+      user.username.getOrElse(""),
+      user.vanityUrl,
+      user.personalDetails,
+      user.deliveryAddress,
+      user.billingAddress,
+      user.lastActivityDate,
+      user.lastActivityIp,
+      user.registrationDate,
+      user.registrationIp,
+      user.status,
+      user.groups
+    ))
+  }
 }

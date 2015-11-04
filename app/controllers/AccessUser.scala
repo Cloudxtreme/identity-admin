@@ -2,8 +2,6 @@ package controllers
 
 import javax.inject.Inject
 import models.Forms._
-import models.{Forms, User}
-import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
@@ -34,23 +32,4 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
         Redirect(routes.Search.search(searchQuery)).flashing("error" -> error.toString)
       }
     }
-
-  def createForm(user: User): Form[UserForm] = {
-    Forms.userForm.fill(UserForm(
-      user.id,
-      user.email,
-      user.displayName,
-      user.username.getOrElse(""),
-      user.vanityUrl,
-      user.personalDetails,
-      user.deliveryAddress,
-      user.billingAddress,
-      user.lastActivityDate,
-      user.lastActivityIp,
-      user.registrationDate,
-      user.registrationIp,
-      user.status,
-      user.groups
-    ))
-  }
 }

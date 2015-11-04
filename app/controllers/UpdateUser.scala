@@ -17,22 +17,8 @@ import scala.concurrent.Future
 trait SaveAction extends Controller with Logging{
   val adminApi: AdminApi
 
-  private[controllers] def doSave(userId: String, userRequest: UserUpdateRequest, searchQuery: String): Future[Result] = {
-    adminApi.updateUserData(userId, userRequest).map {
-      case Right(_) =>
-        logger.info("Successfully updated user in database. Redirecting to search.")
-        Redirect(routes.Search.search(searchQuery)).flashing("message" -> "User has been updated")
-      case Left(error) =>
-        logger.error(s"Failed to update user. error: $error")
-        Redirect(routes.Search.search(searchQuery)).flashing("error" -> error.toString)
-    }
-  }
-}
-
-class UpdateUser @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SaveAction {
-
-  def save(searchQuery: String) = AuthAction.async { request =>
-    userForm.bindFromRequest()(request).fold(
+  private[controllers] def doSave(searchQuery: String, form: Form[Forms.UserForm]): Future[Result] = {
+    form.fold(
       errorForm => {
         val errorMessage = getFormErrorMessage(errorForm)
         Future(BadRequest(views.html.editUser(
@@ -46,14 +32,45 @@ class UpdateUser @Inject() (val adminApi: AdminApi) extends Controller with Auth
       userData => {
         val userRequest = userData.convertToUserUpdateRequest
         val userId = userData.id
-        doSave(userId, userRequest, searchQuery)
+        update(userId, searchQuery, userRequest, form)
       }
     )
+  }
+
+  private[controllers] def update(userId: String,
+                     searchQuery: String,
+                     userRequest: UserUpdateRequest,
+                     form: Form[Forms.UserForm]): Future[Result] = {
+
+    adminApi.updateUserData(userId, userRequest).map {
+      case Right(_) =>
+        logger.info("Successfully updated user in database. Redirecting to search.")
+        Redirect(routes.Search.search(searchQuery)).flashing("message" -> "User has been updated")
+      case Left(error) =>
+        logger.error(s"Failed to update user. error: $error")
+        Ok(
+          views.html.editUser(
+            Messages("editUser.title"),
+            Some(searchQuery),
+            form,
+            None,
+            Some(error.toString)
+          )
+        )
+    }
   }
 
   private def getFormErrorMessage(form: Form[Forms.UserForm]): String = {
     form.error("username").map(error =>
       Messages("editUser.provideUsername")).getOrElse(Messages("editUser.invalidSubmission")
     )
+  }
+}
+
+class UpdateUser @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SaveAction {
+
+  def save(searchQuery: String) = AuthAction.async { request =>
+    val form = userForm.bindFromRequest()(request)
+    doSave(searchQuery, form)
   }
 }
