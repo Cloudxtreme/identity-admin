@@ -28,7 +28,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
   def authHealthCheck: Future[Either[CustomError, String]] = {
     requestSigner.sign(WS.url(authHealthCheckUrl)).get().map ( response => response.status match {
       case 200 => Right("OK 200")
-      case status@_  => Left(CustomError("API auth failed", s"API status code: $status"))
+      case _  => Left(CustomError("API auth failed", s"API status code: ${response.status}"))
     }
     ).recover { case e: Throwable =>
         Left(CustomError("API connection failed", e.getMessage))

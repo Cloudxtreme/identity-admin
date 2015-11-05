@@ -20,7 +20,16 @@ class SNSTest extends FlatSpec with Matchers with MockitoSugar with OneInstanceP
     new Topic().withTopicArn("arn:aws:sns:eu-west-1:1234:IdentityAdmin-DEV-topicSendEmailToIdentityDev-1234")
   )
 
-  "retrieveAdminApiTopic" should "find a topic with the correct pattern" is pending
+  "retrieveAdminApiTopic" should "find a topic with the correct pattern" in {
+    class FakeSNSClient extends NotificationClient {
+      override val topicPattern: String = ""
+      override private[healthcheck] def listTopics: Either[SNSError, List[Topic]] = ???
+      override private[healthcheck] def publishAsync(topic: Topic): Either[SNSError, Topic] = ???
+    }
+
+    val fakeSNSClient = new FakeSNSClient
+    fakeSNSClient.findTopicARN(topics, pattern) should be(Right(validTopic))
+  }
 
   "notifyAdminApiUnhealthy" should "send notification to a topic" in {
     when(mockSNSClient.listTopics).thenReturn(Right(topics))

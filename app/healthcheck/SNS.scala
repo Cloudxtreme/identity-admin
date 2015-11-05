@@ -20,11 +20,16 @@ case class SNSError(message: String)
 trait NotificationClient {
   val topicPattern: String
 
-  private[healthcheck] def findTopicARN(topics: List[Topic], topicPattern: String): Either[SNSError, Topic]
-
   private[healthcheck] def listTopics: Either[SNSError, List[Topic]]
 
   private[healthcheck] def publishAsync(topic: Topic): Either[SNSError, Topic]
+
+  private[healthcheck] def findTopicARN(topics: List[Topic], topicPattern: String): Either[SNSError, Topic] = {
+    topics.find { topic => topic.getTopicArn.contains(topicPattern) } match {
+      case Some(t) => Right(t)
+      case None => Left(SNSError(s"Could not find SNS topic with ARN pattern: $topicPattern"))
+    }
+  }
 }
 
 class SNSClient extends NotificationClient with Logging {
@@ -35,13 +40,6 @@ class SNSClient extends NotificationClient with Logging {
     val client = new AmazonSNSAsyncClient(AWSConfig.credentials)
     client.setEndpoint(Region.getRegion(Regions.EU_WEST_1).getServiceEndpoint(com.amazonaws.regions.ServiceAbbreviations.SNS))
     client
-  }
-
-  override private[healthcheck] def findTopicARN(topics: List[Topic], topicPattern: String): Either[SNSError, Topic] = {
-    topics.find { topic => topic.getTopicArn.contains(topicPattern) } match {
-      case Some(t) => Right(t)
-      case None => Left(SNSError(s"Could not find SNS topic with ARN pattern: $topicPattern"))
-    }
   }
 
   override private[healthcheck] def listTopics: Either[SNSError, List[Topic]] = {
