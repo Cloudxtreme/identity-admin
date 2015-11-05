@@ -15,7 +15,7 @@ searchResults.usernameHeader=Username
 searchResults.nameHeader=Name
 searchResults.registeredDateHeader=Registered Date
 searchResults.lastActivityDateHeader=Last Activity Date
-searchResults.errorMessage=Your search query did not match any records.
+searchResults.noResults=Your search query did not match any records.
 
 editUser.title=Edit User
 editUser.idHeader=# ID
@@ -49,6 +49,11 @@ editUser.countyStateHeader=County or State
 editUser.postcodeZipHeader=Postcode/Zipcode
 editUser.countryHeader=Country
 editUser.userGroupsHeader=User Groups
+editUser.invalidSubmission=Invalid form submission
+editUser.provideUsername=You must supply a username before the user can be updated.
+
+error.email=Email is invalid
+error.username=Username is invalid
 
 deleteUser.success=User {0} has been deleted
 sendEmailValidation.success=Email validation for user {0} has been sent
