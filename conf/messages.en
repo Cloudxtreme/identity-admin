@@ -52,5 +52,8 @@ editUser.userGroupsHeader=User Groups
 editUser.invalidSubmission=Invalid form submission
 editUser.provideUsername=You must supply a username before the user can be updated.
 
+error.email=Email is invalid
+error.username=Username is invalid
+
 deleteUser.success=User {0} has been deleted
 sendEmailValidation.success=Email validation for user {0} has been sent

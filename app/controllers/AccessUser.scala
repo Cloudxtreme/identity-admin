@@ -18,13 +18,14 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
     adminApi.getFullUser(userId).map {
       case Right(user) =>
         val form = createForm(user)
+        val error = request.flash.get("error")
+        val formWithErrors = if(error.isDefined) form.withGlobalError(error.getOrElse("Unknown")) else form
         Ok(
           views.html.editUser(
             Messages("editUser.title"),
             Some(searchQuery),
-            form,
-            request.flash.get("message"),
-            request.flash.get("error")
+            formWithErrors,
+            request.flash.get("message")
           )
         )
       case Left(error) =>

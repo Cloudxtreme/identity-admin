@@ -33,7 +33,7 @@ object Forms {
   }
 
   private val username: Mapping[String] = text.verifying(
-    "Invalid display name, ", name => name.matches("[A-z0-9]+") && name.length > 5 && name.length < 21
+    "error.username", name => name.matches("[A-z0-9]+") && name.length > 5 && name.length < 21
   )
 
   val userForm = Form(
