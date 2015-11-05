@@ -20,13 +20,11 @@ trait SaveAction extends Controller with Logging{
   private[controllers] def doSave(searchQuery: String, form: Form[Forms.UserForm]): Future[Result] = {
     form.fold(
       errorForm => {
-        val errorMessage = getFormErrorMessage(errorForm)
         Future(BadRequest(views.html.editUser(
           Messages("editUser.title"),
           Some(searchQuery),
           errorForm,
-          None,
-          Some(errorMessage)
+          None
         )))
       },
       userData => {
@@ -52,18 +50,11 @@ trait SaveAction extends Controller with Logging{
           views.html.editUser(
             Messages("editUser.title"),
             Some(searchQuery),
-            form,
-            None,
-            Some(error.toString)
+            form.withGlobalError(error.toString),
+            None
           )
         )
     }
-  }
-
-  private def getFormErrorMessage(form: Form[Forms.UserForm]): String = {
-    form.error("username").map(error =>
-      Messages("editUser.provideUsername")).getOrElse(Messages("editUser.invalidSubmission")
-    )
   }
 }
 
