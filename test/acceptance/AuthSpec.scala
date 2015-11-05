@@ -1,7 +1,8 @@
-package large
+package acceptance
 
-import large.util.{Util, Tags, Config}
-import large.pages.Homepage
+import acceptance.util.Tags.Acceptance
+import acceptance.util.{Util, Config}
+import acceptance.pages.Homepage
 
 import org.openqa.selenium.WebDriver
 import org.scalatest.selenium.WebBrowser
@@ -20,7 +21,7 @@ class AuthSpec extends FeatureSpec
   feature("Identity Admin Authentication") {
     info(s"in ${Config.stage} environment: ${Config.baseUrl}")
 
-    scenario("User tries to log in to ID Admin.", Tags.Large) {
+    scenario("User tries to log in to ID Admin.", Acceptance) {
       Given("the user has not been previously authenticated")
       assert(!hasSessionCookie)
 
@@ -34,7 +35,7 @@ class AuthSpec extends FeatureSpec
       assert(currentUrl.startsWith(Config.googleAccountsUrl))
     }
 
-    scenario("Un-authenticated user tries to search ID database.", Tags.Large) {
+    scenario("Un-authenticated user tries to search ID database.", Acceptance) {
       Given("the user has not been previously authenticated")
       assert(!hasSessionCookie)
 
@@ -48,7 +49,7 @@ class AuthSpec extends FeatureSpec
       assert(currentUrl.startsWith(Config.googleAccountsUrl))
     }
 
-    scenario("Un-authenticated user tries to delete a record in ID database.", Tags.Large) {
+    scenario("Un-authenticated user tries to delete a record in ID database.", Acceptance) {
       Given("the user has not been previously authenticated")
       assert(!hasSessionCookie)
 

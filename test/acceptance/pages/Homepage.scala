@@ -1,7 +1,7 @@
-package large.pages
+package acceptance.pages
 
-import large.util.{Config, Util}
-import large.util.Util
+import acceptance.util.{Config, Util}
+import acceptance.util.Util
 import org.openqa.selenium.WebDriver
 import org.scalatest.selenium.WebBrowser.{Element, click}
 import org.scalatest.selenium.{WebBrowser, Page}
