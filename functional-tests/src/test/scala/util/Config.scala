@@ -1,4 +1,4 @@
-package acceptance.util
+package test.util
 
 import com.typesafe.config.ConfigFactory
 import org.openqa.selenium.htmlunit.HtmlUnitDriver

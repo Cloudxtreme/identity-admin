@@ -1,6 +1,6 @@
-package acceptance.util
+package test.util
 
-import acceptance.util.Config.baseUrl
+import test.util.Config.baseUrl
 import java.util.concurrent.TimeUnit
 import org.openqa.selenium.support.ui.{ExpectedConditions, WebDriverWait}
 import org.openqa.selenium.{By, WebDriver}
