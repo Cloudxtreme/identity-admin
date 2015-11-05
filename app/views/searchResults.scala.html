@@ -38,6 +38,7 @@
                         @response.creationDate.map(o => o.getDayOfMonth)
                         @response.creationDate.map(o => o.monthOfYear.getAsText)
                         @response.creationDate.map(o => o.getYear)
+                        @response.registrationIp.map(o => s"($o)")
                         <p></div>
                     <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
@@ -45,6 +46,7 @@
                         @response.lastActivityDate.map(o => o.monthOfYear.getAsText)
                         @response.lastActivityDate.map(o => o.getYear)
                         @response.lastActivityDate.map(o => o.toLocalTime)
+                        @response.lastActiveIpAddress.map(o => s"($o)")
                         <p></div>
                     <div class="col-sm-1">
                         <form action="edit">
