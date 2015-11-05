@@ -1,6 +1,10 @@
 @import play.i18n._
 @import models.Forms._
+@import views.html.helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 @(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String], error: Option[String])
+    @implicitField = @{ FieldConstructor(FieldDisplay.f) }
     @main(pageTitle)(searchQuery){
         <div class="row">
             <div class="col-md-10">
@@ -167,34 +171,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-1">
-                            <input
-                                type="checkbox"
-                                class="checkbox"
-                                name="@form("receiveMarketing").name"
-                                value="true"
-                                @if(form("receiveGnmMarketing").value.getOrElse("false") == "true"){
-                                    checked = "checked"
-                                }
-                            />
-                        </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-12">
+                            <p>@helper.checkbox(field = form("status.receiveGnmMarketing"))</p>
                             <p>@Messages.get("editUser.GNMMarketing")</p>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-1">
-                            <input
-                                type="checkbox"
-                                class="checkbox"
-                                name="@form("receive3rdPartyMarketing").name"
-                                value="true"
-                                @if(form("receive3rdPartyMarketing").value.getOrElse("false") == "true"){
-                                    checked = "checked"
-                                }
-                            />
-                        </div>
-                        <div class="col-xs-11">
+                        <div class="col-xs-12">
+                            <p>@helper.checkbox(field = form("status.receive3rdPartyMarketing"))</p>
                             <p>@Messages.get("editUser.3rdPartyMarketing")</p>
                         </div>
                     </div>
