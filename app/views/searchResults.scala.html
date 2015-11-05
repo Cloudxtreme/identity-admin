@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row">
               <div class="col-md-12">
-                  @if(searchResponse.total < 1){
+                  @if(searchResponse.total < 1 && error == None){
                     <div class="alert alert-danger" role="alert">@Messages.get("searchResults.noResults")</div>
                   }
                   @message.map { msg =>
