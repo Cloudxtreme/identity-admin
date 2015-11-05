@@ -36,12 +36,13 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
   }
 
   def deleteUrl(id: String) = s"$baseUrl/user/$id"
+  def sendValidationEmailUrl(id: String) = s"$baseUrl/user/$id/send-validation-email"
 
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get().map(
       response => checkResponse[SearchResponse](response.status, response.body, 200, x => Json.parse(x).as[SearchResponse])
     ).recover { case e: Any =>
-        logger.error("Future Failed: could not connect to API: {}",e.getMessage)
+        logger.error("Could not retrieve user via admin api: {}",e.getMessage)
         Left(CustomError("Fatal Error", "Contact identity team."))
       }
   }
@@ -63,7 +64,16 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
     requestSigner.sign(WS.url(deleteUrl(id))).delete().map(response =>
       checkResponse[Boolean](response.status, response.body, 204, x => true)
     ).recover { case e: Throwable =>
-      logger.error("Future Failed: could not connect to API", e.getMessage)
+      logger.error("Could not delete user via admin api", e.getMessage)
+      Left(CustomError("Fatal Error", "Contact identity team."))
+    }
+  }
+
+  def sendEmailValidation(id: String): Future[Either[CustomError, Boolean]] = {
+    requestSigner.sign(WS.url(sendValidationEmailUrl(id))).post("").map(response =>
+      checkResponse[Boolean](response.status, response.body, 204, x => true)
+    ).recover { case e: Throwable =>
+      logger.error("Could not send email validation via admin api", e.getMessage)
       Left(CustomError("Fatal Error", "Contact identity team."))
     }
   }

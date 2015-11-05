@@ -23,7 +23,7 @@ trait DeleteAction extends Controller with Logging{
         Redirect(routes.Search.search(searchQuery)).flashing("message" -> Messages("deleteUser.success", userId))
       case Left(error) =>
         logger.error(s"Failed to delete user. error: $error")
-        Redirect(routes.Application.getEditUserPage(searchQuery, userId)).flashing("error" -> error.message)
+        Redirect(routes.Application.getEditUserPage(searchQuery, userId)).flashing("message" -> error.message)
     }
   }
 }
