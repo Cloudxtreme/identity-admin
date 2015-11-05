@@ -7,8 +7,6 @@ import com.amazonaws.regions.{Regions, Region}
 import com.amazonaws.services.sns.AmazonSNSAsyncClient
 import com.amazonaws.services.sns.model.{Topic, PublishRequest}
 import com.google.inject.ImplementedBy
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import util.Logging
 import scala.collection.JavaConversions._
