@@ -2,7 +2,7 @@
 @import services.CustomError
 @(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, message: Option[String], error: Option[String])
     @main(pageTitle)(searchBarText){
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
               <div class="col-md-12">
                   @if(searchResponse.total < 1 && error.isEmpty){
