@@ -6,6 +6,8 @@ import play.api.data.Forms._
 
 object Forms {
 
+  val DateTimeFormat: String = "dd-MM-YYYY, HH:mm:ss"
+
   case class UserForm(
     id: String,
     email: String,
@@ -66,9 +68,9 @@ object Forms {
         "country" -> optional(text),
         "postcode" -> optional(text)
       )(Address.apply)(Address.unapply),
-      "lastActivityDate" -> optional(jodaDate("dd-MM-YYYY, HH:mm:ss")),
+      "lastActivityDate" -> optional(jodaDate(DateTimeFormat)),
       "lastActivityIp" -> optional(text),
-      "registrationDate" -> optional(jodaDate("dd-MM-YYYY, HH:mm:ss")),
+      "registrationDate" -> optional(jodaDate(DateTimeFormat)),
       "registrationIp" -> optional(text),
       "status" -> mapping(
         "receive3rdPartyMarketing" -> optional(boolean),
@@ -78,7 +80,7 @@ object Forms {
       "groups" -> seq(
         mapping(
           "name" -> text,
-          "joinDate" -> optional(jodaDate("dd-MM-YYYY, HH:mm:ss"))
+          "joinDate" -> optional(jodaDate(DateTimeFormat))
         )(UserGroup.apply)(UserGroup.unapply)
       )
     )(UserForm.apply)(UserForm.unapply)
