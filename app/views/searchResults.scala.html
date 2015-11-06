@@ -36,12 +36,12 @@
                     <div class="col-sm-2"><p>@response.firstName @response.lastName<p></div>
                     <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.registeredDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
-                        @response.creationDate.map(o => o.toString(DateTimeFormat.forPattern("dd-MM-YYYY, HH:mm:ss zzz")))
+                        @response.creationDate.map(o => o.toString(DateTimeFormat.forPattern("dd-MM-YYYY, HH:mm:ss")))
                         @response.registrationIp.map(o => s"($o)")
                         <p></div>
                     <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
-                        @response.lastActivityDate.map(o => o.toString(DateTimeFormat.forPattern("dd-MM-YYYY, HH:mm:ss zzz")))
+                        @response.lastActivityDate.map(o => o.toString(DateTimeFormat.forPattern("dd-MM-YYYY, HH:mm:ss")))
                         @response.lastActiveIpAddress.map(o => s"($o)")
                         <p></div>
                     <div class="col-sm-1">
