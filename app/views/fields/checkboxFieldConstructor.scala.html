@@ -1,0 +1,6 @@
+@(elements: helper.FieldElements)
+<div class="row">
+    <div class="col-xs-12 @if(elements.hasErrors) {error}">
+        @elements.input <span>@elements.label</span>
+    </div>
+</div>
