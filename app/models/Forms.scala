@@ -66,9 +66,9 @@ object Forms {
         "country" -> optional(text),
         "postcode" -> optional(text)
       )(Address.apply)(Address.unapply),
-      "lastActivityDate" -> optional(jodaDate),
+      "lastActivityDate" -> optional(jodaDate("dd-MM-YYYY, HH:mm:ss zzz")),
       "lastActivityIp" -> optional(text),
-      "registrationDate" -> optional(jodaDate),
+      "registrationDate" -> optional(jodaDate("dd-MM-YYYY, HH:mm:ss zzz")),
       "registrationIp" -> optional(text),
       "status" -> mapping(
         "receive3rdPartyMarketing" -> optional(boolean),
@@ -78,7 +78,7 @@ object Forms {
       "groups" -> seq(
         mapping(
           "name" -> text,
-          "joinDate" -> optional(jodaDate)
+          "joinDate" -> optional(jodaDate("dd-MM-YYYY, HH:mm:ss zzz"))
         )(UserGroup.apply)(UserGroup.unapply)
       )
     )(UserForm.apply)(UserForm.unapply)
