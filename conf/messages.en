@@ -24,11 +24,7 @@ editUser.lastActivityHeader=Last activity
 editUser.emailValidatedHeader=Email validated
 editUser.accountDetails=Account Details
 editUser.marketingPrefsHeader=Marketing Preferences
-editUser.emailHeader=Email Address
-editUser.firstNameHeader=First name
-editUser.lastNameHeader=Last name
 editUser.displayNameHeader=Display name
-editUser.usernameHeader=Username
 editUser.vanityUrlHeader=Vanity URL
 editUser.GNMMarketing=Receive GNM marketing
 editUser.3rdPartyMarketing=Receive 3rd party marketing
@@ -52,8 +48,15 @@ editUser.userGroupsHeader=User Groups
 editUser.invalidSubmission=Invalid form submission
 editUser.provideUsername=You must supply a username before the user can be updated.
 
-error.email=Email is invalid
-error.username=Username is invalid
+email=Email Address
+username=Username
+personalDetails.firstName=First name
+personalDetails.lastName=Last name
+status.receiveGnmMarketing=Receive GNM marketing
+status.receive3rdPartyMarketing=Receive 3rd party marketing
+
+error.email=A valid email address is required
+error.username=Username is required and must be alphanumeric and between 6 and 20 characters
 
 deleteUser.success=User {0} has been deleted
 sendEmailValidation.success=Email validation for user {0} has been sent

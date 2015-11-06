@@ -1,10 +1,11 @@
-@import play.i18n._
+@import play.api.i18n._
 @import models.Forms._
 @import views.html.helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 @(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String])
-    @implicitField = @{ FieldConstructor(FieldDisplay.f) }
+@implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
+    @checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
     @main(pageTitle)(searchQuery){
         <div class="row">
             <div class="col-md-10">
@@ -13,10 +14,10 @@
                 }
                 @if(form.hasErrors) {
                     <div class="alert alert-danger" role="alert">
-                        <p>@Messages.get("editUser.invalidSubmission")</p>
+                        <p>@Messages("editUser.invalidSubmission")</p>
                         <ul>
                             @for(error <- form.errors) {
-                                <li>@Messages.get(error.message)</li>
+                                <li>@Messages(error.message)</li>
                             }
                         </ul>
                     </div>
@@ -30,7 +31,7 @@
                         <h1>@form("personalDetails.firstName").value @form("personalDetails.lastName").value</h1>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.idHeader")</p>
+                                <p>@Messages("editUser.idHeader")</p>
                             </div>
                             <div class="col-sm-10">
                                 <p>@form("id").value</p>
@@ -38,7 +39,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.displayNameHeader")</p>
+                                <p>@Messages("editUser.displayNameHeader")</p>
                             </div>
                             <div class="col-sm-10">
                                 <p>@form("displayName").value</p>
@@ -46,7 +47,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.vanityUrlHeader")</p>
+                                <p>@Messages("editUser.vanityUrlHeader")</p>
                             </div>
                             <div class="col-sm-10">
                                 <p>@form("vanityUrl").value</p>
@@ -54,7 +55,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.registeredHeader")</p>
+                                <p>@Messages("editUser.registeredHeader")</p>
                             </div>
                             <div class="col-sm-10">
                                 <p>
@@ -64,7 +65,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.lastActivityHeader")</p>
+                                <p>@Messages("editUser.lastActivityHeader")</p>
                             </div>
                             <div class="col-sm-10">
                                 <p>
@@ -74,7 +75,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.emailValidatedHeader")</p>
+                                <p>@Messages("editUser.emailValidatedHeader")</p>
                             </div>
                             <div class="col-sm-10">
                                 @if(form("status.userEmailValidated").value == "true") {
@@ -91,17 +92,17 @@
             <div class="col-md-2">
                 <div class="btn-group-vertical center-block">
                     <a class="btn btn-default" href="http://profile.theguardian.com/user/id/@form("id").value">
-                        @Messages.get("editUser.profileBtn")
+                        @Messages("editUser.profileBtn")
                     </a>
                     <form action="delete" class="btn-group">
                         <input type="hidden" value=@searchQuery name="searchQuery"/>
                         <input type="hidden" value="@form("id").value" name="userId"/>
-                        <button class="btn btn-danger" type="submit">@Messages.get("editUser.deleteBtn")</button>
+                        <button class="btn btn-danger" type="submit">@Messages("editUser.deleteBtn")</button>
                     </form>
                     <form action="validateEmail" class="btn-group">
                         <input type="hidden" value=@searchQuery name="searchQuery"/>
                         <input type="hidden" value=@form("id").value name="userId"/>
-                        <button class="btn btn-warning" type="submit">@Messages.get("editUser.validateBtn")</button>
+                        <button class="btn btn-warning" type="submit">@Messages("editUser.validateBtn")</button>
                     </form>
                 </div>
             </div>
@@ -133,71 +134,33 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <h4>@Messages.get("editUser.accountDetails")</h4>
+                    <h4>@Messages("editUser.accountDetails")</h4>
                 </div>
                 <div class="col-md-4 hidden-xs hidden-sm visible-md visible-lg visible-xl">
-                    <h4>@Messages.get("editUser.marketingPrefsHeader")</h4>
+                    <h4>@Messages("editUser.marketingPrefsHeader")</h4>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p>@Messages.get("editUser.emailHeader")</p>
-                        </div>
-                        <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="@form("email").name" value="@form("email").value"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p>@Messages.get("editUser.firstNameHeader")</p>
-                        </div>
-                        <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="@form("personalDetails.firstName").name" value="@form("personalDetails.firstName").value"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p>@Messages.get("editUser.lastNameHeader")</p>
-                        </div>
-                        <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="@form("personalDetails.lastName").name" value="@form("personalDetails.lastName").value"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p>@Messages.get("editUser.usernameHeader")</p>
-                        </div>
-                        <div class="col-md-8">
-                            <input class="full-width-input" type="text" name="@form("username").name" value="@form("username").value"/>
-                        </div>
-                    </div>
+                    @inputText(form("email"), 'class -> "full-width-input", '_showConstraints -> false)
+                    @inputText(form("personalDetails.firstName"), 'class -> "full-width-input", '_showConstraints -> false)
+                    @inputText(form("personalDetails.lastName"), 'class -> "full-width-input", '_showConstraints -> false)
+                    @inputText(form("username"), 'class -> "full-width-input", '_showConstraints -> false)
                 </div>
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-4 visible-xs visible-sm hidden-md hidden-lg hidden-xl">
-                            <h4>@Messages.get("editUser.marketingPrefsHeader")</h4>
+                            <h4>@Messages("editUser.marketingPrefsHeader")</h4>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <p>@helper.checkbox(field = form("status.receiveGnmMarketing"))</p>
-                            <p>@Messages.get("editUser.GNMMarketing")</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <p>@helper.checkbox(field = form("status.receive3rdPartyMarketing"))</p>
-                            <p>@Messages.get("editUser.3rdPartyMarketing")</p>
-                        </div>
-                    </div>
+                    @fields.checkbox(form("status.receiveGnmMarketing"), '_showConstraints -> false)(handler = checkboxFieldConstructor, implicitly[Messages])
+                    @fields.checkbox(form("status.receive3rdPartyMarketing"), '_showConstraints -> false)(handler = checkboxFieldConstructor, implicitly[Messages])
                 </div>
             </div>
         <div class="row">
             <div class="col-md-10"></div>
             <div class="col-md-2">
-                <button type="submit" class="pull-right btn btn-success btn-block center-block">@Messages.get("editUser.saveBtn")</button>
+                <button type="submit" class="pull-right btn btn-success btn-block center-block">@Messages("editUser.saveBtn")</button>
             </div>
         </div>
     </form>
@@ -205,10 +168,10 @@
         <div class="col-md-10 uneditable-fields">
             <div class="row">
                 <div class="col-md-2">
-                    <h4>@Messages.get("editUser.personalDetailsHeader")</h4>
+                    <h4>@Messages("editUser.personalDetailsHeader")</h4>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.genderHeader")</p>
+                            <p>@Messages("editUser.genderHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("personalDetails.gender").value</p>
@@ -216,7 +179,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.dobHeader")</p>
+                            <p>@Messages("editUser.dobHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>
@@ -226,7 +189,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.locationHeader")</p>
+                            <p>@Messages("editUser.locationHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("personalDetails.location").value</p>
@@ -234,10 +197,10 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <h4>@Messages.get("editUser.deliveryAddressHeader")</h4>
+                    <h4>@Messages("editUser.deliveryAddressHeader")</h4>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.addressLine1Header")</p>
+                            <p>@Messages("editUser.addressLine1Header")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("deliveryAddress.addressLine1").value</p>
@@ -245,7 +208,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.addressLine2Header")</p>
+                            <p>@Messages("editUser.addressLine2Header")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("deliveryAddress.addressLine2").value</p>
@@ -253,7 +216,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.townHeader")</p>
+                            <p>@Messages("editUser.townHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("deliveryAddress.addressLine3").value</p>
@@ -261,7 +224,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.countyStateHeader")</p>
+                            <p>@Messages("editUser.countyStateHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("deliveryAddress.addressLine4").value</p>
@@ -269,7 +232,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.postcodeZipHeader")</p>
+                            <p>@Messages("editUser.postcodeZipHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("deliveryAddress.postcode").value</p>
@@ -277,7 +240,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.countryHeader")</p>
+                            <p>@Messages("editUser.countryHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("deliveryAddress.country").value</p>
@@ -285,10 +248,10 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <h4>@Messages.get("editUser.billingAddressHeader")</h4>
+                    <h4>@Messages("editUser.billingAddressHeader")</h4>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.addressLine1Header")</p>
+                            <p>@Messages("editUser.addressLine1Header")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("billingAddress.addressLine1").value</p>
@@ -296,7 +259,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.addressLine2Header")</p>
+                            <p>@Messages("editUser.addressLine2Header")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("billingAddress.addressLine2").value</p>
@@ -304,7 +267,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.townHeader")</p>
+                            <p>@Messages("editUser.townHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("billingAddress.addressLine3").value</p>
@@ -312,7 +275,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.countyStateHeader")</p>
+                            <p>@Messages("editUser.countyStateHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("billingAddress.addressLine4").value</p>
@@ -320,7 +283,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.postcodeZipHeader")</p>
+                            <p>@Messages("editUser.postcodeZipHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("billingAddress.postcode").value</p>
@@ -328,7 +291,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.countryHeader")</p>
+                            <p>@Messages("editUser.countryHeader")</p>
                         </div>
                         <div class="col-xs-6">
                             <p>@form("billingAddress.country").value</p>
@@ -338,7 +301,7 @@
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <h4>@Messages.get("editUser.userGroupsHeader")</h4>
+                    <h4>@Messages("editUser.userGroupsHeader")</h4>
                 </div>
             </div>
 
