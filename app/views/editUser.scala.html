@@ -94,11 +94,11 @@
                     <a class="btn btn-default" href="http://profile.theguardian.com/user/id/@form("id").value">
                         @Messages("editUser.profileBtn")
                     </a>
-                    <form action="delete" class="btn-group">
-                        <input type="hidden" value=@searchQuery name="searchQuery"/>
-                        <input type="hidden" value="@form("id").value" name="userId"/>
-                        <button class="btn btn-danger" type="submit">@Messages("editUser.deleteBtn")</button>
-                    </form>
+
+                    <a class="btn btn-danger" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">
+                        @Messages("editUser.deleteBtn")
+                    </a>
+
                     <form action="validateEmail" class="btn-group">
                         <input type="hidden" value=@searchQuery name="searchQuery"/>
                         <input type="hidden" value=@form("id").value name="userId"/>
@@ -106,6 +106,31 @@
                     </form>
                 </div>
             </div>
+
+            <!--Modal for the delete button-->
+            <div class="modal fade" id='deleteModal' tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" align="center">Delete @form("personalDetails.firstName").value @form("personalDetails.lastName").value?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p align="center">Are you sure you want to delete the account for @form("personalDetails.firstName").value @form("personalDetails.lastName").value?</p>
+                            <p align="center">This change cannot be undone</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <form action="delete" class="modal-form">
+                                <input type="hidden" value=@searchQuery name="searchQuery"/>
+                                <input type="hidden" value=@form("id").value name="userId"/>
+                                <button type="submit" class="btn btn-danger">Delete Account</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse("")).url">
             <input type="hidden" name="@form("id").name" value="@form("id").value"/>
