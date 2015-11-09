@@ -3,18 +3,25 @@
 # ~~~~
 
 # Home page
-GET        /                    @controllers.Application.index
+GET        /                              @controllers.Application.index
 
 GET        /management/healthcheck        @controllers.HealthCheck.healthCheck
 
 GET        /login                         @controllers.Login.login
+
 GET        /loginAction                   @controllers.Login.loginAction
+
 GET        /oauth2callback                @controllers.Login.oauth2Callback
 
 GET        /assets/*file                  @controllers.Assets.at(path="/public", file)
 
 GET        /search                        @controllers.Search.search(searchQuery: String)
 
-GET        /edit                          @controllers.Application.getEditUserPage(searchQuery: String, userId: String)
 GET        /delete                        @controllers.Delete.delete(searchQuery: String, userId: String)
+
 GET        /validateEmail                 @controllers.SendEmailValidation.sendEmailValidation(searchQuery: String, userId: String)
+
+GET        /edit                          @controllers.AccessUser.getUser(searchQuery: String, userId: String)
+
+POST       /save                          @controllers.UpdateUser.save(searchQuery: String)
+

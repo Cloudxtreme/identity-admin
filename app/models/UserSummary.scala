@@ -12,7 +12,9 @@ case class UserSummary(id: String,
                        firstName: Option[String],
                        lastName: Option[String],
                        creationDate: Option[DateTime],
-                       lastActivityDate: Option[DateTime])
+                       lastActivityDate: Option[DateTime],
+                       registrationIp: Option[String],
+                       lastActiveIpAddress: Option[String])
 
 
 
