@@ -1,6 +1,7 @@
 package services
 
 import javax.inject.Inject
+import config.Conf
 import models.{UserUpdateRequest, SearchResponse, User}
 import play.api.Play._
 import play.api.libs.json.Json
@@ -27,7 +28,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
   lazy val searchUrl = s"$baseUrl/user/search"
   def  accessUserUrl(id: String) = s"$baseUrl/user/$id"
   def sendValidationEmailUrl(id: String) = s"$baseUrl/user/$id/send-validation-email"
-  val contact = "Contact identity team: identitydev@guardian.co.uk"
+  val contact = "Contact identity team: " + Conf.errorEmail
   
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get().map(
