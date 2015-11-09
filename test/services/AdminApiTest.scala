@@ -18,7 +18,7 @@ class AdminApiTest extends WordSpec with Matchers{
     "determine invalid json from the API is handled" in {
       val test = "{}"
       val response = adminApi.checkResponse[SearchResponse](200, test, 200, x => Json.parse(x).as[SearchResponse])
-      response should be (Left(CustomError("Fatal Error", "Contact identity team.")))
+      response should be (Left(CustomError("Fatal Error", adminApi.contact)))
     }
   }
 }
