@@ -25,3 +25,5 @@ GET        /edit                          @controllers.AccessUser.getUser(search
 
 POST       /save                          @controllers.UpdateUser.save(searchQuery: String)
 
+GET        /webjars/*file                 @controllers.WebJarAssets.at(file)
+

@@ -11,6 +11,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.5" % "test",
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "com.gu" %% "play-googleauth" % "0.3.2",
+  "org.webjars" %% "webjars-play" % "2.4.0-1",
   "org.webjars" % "bootstrap" % "3.3.5",
   ws,
   filters
