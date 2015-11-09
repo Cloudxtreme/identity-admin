@@ -5,7 +5,7 @@ groups.failure=User must be in groups: {0}
 main.placeholderSearchBarText=Search by username, email, postcode or IP address...
 
 index.title=User Admin
-index.mainHeader=Welcome to Passport Control
+index.mainHeader=Welcome
 index.subHeader=Search for an Identity using the search bar above
 
 searchResults.title=Search Results
@@ -30,7 +30,7 @@ editUser.GNMMarketing=Receive GNM marketing
 editUser.3rdPartyMarketing=Receive 3rd party marketing
 editUser.profileBtn=View public profile
 editUser.deleteBtn=Delete account
-editUser.validateBtn=Validate email
+editUser.validateBtn=Send validation request email
 editUser.saveBtn=Save
 editUser.personalDetailsHeader=Personal Details
 editUser.deliveryAddressHeader=Delivery Address

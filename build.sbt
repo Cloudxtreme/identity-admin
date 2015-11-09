@@ -17,6 +17,8 @@ libraryDependencies ++= Seq(
   filters
 )
 
+mappings in Universal ++= (baseDirectory.value / "deploy" * "*" get) map (x => x -> ("deploy/" + x.getName))
+
 riffRaffPackageType := (packageZipTarball in Universal).value
 
 riffRaffBuildIdentifier := "DEV"
