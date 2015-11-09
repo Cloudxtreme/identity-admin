@@ -5,7 +5,7 @@ groups.failure=User must be in groups: {0}
 main.placeholderSearchBarText=Search by username, email, postcode or IP address...
 
 index.title=User Admin
-index.mainHeader=Welcome to Passport Control
+index.mainHeader=Welcome
 index.subHeader=Search for an Identity using the search bar above
 
 searchResults.title=Search Results
