@@ -17,14 +17,14 @@ import services.{SafeGoogleAuth, GoogleAuthConf, GoogleGroups}
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
   val authConfig = GoogleAuthConf.googleAuthConfig
-  val loginCall = routes.Login.login()
 }
 
 class Login @Inject() extends Controller with AuthActions {
+  case class LoginError(queryParam: String, translationKey: String, additionalMessage: String)
 
   val indexCall = routes.Application.index()
 
-  def login = Action { request =>
+  def login(errorType: String) = Action { request =>
     val error = request.flash.get("error")
     Ok(views.html.login(error))
   }
@@ -53,12 +53,14 @@ class Login @Inject() extends Controller with AuthActions {
         redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
       }
       case _ => {
-        val redirect = loginErrorRedirect("groups.failure", GoogleGroups.requiredGroupsMsg)
+        val error = LoginError("groups", "groups.failure", GoogleGroups.requiredGroupsMsg)
+        val redirect = loginErrorRedirect(error)
         redirect.withSession { session.loginError }
       }
     } recover {
       case ex => {
-        val redirect = loginErrorRedirect("login.failure", ex.getMessage)
+        val error = LoginError("login", "login.failure", ex.getMessage)
+        val redirect = loginErrorRedirect(error)
         redirect.withSession { session.loginError }
       }
     }
@@ -67,6 +69,6 @@ class Login @Inject() extends Controller with AuthActions {
   private def successfulLoginRedirect(session: Session): Result =
     session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
 
-  private def loginErrorRedirect(errorType: String, additionalMessage: String): Result =
-    Redirect(loginCall).flashing("error" -> Messages(errorType, additionalMessage))
+  private def loginErrorRedirect(error: LoginError): Result =
+    Redirect(routes.Login.login(error.queryParam)).flashing("error" -> Messages(error.translationKey, error.additionalMessage))
 }

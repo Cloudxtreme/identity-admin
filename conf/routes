@@ -7,7 +7,7 @@ GET        /                              @controllers.Application.index
 
 GET        /management/healthcheck        @controllers.HealthCheck.healthCheck
 
-GET        /login                         @controllers.Login.login
+GET        /login                         @controllers.Login.login(errorType: String)
 
 GET        /loginAction                   @controllers.Login.loginAction
 
