@@ -59,7 +59,7 @@
                             </div>
                             <div class="col-sm-10">
                                 <p>
-                                    @form("registrationDate").value @form("registrationType").value.map(o => s"($o)")
+                                    @form("registrationDate").value
                                 </p>
                             </div>
                         </div>
@@ -130,7 +130,6 @@
             <input type="hidden" name="@form("lastActivityIp").name" value="@form("lastActivityIp").value"/>
             <input type="hidden" name="@form("registrationDate").name" value="@form("registrationDate").value"/>
             <input type="hidden" name="@form("registrationIp").name" value="@form("registrationIp").value"/>
-            <input type="hidden" name="@form("registrationType").name" value="@form("registrationType").value"/>
             <input type="hidden" name="@form("status.userEmailValidated").name" value="@form("status.userEmailValidated").value"/>
 
             <div class="row">
