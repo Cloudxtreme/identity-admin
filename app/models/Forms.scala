@@ -21,6 +21,7 @@ object Forms {
     lastActivityIp: Option[String] = None,
     registrationDate: Option[DateTime] = None,
     registrationIp: Option[String] = None,
+    registrationType: Option[String] = None,
     status: UserStatus = UserStatus(),
     groups: Seq[UserGroup] = Nil){
 
@@ -72,6 +73,7 @@ object Forms {
       "lastActivityIp" -> optional(text),
       "registrationDate" -> optional(jodaDate(DateTimeFormat)),
       "registrationIp" -> optional(text),
+      "registrationType" -> optional(text),
       "status" -> mapping(
         "receive3rdPartyMarketing" -> optional(boolean),
         "receiveGnmMarketing" -> optional(boolean),
@@ -100,6 +102,7 @@ object Forms {
       user.lastActivityIp,
       user.registrationDate,
       user.registrationIp,
+      user.registrationType,
       user.status,
       user.groups
     ))
