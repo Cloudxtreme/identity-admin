@@ -2,7 +2,6 @@ import controllers.routes
 import play.api._
 import play.api.Play.current
 import healthcheck.{SNS, AdminApiHealthCheck}
-import play.api.i18n.Messages
 import play.api.mvc.{Result, RequestHeader}
 import play.api.mvc.Results.Redirect
 import services.AdminApi
