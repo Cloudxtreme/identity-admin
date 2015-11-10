@@ -1,8 +1,10 @@
 @import play.i18n._
 @import services.CustomError
+@import models.Forms
+@import org.joda.time.format.DateTimeFormat
 @(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, message: Option[String], error: Option[String])
     @main(pageTitle)(searchBarText){
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
               <div class="col-md-12">
                   @if(searchResponse.total < 1 && error.isEmpty){
@@ -35,16 +37,13 @@
                     <div class="col-sm-2"><p>@response.firstName @response.lastName<p></div>
                     <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.registeredDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
-                        @response.creationDate.map(o => o.getDayOfMonth)
-                        @response.creationDate.map(o => o.monthOfYear.getAsText)
-                        @response.creationDate.map(o => o.getYear)
+                        @response.creationDate.map(o => o.toString(DateTimeFormat.forPattern(Forms.DateTimeFormat)))
+                        @response.registrationIp.map(o => s"($o)")
                         <p></div>
                     <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
-                        @response.lastActivityDate.map(o => o.getDayOfMonth)
-                        @response.lastActivityDate.map(o => o.monthOfYear.getAsText)
-                        @response.lastActivityDate.map(o => o.getYear)
-                        @response.lastActivityDate.map(o => o.toLocalTime)
+                        @response.lastActivityDate.map(o => o.toString(DateTimeFormat.forPattern(Forms.DateTimeFormat)))
+                        @response.lastActiveIpAddress.map(o => s"($o)")
                         <p></div>
                     <div class="col-sm-1">
                         <form action="edit">

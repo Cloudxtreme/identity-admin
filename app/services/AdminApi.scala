@@ -48,7 +48,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
     requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get().map(
       response => checkResponse[SearchResponse](response.status, response.body, 200, x => Json.parse(x).as[SearchResponse])
     ).recover { case e: Any =>
-        logger.error("Could not retrieve user via admin api: {}",e.getMessage)
+        logger.error("Future Failed: could not connect to API. {}",e.getMessage)
         Left(CustomError("Fatal Error", "Contact identity team."))
       }
   }

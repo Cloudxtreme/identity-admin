@@ -84,3 +84,4 @@ sbt devrun
 - Browser tests should only be written if the functionality cannot be tested any other way.
 - Tests should always complete in under five minutes.
 - Unstable tests are not acceptable.
+
