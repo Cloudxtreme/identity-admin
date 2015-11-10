@@ -1,12 +1,24 @@
-@(error: Option[String] = None)
+@(errorType: Option[String] = None, contactEmail: Option[String])
 
 <html>
     <head><title>Login</title></head>
     <body>
         <h1>Login Page</h1>
-        <p>Click the button below to login.</p>
-        <p>This page is used to redirect failed login attempts and display any errors.</p>
-        <p>The error this time was: @error</p>
+        @(errorType, contactEmail) match {
+            case (Some("groupsValidationFailed"), Some(email)) => {
+                <p>Sorry, you do not have access to User Admin. If you would like access, please email @email.
+                   Please state the reason why you need access.</p>
+            }
+            case (Some("identityValidationFailed"), Some(email)) => {
+                <p>We could not log you in. Please contact @email if the problem persists.</p>
+            }
+            case (Some(_), _) => {
+                <p>Failed to login. Please try again.</p>
+            }
+            case (None, _) => {
+                <p>Click the button below to login.</p>
+            }
+        }
         <form action="@routes.Login.loginAction()" method="get">
             <input value="Log In" type="submit">
         </form>

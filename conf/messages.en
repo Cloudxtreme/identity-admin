@@ -1,7 +1,3 @@
-login.missingAntiForgeryToken=Anti forgery token missing in session
-login.failure=Login failure: {0}
-groups.failure=User must be in groups: {0}
-
 main.placeholderSearchBarText=Search by username, email, postcode or IP address...
 
 index.title=User Admin

@@ -5,9 +5,7 @@ import javax.inject.Inject
 import auth.CSRFAction
 import auth.CSRF.ANTI_FORGERY_KEY
 import auth.LoginSession.SessionOps
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-import play.api.libs.json.Json
+import config.Conf
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.googleauth._
@@ -20,13 +18,12 @@ trait AuthActions extends Actions {
 }
 
 class Login @Inject() extends Controller with AuthActions {
-  case class LoginError(queryParam: String, translationKey: String, additionalMessage: String)
 
   val indexCall = routes.Application.index()
+  val contactEmail = Conf.errorEmail
 
-  def login(errorType: String) = Action { request =>
-    val error = request.flash.get("error")
-    Ok(views.html.login(error))
+  def login(errorType: Option[String]) = Action { request =>
+    Ok(views.html.login(errorType, Some(contactEmail)))
   }
 
   def loginAction = Action.async { implicit request =>
@@ -53,14 +50,12 @@ class Login @Inject() extends Controller with AuthActions {
         redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
       }
       case _ => {
-        val error = LoginError("groups", "groups.failure", GoogleGroups.requiredGroupsMsg)
-        val redirect = loginErrorRedirect(error)
+        val redirect = loginErrorRedirect("groupsValidationFailed")
         redirect.withSession { session.loginError }
       }
     } recover {
       case ex => {
-        val error = LoginError("login", "login.failure", ex.getMessage)
-        val redirect = loginErrorRedirect(error)
+        val redirect = loginErrorRedirect("identityValidationFailed")
         redirect.withSession { session.loginError }
       }
     }
@@ -69,6 +64,7 @@ class Login @Inject() extends Controller with AuthActions {
   private def successfulLoginRedirect(session: Session): Result =
     session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
 
-  private def loginErrorRedirect(error: LoginError): Result =
-    Redirect(routes.Login.login(error.queryParam)).flashing("error" -> Messages(error.translationKey, error.additionalMessage))
+  private def loginErrorRedirect(loginType: String): Result = {
+    Redirect(routes.Login.login(Some(loginType)))
+  }
 }

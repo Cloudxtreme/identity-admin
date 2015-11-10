@@ -14,7 +14,6 @@ object GoogleGroups extends Logging {
   import Authorisation._
 
   val requiredGroups = Set(TWO_FACTOR_AUTH_GROUP, GoogleAuthConf.userAdminGroup)
-  val requiredGroupsMsg = requiredGroups.mkString(", ")
 
   private val serviceAccount = GoogleServiceAccount(
     credentials.getServiceAccountId,
