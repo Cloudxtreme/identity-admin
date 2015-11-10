@@ -64,7 +64,7 @@ class Login @Inject() extends Controller with AuthActions {
   private def successfulLoginRedirect(session: Session): Result =
     session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
 
-  private def loginErrorRedirect(loginType: String): Result = {
-    Redirect(routes.Login.login(Some(loginType)))
+  private def loginErrorRedirect(errorType: String): Result = {
+    Redirect(routes.Login.login(Some(errorType)))
   }
 }
