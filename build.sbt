@@ -12,7 +12,10 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "com.gu" %% "play-googleauth" % "0.3.2",
   "org.webjars" % "bootstrap" % "3.3.5",
-  ws,
+  "com.typesafe.akka" %% "akka-agent" % "2.4.0",
+  "com.typesafe.akka" %% "akka-slf4j" % "2.4.0",
+  "com.amazonaws" % "aws-java-sdk-sns" % "1.10.30",
+   ws,
   filters
 )
 

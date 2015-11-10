@@ -31,4 +31,6 @@
     <root level="INFO">
         <appender-ref ref="LOGFILE"/>
     </root>
+
+    <logger name="akka" level="INFO" />
 </configuration>

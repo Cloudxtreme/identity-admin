@@ -24,8 +24,24 @@ object CustomError {
 class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
 
   lazy val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
+  lazy val baseRootUrl = current.configuration.getString("identity-admin.adminApi.baseRootUrl").get
+
   lazy val searchUrl = s"$baseUrl/user/search"
+
+  lazy val authHealthCheckUrl = s"$baseRootUrl/authHealthcheck"
+
+  def authHealthCheck: Future[Either[CustomError, String]] = {
+    requestSigner.sign(WS.url(authHealthCheckUrl)).get().map ( response => response.status match {
+      case 200 => Right("OK 200")
+      case _  => Left(CustomError("API auth failed", s"API status code: ${response.status}"))
+    }
+    ).recover { case e: Throwable =>
+        Left(CustomError("API connection failed", e.getMessage))
+    }
+  }
+
   def  accessUserUrl(id: String) = s"$baseUrl/user/$id"
+
   def sendValidationEmailUrl(id: String) = s"$baseUrl/user/$id/send-validation-email"
   
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
