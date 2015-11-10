@@ -43,7 +43,8 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
   def  accessUserUrl(id: String) = s"$baseUrl/user/$id"
 
   def sendValidationEmailUrl(id: String) = s"$baseUrl/user/$id/send-validation-email"
-  
+  def validateEmailUrl(id: String) = s"$baseUrl/user/$id/validate-email"
+
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get().map(
       response => checkResponse[SearchResponse](response.status, response.body, 200, x => Json.parse(x).as[SearchResponse])
@@ -99,6 +100,15 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
       checkResponse[Boolean](response.status, response.body, 204, x => true)
     ).recover { case e: Throwable =>
       logger.error("Could not send email validation via admin api", e.getMessage)
+      Left(CustomError("Fatal Error", "Contact identity team."))
+    }
+  }
+
+  def validateEmail(id: String): Future[Either[CustomError, Boolean]] = {
+    requestSigner.sign(WS.url(validateEmailUrl(id))).post("").map(response =>
+      checkResponse[Boolean](response.status, response.body, 204, x => true)
+    ).recover { case e: Throwable =>
+      logger.error("Could not validate email via admin api", e.getMessage)
       Left(CustomError("Fatal Error", "Contact identity team."))
     }
   }

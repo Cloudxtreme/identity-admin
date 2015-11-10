@@ -17,6 +17,7 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
   def getUser(searchQuery: String, userId: String) = AuthAction.async { request =>
     adminApi.getFullUser(userId).map {
       case Right(user) =>
+        println(user)
         val form = createForm(user)
         val error = request.flash.get("error")
         val formWithErrors = if(error.isDefined) form.withGlobalError(error.getOrElse("Unknown")) else form

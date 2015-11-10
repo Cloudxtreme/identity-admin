@@ -5,7 +5,10 @@
 @import play.api.i18n.Messages.Implicits._
 @(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String])
 @implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
-    @checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
+@checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
+@userId = @{form("id").value.getOrElse("")}
+@query = @{searchQuery.getOrElse("")}
+
     @main(pageTitle)(searchQuery){
         <div class="row">
             <div class="col-md-10">
@@ -78,7 +81,7 @@
                                 <p>@Messages("editUser.emailValidatedHeader")</p>
                             </div>
                             <div class="col-sm-10">
-                                @if(form("status.userEmailValidated").value == "true") {
+                                @if(form("status.userEmailValidated").value == Some("true")) {
                                     <p class="email-validated">Yes</p>
                                 } else {
                                     <p class="email-not-validated">No</p>
@@ -91,19 +94,18 @@
             </div>
             <div class="col-md-2">
                 <div class="btn-group-vertical center-block">
-                    <a class="btn btn-default" href="http://profile.theguardian.com/user/id/@form("id").value">
+                    <a class="btn btn-default" href="http://profile.theguardian.com/user/id/@userId">
                         @Messages("editUser.profileBtn")
                     </a>
-                    <form action="delete" class="btn-group">
-                        <input type="hidden" value=@searchQuery name="searchQuery"/>
-                        <input type="hidden" value="@form("id").value" name="userId"/>
-                        <button class="btn btn-danger" type="submit">@Messages("editUser.deleteBtn")</button>
-                    </form>
-                    <form action="validateEmail" class="btn-group">
-                        <input type="hidden" value=@searchQuery name="searchQuery"/>
-                        <input type="hidden" value=@form("id").value name="userId"/>
-                        <button class="btn btn-warning" type="submit">@Messages("editUser.validateBtn")</button>
-                    </form>
+                    <a class="btn btn-danger" href="@routes.Delete.delete(query, userId)">
+                        @Messages("editUser.deleteBtn")
+                    </a>
+                    <a class="btn btn-warning" href="@routes.SendEmailValidation.sendEmailValidation(query, userId)">
+                        @Messages("editUser.validateBtn")
+                    </a>
+                    <a class="btn btn-success" href="@routes.SendEmailValidation.validateEmail(query, userId)">
+                        @Messages("editUser.validateEmailBtn")
+                    </a>
                 </div>
             </div>
         </div>

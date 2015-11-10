@@ -31,6 +31,7 @@ editUser.3rdPartyMarketing=Receive 3rd party marketing
 editUser.profileBtn=View public profile
 editUser.deleteBtn=Delete account
 editUser.validateBtn=Send validation request email
+editUser.validateEmailBtn=Validate email
 editUser.saveBtn=Save
 editUser.personalDetailsHeader=Personal Details
 editUser.deliveryAddressHeader=Delivery Address
@@ -59,4 +60,5 @@ error.email=A valid email address is required
 error.username=Username is required and must be alphanumeric and between 6 and 20 characters
 
 deleteUser.success=User {0} has been deleted
+validateEmail.success=Email has been validated for user {0}
 sendEmailValidation.success=Email validation for user {0} has been sent

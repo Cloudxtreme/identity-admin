@@ -26,11 +26,26 @@ trait SendEmailValidationAction extends Controller with Logging{
         Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("error" -> error.message)
     }
   }
+
+  private[controllers] def doValidateEmail(searchQuery: String, userId: String): Future[Result] = {
+    logger.info(s"Validating email for user with id: $userId")
+    adminApi.validateEmail(userId).map {
+      case Right(result) =>
+        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("message" -> Messages("validateEmail.success", userId))
+      case Left(error) =>
+        logger.error(s"Failed to validate email for user with id: $userId. error: $error")
+        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("error" -> error.message)
+    }
+  }
 }
 
 class SendEmailValidation @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SendEmailValidationAction {
 
   def sendEmailValidation(searchQuery: String, userId: String) = AuthAction.async {
     doSendEmailValidation(searchQuery, userId)
+  }
+
+  def validateEmail(searchQuery: String, userId: String) = AuthAction.async {
+    doValidateEmail(searchQuery, userId)
   }
 }
