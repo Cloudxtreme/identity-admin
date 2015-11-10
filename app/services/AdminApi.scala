@@ -21,19 +21,37 @@ object CustomError {
   implicit val format = Json.format[CustomError]
 }
 
-class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
+class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging {
 
   lazy val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
+  lazy val baseRootUrl = current.configuration.getString("identity-admin.adminApi.baseRootUrl").get
+
   lazy val searchUrl = s"$baseUrl/user/search"
+
+  lazy val authHealthCheckUrl = s"$baseRootUrl/authHealthcheck"
+
+  def authHealthCheck: Future[Either[CustomError, String]] = {
+    requestSigner.sign(WS.url(authHealthCheckUrl)).get().map ( response => response.status match {
+      case 200 => Right("OK 200")
+      case _  => Left(CustomError("API auth failed", s"API status code: ${response.status}"))
+    }
+    ).recover { case e: Throwable =>
+        Left(CustomError("API connection failed", e.getMessage))
+    }
+  }
+
   def  accessUserUrl(id: String) = s"$baseUrl/user/$id"
+
   def sendValidationEmailUrl(id: String) = s"$baseUrl/user/$id/send-validation-email"
+  lazy val errorEmail = current.configuration.getString("identity-admin.email.error").get
+  val contact = "Contact identity team: " + errorEmail
   
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {
     requestSigner.sign(WS.url(searchUrl).withQueryString("query" -> searchQuery)).get().map(
       response => checkResponse[SearchResponse](response.status, response.body, 200, x => Json.parse(x).as[SearchResponse])
     ).recover { case e: Any =>
-        logger.error("Could not retrieve user via admin api",e.getMessage)
-        Left(CustomError("Fatal Error", "Contact identity team."))
+        logger.error("Future Failed: could not connect to API. {}",e.getMessage)
+        Left(CustomError("Fatal Error", contact))
       }
   }
 
@@ -43,7 +61,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
     ).recover {
       case e: Any =>
         logger.error("Future Failed: could not connect to API",e.getMessage)
-        Left(CustomError("Fatal Error", "Contact identity team."))
+        Left(CustomError("Fatal Error", contact))
     }
   }
 
@@ -53,7 +71,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
     ).recover {
       case e: Any =>
         logger.error("Future Failed: could not connect to API",e.getMessage)
-        Left(CustomError("Fatal Error", "Contact identity team."))
+        Left(CustomError("Fatal Error", contact))
     }
   }
 
@@ -66,7 +84,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
       }
     ).getOrElse{
       logger.error(s"Invalid response from API could not be parsed. Status: $status, Body: $body.")
-      Left(CustomError("Fatal Error", "Contact identity team."))
+      Left(CustomError("Fatal Error", contact))
     }
 
   def delete(id: String): Future[Either[CustomError, Boolean]] = {
@@ -74,7 +92,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
       checkResponse[Boolean](response.status, response.body, 204, x => true)
     ).recover { case e: Throwable =>
       logger.error("Could not delete user via admin api", e.getMessage)
-      Left(CustomError("Fatal Error", "Contact identity team."))
+      Left(CustomError("Fatal Error", contact))
     }
   }
 
@@ -83,7 +101,7 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging{
       checkResponse[Boolean](response.status, response.body, 204, x => true)
     ).recover { case e: Throwable =>
       logger.error("Could not send email validation via admin api", e.getMessage)
-      Left(CustomError("Fatal Error", "Contact identity team."))
+      Left(CustomError("Fatal Error", contact))
     }
   }
 }
