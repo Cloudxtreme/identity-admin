@@ -12,7 +12,12 @@ class AdminApiTest extends WordSpec with Matchers{
     override def sign(request: WSRequest): WSRequest = request
   }
 
-  val adminApi = new AdminApi(requestSigner)
+
+  class TestAdminApi(requestSigner: RequestSigner) extends AdminApi(requestSigner: RequestSigner) {
+    override lazy val errorEmail = "test@theguardian.com"
+  }
+
+  val adminApi = new TestAdminApi(requestSigner)
 
   "checkResponse" should {
     "determine invalid json from the API is handled" in {
