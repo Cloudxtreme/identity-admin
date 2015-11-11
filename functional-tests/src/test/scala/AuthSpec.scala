@@ -28,9 +28,7 @@ class AuthSpec extends FeatureSpec
       go to new Homepage
 
       Then("Google OpenID Connect authentication process should start")
-      assert(pageHasText("Sign in with your Google Account"))
-
-      And("we should be on Google domain")
+      assert(pageHasElement(id("Email")))
       assert(currentUrl.startsWith(Config.googleAccountsUrl))
     }
 
@@ -42,9 +40,7 @@ class AuthSpec extends FeatureSpec
       go to s"${Config.baseUrl}/search?searchQuery=test"
 
       Then("Google OpenID Connect authentication process should start")
-      assert(pageHasText("Sign in with your Google Account"))
-
-      And("we should be on Google domain")
+      assert(pageHasElement(id("Email")))
       assert(currentUrl.startsWith(Config.googleAccountsUrl))
     }
 
@@ -56,9 +52,7 @@ class AuthSpec extends FeatureSpec
       go to s"${Config.baseUrl}/delete?searchQuery=98f36ffbc%40gu.com&userId=11111111"
 
       Then("Google OpenID Connect authentication process should start")
-      assert(pageHasText("Sign in with your Google Account"))
-
-      And("we should be on Google domain")
+      assert(pageHasElement(id("Email")))
       assert(currentUrl.startsWith(Config.googleAccountsUrl))
     }
   }
