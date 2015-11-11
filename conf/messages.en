@@ -16,6 +16,7 @@ searchResults.nameHeader=Name
 searchResults.registeredDateHeader=Registered Date
 searchResults.lastActivityDateHeader=Last Activity Date
 searchResults.noResults=Your search query did not match any records.
+searchResults.editBtn=Edit
 
 editUser.title=Edit User
 editUser.idHeader=# ID

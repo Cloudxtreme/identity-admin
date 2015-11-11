@@ -3,6 +3,7 @@
 @import views.html.helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
+
 @(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String])
 @implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
 @checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }

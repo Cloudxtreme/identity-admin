@@ -1,14 +1,18 @@
-@import play.i18n._
 @import services.CustomError
-@import models.Forms
 @import org.joda.time.format.DateTimeFormat
+@import play.api.i18n._
+@import views.html.helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
 @(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, message: Option[String], error: Option[String])
+    @query = @{searchBarText.getOrElse("")}
     @main(pageTitle)(searchBarText){
         <div class="container">
             <div class="row">
               <div class="col-md-12">
                   @if(searchResponse.total < 1 && error.isEmpty){
-                    <div class="alert alert-danger" role="alert">@Messages.get("searchResults.noResults")</div>
+                    <div class="alert alert-danger" role="alert">@Messages("searchResults.noResults")</div>
                   }
                   @message.map { msg =>
                       <div class="alert alert-success" role="alert">@msg</div>
@@ -16,41 +20,39 @@
                   @error.map { err =>
                       <div class="alert alert-danger" role="alert">@err</div>
                   }
-                  <h1><small>@Messages.get("searchResults.mainHeader")</small></h1>
+                  <h1><small>@Messages("searchResults.mainHeader")</small></h1>
               </div>
             </div>
             <div class="row search-headers">
-                <div class="col-sm-3 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.emailHeader")</h5></div>
-                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.usernameHeader")</h5></div>
-                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.nameHeader")</h5></div>
-                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.registeredDateHeader")</h5></div>
-                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
+                <div class="col-sm-3 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages("searchResults.emailHeader")</h5></div>
+                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages("searchResults.usernameHeader")</h5></div>
+                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages("searchResults.nameHeader")</h5></div>
+                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages("searchResults.registeredDateHeader")</h5></div>
+                <div class="col-sm-2 hidden-xs visible-sm visible-md visible-lg visible-xl"><h5>@Messages("searchResults.lastActivityDateHeader")</h5></div>
                 <div class="col-sm-1 hidden-xs visible-sm visible-md visible-lg visible-xl"></div>
             </div>
             @for(response <- searchResponse.results) {
                 <div class="row search-grid-padding">
-                    <div class="col-sm-3 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.emailHeader")</h5></div>
+                    <div class="col-sm-3 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages("searchResults.emailHeader")</h5></div>
                     <div class="col-sm-3"><p>@response.email<p></div>
-                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.usernameHeader")</h5></div>
+                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages("searchResults.usernameHeader")</h5></div>
                     <div class="col-sm-2"><p>@response.username<p></div>
-                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.nameHeader")</h5></div>
+                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages("searchResults.nameHeader")</h5></div>
                     <div class="col-sm-2"><p>@response.firstName @response.lastName<p></div>
-                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.registeredDateHeader")</h5></div>
+                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages("searchResults.registeredDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
-                        @response.creationDate.map(o => o.toString(DateTimeFormat.forPattern(Forms.DateTimeFormat)))
+                        @response.creationDate.map(o => o.toString(DateTimeFormat.forPattern(models.Forms.DateTimeFormat)))
                         @response.registrationIp.map(o => s"($o)")
                         <p></div>
-                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages.get("searchResults.lastActivityDateHeader")</h5></div>
+                    <div class="col-sm-2 visible-xs hidden-sm hidden-md hidden-lg hidden-xl search-headers-mobile"><h5>@Messages("searchResults.lastActivityDateHeader")</h5></div>
                     <div class="col-sm-2"><p>
-                        @response.lastActivityDate.map(o => o.toString(DateTimeFormat.forPattern(Forms.DateTimeFormat)))
+                        @response.lastActivityDate.map(o => o.toString(DateTimeFormat.forPattern(models.Forms.DateTimeFormat)))
                         @response.lastActiveIpAddress.map(o => s"($o)")
                         <p></div>
                     <div class="col-sm-1">
-                        <form action="edit">
-                            <input type="hidden" value=@searchBarText name="searchQuery"/>
-                            <input type="hidden" value=@response.id name="userId"/>
-                            <button class="btn btn-primary btn-block" type="submit">Edit</button>
-                        </form>
+                        <a class="btn btn-primary btn-block" href="@routes.AccessUser.getUser(query, response.id)">
+                            @Messages("searchResults.editBtn")
+                        </a>
                     </div>
                 </div>
             }
