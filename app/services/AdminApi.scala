@@ -43,6 +43,8 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging {
   def  accessUserUrl(id: String) = s"$baseUrl/user/$id"
 
   def sendValidationEmailUrl(id: String) = s"$baseUrl/user/$id/send-validation-email"
+  def validateEmailUrl(id: String) = s"$baseUrl/user/$id/validate-email"
+
   lazy val errorEmail = current.configuration.getString("identity-admin.email.error").get
   val contact = "Contact identity team: " + errorEmail
   
@@ -101,6 +103,15 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging {
       checkResponse[Boolean](response.status, response.body, 204, x => true)
     ).recover { case e: Throwable =>
       logger.error("Could not send email validation via admin api", e.getMessage)
+      Left(CustomError("Fatal Error", contact))
+    }
+  }
+
+  def validateEmail(id: String): Future[Either[CustomError, Boolean]] = {
+    requestSigner.sign(WS.url(validateEmailUrl(id))).post("").map(response =>
+      checkResponse[Boolean](response.status, response.body, 204, x => true)
+    ).recover { case e: Throwable =>
+      logger.error("Could not validate email via admin api", e.getMessage)
       Left(CustomError("Fatal Error", contact))
     }
   }
