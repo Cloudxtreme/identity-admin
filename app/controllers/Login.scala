@@ -5,7 +5,7 @@ import javax.inject.Inject
 import auth.CSRFAction
 import auth.CSRF.ANTI_FORGERY_KEY
 import auth.LoginSession.SessionOps
-import config.Conf
+import config.Config
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.googleauth._
@@ -17,10 +17,12 @@ trait AuthActions extends Actions {
   val authConfig = GoogleAuthConf.googleAuthConfig
 }
 
-class Login @Inject() extends Controller with AuthActions {
+class Login @Inject() (conf: Config) extends Controller with AuthActions {
 
   val indexCall = routes.Application.index()
-  val contactEmail = Conf.errorEmail
+  val contactEmail = conf.errorEmail
+  val GROUPS_VALIDATION_FAILED = "groupsValidationFailed"
+  val IDENTITY_VALIDATION_FAILED = "identityValidationFailed"
 
   def login(errorType: Option[String]) = Action { request =>
     Ok(views.html.login(errorType, Some(contactEmail)))
@@ -50,12 +52,12 @@ class Login @Inject() extends Controller with AuthActions {
         redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
       }
       case _ => {
-        val redirect = loginErrorRedirect("groupsValidationFailed")
+        val redirect = loginErrorRedirect(GROUPS_VALIDATION_FAILED)
         redirect.withSession { session.loginError }
       }
     } recover {
       case ex => {
-        val redirect = loginErrorRedirect("identityValidationFailed")
+        val redirect = loginErrorRedirect(IDENTITY_VALIDATION_FAILED)
         redirect.withSession { session.loginError }
       }
     }
