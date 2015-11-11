@@ -62,7 +62,7 @@
                             </div>
                             <div class="col-sm-10">
                                 <p>
-                                    @form("registrationDate").value @form("registrationType").value.map(o => s"($o)")
+                                    @form("registrationDate").value @form("registrationIp").value.map(o => s"($o)") @form("registrationType").value.map(o => s"($o)")
                                 </p>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                             </div>
                             <div class="col-sm-10">
                                 <p>
-                                    @form("lastActivityDate").value
+                                    @form("lastActivityDate").value @form("lastActiveIpAddress").value.map(o => s"($o)")
                                 </p>
                             </div>
                         </div>
