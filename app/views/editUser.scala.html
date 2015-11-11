@@ -94,16 +94,16 @@
             </div>
             <div class="col-md-2">
                 <div class="btn-group-vertical center-block">
-                    <a class="btn btn-default" href="http://profile.theguardian.com/user/id/@userId">
+                    <a class="btn btn-default btn--bottomMargin" href="http://profile.theguardian.com/user/id/@userId">
                         @Messages("editUser.profileBtn")
                     </a>
-                    <a class="btn btn-danger" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">
+                    <a class="btn btn-danger btn--bottomMargin" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">
                         @Messages("editUser.deleteBtn")
                     </a>
-                    <a class="btn btn-warning" href="@routes.SendEmailValidation.sendEmailValidation(query, userId)">
+                    <a class="btn btn-warning btn--bottomMargin" href="@routes.SendEmailValidation.sendEmailValidation(query, userId)">
                         @Messages("editUser.validateBtn")
                     </a>
-                    <a class="btn btn-success" href="@routes.SendEmailValidation.validateEmail(query, userId)">
+                    <a class="btn btn-success btn--bottomMargin" href="@routes.SendEmailValidation.validateEmail(query, userId)">
                         @Messages("editUser.validateEmailBtn")
                     </a>
                 </div>
@@ -186,7 +186,7 @@
         <div class="row">
             <div class="col-md-10"></div>
             <div class="col-md-2">
-                <button type="submit" class="pull-right btn btn-success btn-block center-block">@Messages("editUser.saveBtn")</button>
+                <button type="submit" class="pull-right btn btn-success btn-block center-block btn--bottomMargin">@Messages("editUser.saveBtn")</button>
             </div>
         </div>
     </form>
