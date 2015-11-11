@@ -84,6 +84,10 @@
     "AlarmEmailAddress": {
       "Description": "Contact email for alarms",
       "Type": "String"
+    },
+    "PagerDutyUrl": {
+      "Description": "HTTPS url for pager duty notifications",
+      "Type": "String"
     }
   },
 
@@ -392,7 +396,7 @@
       }
     },
 
-    "topicSendEmailToIdentityDev": {
+    "TopicSendEmail": {
       "Type": "AWS::SNS::Topic",
       "Properties": {
         "DisplayName": "SendEmailToIdentityDev",
@@ -405,20 +409,41 @@
       }
     },
 
+    "TopicPagerDutyAlerts": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "DisplayName": "PagerDutyTopic",
+        "Subscription": [
+          {
+            "Endpoint": {"Ref": "PagerDutyUrl"},
+            "Protocol": "https"
+          }
+        ]
+      }
+    },
+
     "alarmNoHealthyHosts": {
       "Type": "AWS::CloudWatch::Alarm",
       "Properties": {
         "ActionsEnabled": "true",
-        "AlarmDescription": "There are no healthy hosts",
+        "AlarmDescription": "There are insufficient healthy hosts",
         "ComparisonOperator": "LessThanThreshold",
         "EvaluationPeriods": "1",
         "MetricName": "HealthyHostCount",
         "Namespace": "AWS/ELB",
         "Period": "60",
         "Statistic": "Average",
-        "Threshold": "1",
+        "Threshold": {"Ref":"MinInstances"},
         "AlarmActions": [
-          { "Ref": "topicSendEmailToIdentityDev" }
+          { "Ref": "TopicSendEmail" },
+          { "Ref": "TopicPagerDutyAlerts" }
+        ],
+        "InsufficientDataActions": [
+          { "Ref": "TopicSendEmail" },
+          { "Ref": "TopicPagerDutyAlerts" }
+        ],
+        "OKActions": [
+          { "Ref": "TopicPagerDutyAlerts" }
         ],
         "Dimensions": [
           {
