@@ -1,9 +1,14 @@
+import controllers.routes
 import play.api._
 import play.api.Play.current
 import healthcheck.{SNS, AdminApiHealthCheck}
+import play.api.mvc.{Result, RequestHeader}
+import play.api.mvc.Results.Redirect
 import services.AdminApi
 import play.api.libs.concurrent.Akka.system
 import util.Logging
+
+import scala.concurrent.Future
 
 object Global extends GlobalSettings with Logging {
 
@@ -17,5 +22,9 @@ object Global extends GlobalSettings with Logging {
     else {
       println("Not starting Admin API HealthCheck agent in DEV mode")
     }
+  }
+
+  override def onHandlerNotFound(request: RequestHeader): Future[Result] = {
+    Future.successful(Redirect(routes.Application.index()))
   }
 }
