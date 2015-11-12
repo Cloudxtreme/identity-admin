@@ -1,9 +1,11 @@
-@import play.i18n._
+@import play.api.i18n._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 @(title: String)(searchBarText: Option[String])(content: Html)
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
     <head>
         <title>@title</title>
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
@@ -16,8 +18,9 @@
 
           ga('create', '@play.Play.application().configuration().getString("ga.code")', 'auto');
           ga('send', 'pageview');
-
         </script>
+        <script type="text/javascript" src="@routes.Assets.at("lib/jquery/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("lib/bootstrap/js/bootstrap.min.js")"></script>
     </head>
     <body>
         <nav class="navbar navbar-default">
@@ -37,8 +40,8 @@
                                     autofocus
                                     class="form-control" type="text"
                                     name="searchQuery"
-                                    placeholder="@Messages.get("main.placeholderSearchBarText")"
-                                    value="@searchBarText"
+                                    placeholder="@Messages("main.placeholderSearchBarText")"
+                                    value=@searchBarText
                                 >
                             </div>
                         </form>
