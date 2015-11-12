@@ -7,7 +7,7 @@
 
 @(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, message: Option[String], error: Option[String])
     @query = @{searchBarText.getOrElse("")}
-    @main(pageTitle)(searchBarText){
+    @main(pageTitle)(Some(searchBar(searchBarText))){
         <div class="container">
             <div class="row">
               <div class="col-md-12">

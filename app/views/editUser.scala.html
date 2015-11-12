@@ -10,7 +10,7 @@
 @userId = @{form("id").value.getOrElse("")}
 @query = @{searchQuery.getOrElse("")}
 
-    @main(pageTitle)(searchQuery){
+    @main(pageTitle)(Some(searchBar(searchQuery))){
         <div class="row">
             <div class="col-md-10">
                 @message.map { msg =>
