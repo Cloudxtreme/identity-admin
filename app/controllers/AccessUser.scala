@@ -25,7 +25,8 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
             Messages("editUser.title"),
             Some(searchQuery),
             formWithErrors,
-            request.flash.get("message")
+            request.flash.get("message"),
+            current.configuration.getString("identity-admin.editUser.baseProfileUrl").get
           )
         )
       case Left(error) =>
