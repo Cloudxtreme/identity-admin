@@ -36,7 +36,7 @@ trait RequestSigner extends Logging {
   private[services] def getPath(request: WSRequest): String = {
     val uri = request.uri
     val queryString = uri.getQuery
-    if(queryString == null || queryString.isEmpty) uri.getPath else s"${uri.getPath}?${queryString.replace("+","%20")}"
+    if(queryString == null || queryString.isEmpty) uri.getPath else s"${uri.getPath}?${queryString.replace("+","%20").replace("@","%40")}"
   }
 
   private[services] def getDateHeaderValue: String = {
