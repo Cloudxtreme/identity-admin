@@ -16,7 +16,7 @@ import scala.concurrent.Future
 
 trait SaveAction extends Controller with Logging{
   val adminApi: AdminApi
-  val publicProfileUrl: String = current.configuration.getString("identity-admin.editUser.baseProfileUrl").get
+  val publicProfileUrl: String
 
   private[controllers] def doSave(searchQuery: String, form: Form[Forms.UserForm]): Future[Result] = {
     form.fold(
@@ -53,14 +53,15 @@ trait SaveAction extends Controller with Logging{
             Messages("editUser.title"),
             Some(searchQuery),
             form.withGlobalError(error.toString),
-            None
+            None,
+            publicProfileUrl
           )
         )
     }
   }
 }
 
-class UpdateUser @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SaveAction {
+class UpdateUser @Inject() (val adminApi: AdminApi, val publicProfileUrl: String) extends Controller with AuthActions with SaveAction {
 
   def save(searchQuery: String) = AuthAction.async { request =>
     val form = userForm.bindFromRequest()(request)
