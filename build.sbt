@@ -29,5 +29,6 @@ riffRaffUploadManifestBucket := "riffraff-builds"
 
 play.PlayImport.PlayKeys.playDefaultPort := 8852
 routesGenerator := InjectedRoutesGenerator
+routesImport += "auth.LoginError"
 
 addCommandAlias("devrun", "run -Dconfig.resource=dev.conf -Dlogs.home=logs")

@@ -19,7 +19,7 @@ object CSRFAction extends ActionRefiner[Request, CSRFRequest] with ActionBuilder
       case Some(token) => Right(new CSRFRequest[A](token, request))
       case None => {
         logger.info("Login Error: CSRFValidationFailed")
-        Left(Redirect(routes.Login.login(Some(CSRF.CSRF_VALIDATION_FAILED))))
+        Left(Redirect(routes.Login.login(Some(CSRFValidationFailed()))))
       }
     }
   }
@@ -27,5 +27,4 @@ object CSRFAction extends ActionRefiner[Request, CSRFRequest] with ActionBuilder
 
 object CSRF {
   val ANTI_FORGERY_KEY = "antiForgeryToken"
-  val CSRF_VALIDATION_FAILED = "CSRFValidationFailed"
 }

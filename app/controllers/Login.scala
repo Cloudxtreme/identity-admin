@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import auth.CSRFAction
+import auth.{IdentityValidationFailed, GroupsValidationFailed, LoginError, CSRFAction}
 import auth.CSRF.ANTI_FORGERY_KEY
 import auth.LoginSession.SessionOps
 import config.Config
@@ -21,11 +21,9 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
 
   val indexCall = routes.Application.index()
   val contactEmail = conf.errorEmail
-  val GROUPS_VALIDATION_FAILED = "groupsValidationFailed"
-  val IDENTITY_VALIDATION_FAILED = "identityValidationFailed"
 
-  def login(errorType: Option[String]) = Action { request =>
-    Ok(views.html.login(errorType, Some(contactEmail)))
+  def login(loginError: Option[LoginError]) = Action { request =>
+    Ok(views.html.login(loginError, Some(contactEmail)))
   }
 
   def loginAction = Action.async { implicit request =>
@@ -52,12 +50,12 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
         redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
       }
       case _ => {
-        val redirect = loginErrorRedirect(GROUPS_VALIDATION_FAILED)
+        val redirect = loginErrorRedirect(GroupsValidationFailed())
         redirect.withSession { session.loginError }
       }
     } recover {
       case ex => {
-        val redirect = loginErrorRedirect(IDENTITY_VALIDATION_FAILED)
+        val redirect = loginErrorRedirect(IdentityValidationFailed())
         redirect.withSession { session.loginError }
       }
     }
@@ -66,7 +64,7 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
   private def successfulLoginRedirect(session: Session): Result =
     session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
 
-  private def loginErrorRedirect(errorType: String): Result = {
-    Redirect(routes.Login.login(Some(errorType)))
+  private def loginErrorRedirect(loginError: LoginError): Result = {
+    Redirect(routes.Login.login(Some(loginError)))
   }
 }

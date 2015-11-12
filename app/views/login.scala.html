@@ -1,15 +1,19 @@
-@(errorType: Option[String] = None, contactEmail: Option[String])
+@import auth.GroupsValidationFailed
+@import auth.IdentityValidationFailed
+@import auth.LoginError
+
+@(loginError: Option[LoginError] = None, contactEmail: Option[String])
 
 <html>
     <head><title>Login</title></head>
     <body>
         <h1>Login Page</h1>
-        @(errorType, contactEmail) match {
-            case (Some("groupsValidationFailed"), Some(email)) => {
+        @(loginError, contactEmail) match {
+            case (Some(GroupsValidationFailed()), Some(email)) => {
                 <p>Sorry, you do not have access to User Admin. If you would like access, please email @email.
                    Please state the reason why you need access.</p>
             }
-            case (Some("identityValidationFailed"), Some(email)) => {
+            case (Some(IdentityValidationFailed()), Some(email)) => {
                 <p>We could not log you in. Please contact @email if the problem persists.</p>
             }
             case (Some(_), _) => {
