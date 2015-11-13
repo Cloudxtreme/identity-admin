@@ -1,10 +1,11 @@
 package services
 
 import javax.inject.Inject
+import config.Config
 import models.{UserUpdateRequest, SearchResponse, User}
 import play.api.Play._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSResponse, WS}
+import play.api.libs.ws.WS
 import play.api.libs.concurrent.Execution.Implicits._
 import util.Logging
 import scala.concurrent.Future
@@ -21,10 +22,11 @@ object CustomError {
   implicit val format = Json.format[CustomError]
 }
 
-class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging {
+class AdminApi @Inject() (conf: Config, requestSigner: RequestSigner) extends Logging {
 
-  lazy val baseUrl = current.configuration.getString("identity-admin.adminApi.baseUrl").get
-  lazy val baseRootUrl = current.configuration.getString("identity-admin.adminApi.baseRootUrl").get
+  val baseUrl = conf.baseUrl
+  val baseRootUrl = conf.baseRootUrl
+  val errorEmail = conf.errorEmail
 
   lazy val searchUrl = s"$baseUrl/user/search"
 
@@ -45,7 +47,6 @@ class AdminApi @Inject() (requestSigner: RequestSigner) extends Logging {
   def sendValidationEmailUrl(id: String) = s"$baseUrl/user/$id/send-validation-email"
   def validateEmailUrl(id: String) = s"$baseUrl/user/$id/validate-email"
 
-  lazy val errorEmail = current.configuration.getString("identity-admin.email.error").get
   val contact = "Contact identity team: " + errorEmail
   
   def getUsers(searchQuery: String): Future[Either[CustomError, SearchResponse]] = {

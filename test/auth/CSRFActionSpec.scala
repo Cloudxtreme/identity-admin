@@ -23,8 +23,7 @@ class CSRFActionSpec extends PlaySpec {
         val result = call(action, request)
 
         status(result) mustEqual 303
-        redirectLocation(result) mustEqual Some("/login")
-        flash(result).get("error") mustEqual Some("Anti forgery token missing in session")
+        redirectLocation(result) mustEqual Some("/login?loginError=CSRFValidationFailed")
       }
     }
   }
@@ -45,7 +44,6 @@ class CSRFActionSpec extends PlaySpec {
 
         status(result) mustEqual 200
         contentAsString(result) mustEqual "abcd"
-        flash(result).get("error") mustEqual None
       }
     }
   }

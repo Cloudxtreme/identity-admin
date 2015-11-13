@@ -1,5 +1,6 @@
 package services
 
+import config.Config
 import models.SearchResponse
 import org.scalatest.{WordSpec, Matchers}
 import play.api.libs.json.Json
@@ -12,12 +13,13 @@ class AdminApiTest extends WordSpec with Matchers{
     override def sign(request: WSRequest): WSRequest = request
   }
 
-
-  class TestAdminApi(requestSigner: RequestSigner) extends AdminApi(requestSigner: RequestSigner) {
-    override lazy val errorEmail = "test@theguardian.com"
+  val conf = new Config {
+    val baseUrl = "baseUrl"
+    val baseRootUrl = "baseRootUrl"
+    val errorEmail = "errorEmail"
   }
 
-  val adminApi = new TestAdminApi(requestSigner)
+  val adminApi = new AdminApi(conf, requestSigner)
 
   "checkResponse" should {
     "determine invalid json from the API is handled" in {
