@@ -3,8 +3,7 @@
 @import views.html.helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
-
-@(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String])
+@(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String], publicProfileUrl: String)
 @implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
 @checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
 @userId = @{form("id").value.getOrElse("")}
@@ -95,7 +94,7 @@
             </div>
             <div class="col-md-2">
                 <div class="btn-group-vertical center-block">
-                    <a class="btn btn-default btn--bottomMargin" href="http://profile.theguardian.com/user/id/@userId">
+                    <a class="btn btn-default btn--bottomMargin" href= "@publicProfileUrl@userId" target="_blank">
                         @Messages("editUser.profileBtn")
                     </a>
                     <a class="btn btn-danger btn--bottomMargin" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">

@@ -4,7 +4,6 @@ import models.{Forms, User, UserUpdateRequest}
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.data.Form
 import play.api.test.Helpers._
 import services.{CustomError, AdminApi}
 
@@ -14,8 +13,11 @@ import scala.concurrent.Future
 class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
 
   val adminApiMock = mock[AdminApi]
-
-  val controller = new SaveAction {override val adminApi: AdminApi = adminApiMock}
+  val publicProfileUrlMock = "http://mockProfilePage.com/"
+  val controller = new SaveAction {
+    override val adminApi: AdminApi = adminApiMock
+    override val publicProfileUrl = publicProfileUrlMock
+  }
 
   val searchQuery = "search query"
   val userId = "1234"
