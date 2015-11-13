@@ -1,6 +1,6 @@
 @import play.i18n._
 @(pageTitle: String, searchBarDescription: Option[String])
-@main(pageTitle)(searchBarDescription){
+@main(pageTitle)(Some(searchBar(searchBarDescription))){
     <div class="col-sm-6 col-sm-push-6">
         <div class="hidden-xs">
             <img src="@routes.Assets.at("images/ArrowLargeScreen.svg")">
