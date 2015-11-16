@@ -1,0 +1,32 @@
+@import play.api.i18n._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+@(searchText: Option[String])
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1">
+                <div class="pull-left">
+                    <a href="/">
+                        <img src="@routes.Assets.at("images/UserIcon.svg")">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-11">
+                <form class="search-bar-width navbar-form navbar-left" action="search" role="search">
+                    <div class="search-bar-width form-group">
+                        <input
+                        autofocus
+                        class="form-control" type="text"
+                        name="searchQuery"
+                        placeholder="@Messages("main.placeholderSearchBarText")"
+                        value=@searchText
+                        >
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>

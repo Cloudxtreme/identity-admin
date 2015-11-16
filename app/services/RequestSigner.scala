@@ -29,14 +29,14 @@ trait RequestSigner extends Logging {
     val path = getPath(request)
     val dateHeaderValue = getDateHeaderValue
     val hmacToken = sign(dateHeaderValue, path)
-    logger.debug(s"path: $path, date: $dateHeaderValue, hmac: $hmacToken")
+    logger.info(s"path: $path, date: $dateHeaderValue, hmac: $hmacToken")
     request.withHeaders(HeaderNames.DATE -> dateHeaderValue, HeaderNames.AUTHORIZATION -> hmacHeaderValue(hmacToken))
   }
 
   private[services] def getPath(request: WSRequest): String = {
     val uri = request.uri
     val queryString = uri.getRawQuery
-    if(queryString == null || queryString.isEmpty) uri.getPath else s"${uri.getPath}?$queryString"
+    if(queryString == null || queryString.isEmpty) uri.getPath else s"${uri.getPath}?" + queryString.replace("+", "%20")
   }
 
   private[services] def getDateHeaderValue: String = {

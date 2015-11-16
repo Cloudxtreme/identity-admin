@@ -1,71 +1,87 @@
-@import play.i18n._
-@(pageTitle: String, searchQuery: Option[String], user: UserMock, error: Option[String])
-    @main(pageTitle)(searchQuery){
+@import play.api.i18n._
+@import models.Forms._
+@import views.html.helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+@(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String], publicProfileUrl: String)
+@implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
+@checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
+@userId = @{form("id").value.getOrElse("")}
+@query = @{searchQuery.getOrElse("")}
+
+    @main(pageTitle)(Some(searchBar(searchQuery))){
         <div class="row">
             <div class="col-md-10">
-                @error.map { err =>
-                    <div class="alert alert-danger" role="alert">@err</div>
+                @message.map { msg =>
+                    <div class="alert alert-success" role="alert">@msg</div>
                 }
+                @if(form.hasErrors) {
+                    <div class="alert alert-danger" role="alert">
+                        <p>@Messages("editUser.invalidSubmission")</p>
+                        <ul>
+                            @for(error <- form.errors) {
+                                <li>@Messages(error.message)</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
                 <div class="row uneditable-fields">
                     <div class="col-sm-2">
                         <img src="@routes.Assets.at("images/darkUserIcon.svg")" />
                     </div>
                     <div class="col-sm-10">
-                        <h1>@user.firstName @user.lastName</h1>
+                        <h1>@form("personalDetails.firstName").value @form("personalDetails.lastName").value</h1>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.idHeader")</p>
+                                <p>@Messages("editUser.idHeader")</p>
                             </div>
                             <div class="col-sm-10">
-                                <p>@user.id</p>
+                                <p>@form("id").value</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.displayNameHeader")</p>
+                                <p>@Messages("editUser.displayNameHeader")</p>
                             </div>
                             <div class="col-sm-10">
-                                <p>@user.displayName</p>
+                                <p>@form("displayName").value</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.vanityUrlHeader")</p>
+                                <p>@Messages("editUser.vanityUrlHeader")</p>
                             </div>
                             <div class="col-sm-10">
-                                <p>@user.vanityURL</p>
+                                <p>@form("vanityUrl").value</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.registeredHeader")</p>
+                                <p>@Messages("editUser.registeredHeader")</p>
                             </div>
                             <div class="col-sm-10">
                                 <p>
-                                    @user.registeredDate.dayOfWeek.getAsText
-                                    @user.registeredDate.getDayOfMonth/@user.registeredDate.getMonthOfYear/@user.registeredDate.getYear
-                                    @user.registeredDate.toLocalTime
+                                    @form("registrationDate").value @form("registrationIp").value.map(o => s"($o)") @form("registrationType").value.map(o => s"($o)")
                                 </p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.lastActivityHeader")</p>
+                                <p>@Messages("editUser.lastActivityHeader")</p>
                             </div>
                             <div class="col-sm-10">
                                 <p>
-                                    @user.lastActivityDate.dayOfWeek.getAsText
-                                    @user.lastActivityDate.getDayOfMonth/@user.lastActivityDate.getMonthOfYear/@user.lastActivityDate.getYear
-                                    @user.lastActivityDate.toLocalTime
+                                    @form("lastActivityDate").value @form("lastActiveIpAddress").value.map(o => s"($o)")
                                 </p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>@Messages.get("editUser.emailValidatedHeader")</p>
+                                <p>@Messages("editUser.emailValidatedHeader")</p>
                             </div>
                             <div class="col-sm-10">
-                                @if(user.emailValidated) {
+                                @if(form("status.userEmailValidated").value == Some("true")) {
                                     <p class="email-validated">Yes</p>
                                 } else {
                                     <p class="email-not-validated">No</p>
@@ -78,246 +94,253 @@
             </div>
             <div class="col-md-2">
                 <div class="btn-group-vertical center-block">
-                    <button class="btn btn-default">@Messages.get("editUser.profileBtn")</button>
-                    <form action="delete" class="btn-group">
-                        <input type="hidden" value=@searchQuery name="searchQuery"/>
-                        <input type="hidden" value=@user.id name="userId"/>
-                        <button class="btn btn-danger" type="submit">@Messages.get("editUser.deleteBtn")</button>
-                    </form>
-                    <button class="btn btn-warning">@Messages.get("editUser.validateBtn")</button>
+                    <a class="btn btn-default btn--bottomMargin" href= "@publicProfileUrl@userId" target="_blank">
+                        @Messages("editUser.profileBtn")
+                    </a>
+                    <a class="btn btn-danger btn--bottomMargin" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">
+                        @Messages("editUser.deleteBtn")
+                    </a>
+                    <a class="btn btn-warning btn--bottomMargin" href="@routes.SendEmailValidation.sendEmailValidation(query, userId)">
+                        @Messages("editUser.validateBtn")
+                    </a>
+                    <a class="btn btn-success btn--bottomMargin" href="@routes.SendEmailValidation.validateEmail(query, userId)">
+                        @Messages("editUser.validateEmailBtn")
+                    </a>
                 </div>
             </div>
+
+            <!--Modal for the delete button-->
+            <div class="modal fade" id='deleteModal' tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title text-center">Delete @form("personalDetails.firstName").value @form("personalDetails.lastName").value?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center">Are you sure you want to delete the account for @form("personalDetails.firstName").value @form("personalDetails.lastName").value?</p>
+                            <p class="text-center"> This change cannot be undone</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <a class="btn btn-danger" href="@routes.Delete.delete(query, userId)">
+                            @Messages("editUser.deleteBtn")
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+        <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse("")).url">
+            <input type="hidden" name="@form("id").name" value="@form("id").value"/>
+            <input type="hidden" name="@form("personalDetails.gender").name" value="@form("personalDetails.gender").value"/>
+            <input type="hidden" name="@form("personalDetails.dateOfBirth").name" value="@form("personalDetails.dateOfBirth").value"/>
+            <input type="hidden" name="@form("personalDetails.location").name" value="@form("personalDetails.location").value"/>
+            <input type="hidden" name="@form("displayName").name" value="@form("displayName").value"/>
+            <input type="hidden" name="@form("vanityUrl").name" value="@form("vanityUrl").value"/>
+            <input type="hidden" name="@form("deliveryAddress.addressLine1").name" value="@form("deliveryAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("deliveryAddress.addressLine2").name" value="@form("deliveryAddress.addressLine2").value"/>
+            <input type="hidden" name="@form("deliveryAddress.addressLine3").name" value="@form("deliveryAddress.addressLine3").value"/>
+            <input type="hidden" name="@form("deliveryAddress.addressLine4").name" value="@form("deliveryAddress.addressLine4").value"/>
+            <input type="hidden" name="@form("deliveryAddress.country").name" value="@form("deliveryAddress.country").value"/>
+            <input type="hidden" name="@form("deliveryAddress.postcode").name" value="@form("deliveryAddress.postcode").value"/>
+            <input type="hidden" name="@form("billingAddress.addressLine1").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.addressLine2").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.addressLine3").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.addressLine4").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.country").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("billingAddress.postcode").name" value="@form("billingAddress.addressLine1").value"/>
+            <input type="hidden" name="@form("lastActivityDate").name" value="@form("lastActivityDate").value"/>
+            <input type="hidden" name="@form("lastActivityIp").name" value="@form("lastActivityIp").value"/>
+            <input type="hidden" name="@form("registrationDate").name" value="@form("registrationDate").value"/>
+            <input type="hidden" name="@form("registrationIp").name" value="@form("registrationIp").value"/>
+            <input type="hidden" name="@form("registrationType").name" value="@form("registrationType").value"/>
+            <input type="hidden" name="@form("status.userEmailValidated").name" value="@form("status.userEmailValidated").value"/>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>@Messages("editUser.accountDetails")</h4>
+                </div>
+                <div class="col-md-4 hidden-xs hidden-sm visible-md visible-lg visible-xl">
+                    <h4>@Messages("editUser.marketingPrefsHeader")</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    @inputText(form("email"), 'class -> "full-width-input", '_showConstraints -> false)
+                    @inputText(form("personalDetails.firstName"), 'class -> "full-width-input", '_showConstraints -> false)
+                    @inputText(form("personalDetails.lastName"), 'class -> "full-width-input", '_showConstraints -> false)
+                    @inputText(form("username"), 'class -> "full-width-input", '_showConstraints -> false)
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-4 visible-xs visible-sm hidden-md hidden-lg hidden-xl">
+                            <h4>@Messages("editUser.marketingPrefsHeader")</h4>
+                        </div>
+                    </div>
+                    @fields.checkbox(form("status.receiveGnmMarketing"), '_showConstraints -> false)(handler = checkboxFieldConstructor, implicitly[Messages])
+                    @fields.checkbox(form("status.receive3rdPartyMarketing"), '_showConstraints -> false)(handler = checkboxFieldConstructor, implicitly[Messages])
+                </div>
+            </div>
         <div class="row">
-            <div class="col-md-6">
-                <h4>@Messages.get("editUser.accountDetails")</h4>
-            </div>
-            <div class="col-md-4 hidden-xs hidden-sm visible-md visible-lg visible-xl">
-                <h4>@Messages.get("editUser.marketingPrefsHeader")</h4>
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+                <button type="submit" class="pull-right btn btn-success btn-block center-block btn--bottomMargin">@Messages("editUser.saveBtn")</button>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-md-4">
-                        <p>@Messages.get("editUser.emailHeader")</p>
-                    </div>
-                    <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="emailAddress" value="@user.email"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <p>@Messages.get("editUser.firstNameHeader")</p>
-                    </div>
-                    <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="firstName" value="@user.firstName"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <p>@Messages.get("editUser.lastNameHeader")</p>
-                    </div>
-                    <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="lastName" value="@user.lastName"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <p>@Messages.get("editUser.usernameHeader")</p>
-                    </div>
-                    <div class="col-md-8">
-                        <input class="full-width-input" type="text" name="username" value="@user.userName"/>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-4 visible-xs visible-sm hidden-md hidden-lg hidden-xl">
-                        <h4>@Messages.get("editUser.marketingPrefsHeader")</h4>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-1">
-                        <input type="checkbox" class="checkbox" name="GNMMarketing"
-                            @if(user.receiveGNMMarketing){
-                                checked="checked"
-                            }
-                        />
-                    </div>
-                    <div class="col-xs-11">
-                        <p>@Messages.get("editUser.GNMMarketing")</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-1">
-                        <input type="checkbox" class="checkbox" name="3rdPartyMarketing"
-                            @if(user.receive3rdPartyMarketing){
-                                checked="checked"
-                            }
-                        />
-                    </div>
-                    <div class="col-xs-11">
-                        <p>@Messages.get("editUser.3rdPartyMarketing")</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <div class="row">
-        <div class="col-md-10"></div>
-        <div class="col-md-2">
-            <button class="pull-right btn btn-success btn-block center-block">@Messages.get("editUser.saveBtn")</button>
-        </div>
-    </div>
+    </form>
     <div class="row">
         <div class="col-md-10 uneditable-fields">
             <div class="row">
                 <div class="col-md-2">
-                    <h4>@Messages.get("editUser.personalDetailsHeader")</h4>
+                    <h4>@Messages("editUser.personalDetailsHeader")</h4>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.genderHeader")</p>
+                            <p>@Messages("editUser.genderHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.gender</p>
+                            <p>@form("personalDetails.gender").value</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.dobHeader")</p>
+                            <p>@Messages("editUser.dobHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.dob.getDayOfMonth/@user.dob.getMonthOfYear/@user.dob.getYear</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>@Messages.get("editUser.locationHeader")</p>
-                        </div>
-                        <div class="col-xs-6">
-                            <p>@user.location</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <h4>@Messages.get("editUser.deliveryAddressHeader")</h4>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>@Messages.get("editUser.addressLine1Header")</p>
-                        </div>
-                        <div class="col-xs-6">
-                            <p>@user.deliveryLine1</p>
+                            <p>
+                                @form("personalDetails.dateOfBirth").value
+                            </p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.addressLine2Header")</p>
+                            <p>@Messages("editUser.locationHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.deliveryLine2</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>@Messages.get("editUser.townHeader")</p>
-                        </div>
-                        <div class="col-xs-6">
-                            <p>@user.deliveryTown</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>@Messages.get("editUser.countyStateHeader")</p>
-                        </div>
-                        <div class="col-xs-6">
-                            <p>@user.deliveryCountyState</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>@Messages.get("editUser.postcodeZipHeader")</p>
-                        </div>
-                        <div class="col-xs-6">
-                            <p>@user.deliveryPostcodeZip</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>@Messages.get("editUser.countryHeader")</p>
-                        </div>
-                        <div class="col-xs-6">
-                            <p>@user.deliveryCountry</p>
+                            <p>@form("personalDetails.location").value</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <h4>@Messages.get("editUser.billingAddressHeader")</h4>
+                    <h4>@Messages("editUser.deliveryAddressHeader")</h4>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.addressLine1Header")</p>
+                            <p>@Messages("editUser.addressLine1Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingLine1</p>
+                            <p>@form("deliveryAddress.addressLine1").value</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.addressLine2Header")</p>
+                            <p>@Messages("editUser.addressLine2Header")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingLine2</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>@Messages.get("editUser.townHeader")</p>
-                        </div>
-                        <div class="col-xs-6">
-                            <p>@user.billingTown</p>
+                            <p>@form("deliveryAddress.addressLine2").value</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.countyStateHeader")</p>
+                            <p>@Messages("editUser.townHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingCountyState</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>@Messages.get("editUser.postcodeZipHeader")</p>
-                        </div>
-                        <div class="col-xs-6">
-                            <p>@user.billingPostcodeZip</p>
+                            <p>@form("deliveryAddress.addressLine3").value</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>@Messages.get("editUser.countryHeader")</p>
+                            <p>@Messages("editUser.countyStateHeader")</p>
                         </div>
                         <div class="col-xs-6">
-                            <p>@user.billingCountry</p>
+                            <p>@form("deliveryAddress.addressLine4").value</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages("editUser.postcodeZipHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@form("deliveryAddress.postcode").value</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages("editUser.countryHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@form("deliveryAddress.country").value</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h4>@Messages("editUser.billingAddressHeader")</h4>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages("editUser.addressLine1Header")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@form("billingAddress.addressLine1").value</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages("editUser.addressLine2Header")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@form("billingAddress.addressLine2").value</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages("editUser.townHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@form("billingAddress.addressLine3").value</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages("editUser.countyStateHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@form("billingAddress.addressLine4").value</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages("editUser.postcodeZipHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@form("billingAddress.postcode").value</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>@Messages("editUser.countryHeader")</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>@form("billingAddress.country").value</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <h4>@Messages.get("editUser.userGroupsHeader")</h4>
+                    <h4>@Messages("editUser.userGroupsHeader")</h4>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xs-2">
-                    <p>@user.userGroups.name</p>
+
+            @helper.repeat(form("groups"), min=1) {userGroup =>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <p>@form(userGroup.name + ".name").value</p>
+                    </div>
+                    <div>
+                    <p>@form(userGroup.name + ".joinDate").value</p>
+                    </div>
                 </div>
-                <div class="col-xs-4">
-                    <p>
-                        @user.userGroups.joinDate.getDayOfMonth/@user.userGroups.joinDate.getMonthOfYear/@user.userGroups.joinDate.getYear
-                        @user.userGroups.joinDate.toLocalTime
-                    </p>
-                </div>
-            </div>
+            }
         </div>
     </div>
     }

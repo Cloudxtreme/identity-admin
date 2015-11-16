@@ -1,11 +1,7 @@
-login.missingAntiForgeryToken=Anti forgery token missing in session
-login.failure=Login failure: {0}
-groups.failure=User must be in groups: {0}
-
 main.placeholderSearchBarText=Search by username, email, postcode or IP address...
 
 index.title=User Admin
-index.mainHeader=Welcome to Passport Control
+index.mainHeader=Welcome
 index.subHeader=Search for an Identity using the search bar above
 
 searchResults.title=Search Results
@@ -15,7 +11,8 @@ searchResults.usernameHeader=Username
 searchResults.nameHeader=Name
 searchResults.registeredDateHeader=Registered Date
 searchResults.lastActivityDateHeader=Last Activity Date
-searchResults.errorMessage=Your search query did not match any records.
+searchResults.noResults=Your search query did not match any records.
+searchResults.editBtn=Edit
 
 editUser.title=Edit User
 editUser.idHeader=# ID
@@ -24,17 +21,14 @@ editUser.lastActivityHeader=Last activity
 editUser.emailValidatedHeader=Email validated
 editUser.accountDetails=Account Details
 editUser.marketingPrefsHeader=Marketing Preferences
-editUser.emailHeader=Email Address
-editUser.firstNameHeader=First name
-editUser.lastNameHeader=Last name
 editUser.displayNameHeader=Display name
-editUser.usernameHeader=Username
 editUser.vanityUrlHeader=Vanity URL
 editUser.GNMMarketing=Receive GNM marketing
 editUser.3rdPartyMarketing=Receive 3rd party marketing
 editUser.profileBtn=View public profile
 editUser.deleteBtn=Delete account
-editUser.validateBtn=Validate email
+editUser.validateBtn=Send validation request email
+editUser.validateEmailBtn=Validate email
 editUser.saveBtn=Save
 editUser.personalDetailsHeader=Personal Details
 editUser.deliveryAddressHeader=Delivery Address
@@ -49,5 +43,19 @@ editUser.countyStateHeader=County or State
 editUser.postcodeZipHeader=Postcode/Zipcode
 editUser.countryHeader=Country
 editUser.userGroupsHeader=User Groups
+editUser.invalidSubmission=Invalid form submission
+editUser.provideUsername=You must supply a username before the user can be updated.
+
+email=Email Address
+username=Username
+personalDetails.firstName=First name
+personalDetails.lastName=Last name
+status.receiveGnmMarketing=Receive GNM marketing
+status.receive3rdPartyMarketing=Receive 3rd party marketing
+
+error.email=A valid email address is required
+error.username=Username is required and must be alphanumeric and between 6 and 20 characters
 
 deleteUser.success=User {0} has been deleted
+validateEmail.success=Email has been validated for user {0}
+sendEmailValidation.success=Email validation for user {0} has been sent
