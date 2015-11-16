@@ -10,7 +10,8 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.googleauth._
 import play.api.Play.current
-import services.{SafeGoogleAuth, GoogleAuthConf, GoogleGroups}
+import services.{GoogleAuthConf, GoogleGroups}
+import services.SafeGoogleAuth._
 
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
@@ -40,9 +41,10 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
     val session = request.session
 
     val result = for {
-      identity <- SafeGoogleAuth.validatedUserIdentity
+      identity <- validatedUserIdentity
+      validUser <- correctHostedDomain(identity)
       admin <- GoogleGroups.isUserAdmin(identity.email)
-    } yield if (admin) identity
+    } yield if (admin && validUser) identity
 
     result map {
       case identity: UserIdentity => {
