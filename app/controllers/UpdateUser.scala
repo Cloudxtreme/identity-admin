@@ -26,7 +26,7 @@ trait SaveAction extends Controller with Logging{
           errorForm,
           None,
           publicProfileUrl
-        )(request)))
+        )))
       },
       userData => {
         val userRequest = userData.convertToUserUpdateRequest
