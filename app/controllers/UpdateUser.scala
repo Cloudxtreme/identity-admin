@@ -7,8 +7,7 @@ import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import play.api.mvc.Controller
-import play.api.mvc.Result
+import play.api.mvc.{RequestHeader, Controller, Result}
 import services.AdminApi
 import play.api.libs.concurrent.Execution.Implicits._
 import util.Logging
@@ -18,7 +17,7 @@ trait SaveAction extends Controller with Logging{
   val adminApi: AdminApi
   val publicProfileUrl: String
 
-  private[controllers] def doSave(searchQuery: String, form: Form[Forms.UserForm]): Future[Result] = {
+  private[controllers] def doSave(searchQuery: String, form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
     form.fold(
       errorForm => {
         Future(BadRequest(views.html.editUser(
@@ -27,7 +26,7 @@ trait SaveAction extends Controller with Logging{
           errorForm,
           None,
           publicProfileUrl
-        )))
+        )(request)))
       },
       userData => {
         val userRequest = userData.convertToUserUpdateRequest
@@ -40,7 +39,7 @@ trait SaveAction extends Controller with Logging{
   private[controllers] def update(userId: String,
                      searchQuery: String,
                      userRequest: UserUpdateRequest,
-                     form: Form[Forms.UserForm]): Future[Result] = {
+                     form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
 
     adminApi.updateUserData(userId, userRequest).map {
       case Right(_) =>
@@ -65,6 +64,6 @@ class UpdateUser @Inject() (val adminApi: AdminApi, val publicProfileUrl: String
 
   def save(searchQuery: String) = AuthAction.async { request =>
     val form = userForm.bindFromRequest()(request)
-    doSave(searchQuery, form)
+    doSave(searchQuery, form)(request)
   }
 }
