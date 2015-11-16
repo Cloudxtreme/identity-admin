@@ -4,27 +4,31 @@
 
 @(loginError: Option[LoginError] = None, contactEmail: Option[String])
 
-<html>
-    <head><title>Login</title></head>
-    <body>
-        <h1>Login Page</h1>
+<div class="jumbotron">
+    @main("Login")(None){
         @(loginError, contactEmail) match {
             case (Some(GroupsValidationFailed()), Some(email)) => {
-                <p>Sorry, you do not have access to User Admin. If you would like access, please email @email.
-                   Please state the reason why you need access.</p>
+                <div class="alert alert-danger" role="alert">
+                   Sorry, you do not have access to User Admin. If you would like access, please email @email.
+                   Please state the reason why you need access.
+                </div>
             }
             case (Some(IdentityValidationFailed()), Some(email)) => {
-                <p>We could not log you in. Please contact @email if the problem persists.</p>
+                <div class="alert alert-danger" role="alert">
+                    We could not log you in. Please contact @email if the problem persists.
+                </div>
             }
             case (Some(_), _) => {
-                <p>Failed to login. Please try again.</p>
+                <div class="alert alert-danger" role="alert">
+                    Failed to login. Please try again.
+                </div>
             }
             case (None, _) => {
                 <p>Click the button below to login.</p>
             }
         }
         <form action="@routes.Login.loginAction()" method="get">
-            <input value="Log In" type="submit">
+            <input class="btn btn-default" value="Log In" type="submit">
         </form>
-    </body>
-</html>
+    }
+</div>
