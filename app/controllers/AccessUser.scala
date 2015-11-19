@@ -4,7 +4,7 @@ import javax.inject.Inject
 import models.Forms._
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
+import play.api.Play._
 import play.api.mvc.Controller
 import services.AdminApi
 import util.Logging
@@ -26,7 +26,8 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
             Some(searchQuery),
             formWithErrors,
             request.flash.get("message"),
-            current.configuration.getString("identity-admin.editUser.baseProfileUrl").get
+            current.configuration.getString("identity-admin.editUser.baseProfileUrl").get,
+            current.configuration.getString("identity-admin.avatar.baseUrl").get
           )
         )
       case Left(error) =>

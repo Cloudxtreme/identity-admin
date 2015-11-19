@@ -14,9 +14,11 @@ class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
 
   val adminApiMock = mock[AdminApi]
   val publicProfileUrlMock = "http://mockProfilePage.com/"
+  val avatarUrlMock = "http://mockavatar.com"
   val controller = new SaveAction {
     override val adminApi: AdminApi = adminApiMock
     override val publicProfileUrl = publicProfileUrlMock
+    override val avatarUrl = avatarUrlMock
   }
 
   val searchQuery = "search query"

@@ -3,7 +3,14 @@
 @import views.html.helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
-@(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String], publicProfileUrl: String)
+@(
+        pageTitle: String,
+        searchQuery: Option[String],
+        form: Form[UserForm],
+        message: Option[String],
+        publicProfileUrl: String,
+        avatarUrl: String
+    )
 @implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
 @checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
 @userId = @{form("id").value.getOrElse("")}
@@ -27,10 +34,12 @@
                 }
 
                 <div class="row uneditable-fields">
-                    <div class="col-sm-2">
-                        <img src="@routes.Assets.at("images/darkUserIcon.svg")" />
+                    <div class="col-sm-1">
+                        <div style="margin: 5px; margin-top:15px">
+                            <img style="border-radius: 62.5rem; height: 60px; width:60px" src="@avatarUrl@userId">
+                        </div>
                     </div>
-                    <div class="col-sm-10">
+                    <div class="col-sm-11">
                         <h1>@form("personalDetails.firstName").value @form("personalDetails.lastName").value</h1>
                         <div class="row">
                             <div class="col-sm-2">
