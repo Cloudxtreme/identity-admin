@@ -8,6 +8,8 @@ trait Config {
   val baseUrl: String
   val baseRootUrl: String
   val errorEmail: String
+  val publicProfileUrl: String
+  val avatarUrl: String
 }
 
 class MainConfig extends Config {
@@ -19,4 +21,10 @@ class MainConfig extends Config {
 
   val errorEmail = current.configuration.getString("identity-admin.email.error")
     .getOrElse(throw new IllegalStateException("Missing configuration: identity-admin.email.error"))
+
+  val publicProfileUrl = current.configuration.getString("identity-admin.editUser.baseProfileUrl")
+    .getOrElse(throw new IllegalStateException("Missing configuration: identity-admin.editUser.baseProfileUrl"))
+
+  val avatarUrl = current.configuration.getString("identity-admin.avatar.baseUrl")
+    .getOrElse(throw new IllegalStateException("Missing configuration: identity-admin.avatar.baseUrl"))
 }

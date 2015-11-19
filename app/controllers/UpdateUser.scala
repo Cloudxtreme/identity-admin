@@ -1,6 +1,7 @@
 package controllers
 
 import javax.inject.Inject
+import config.Config
 import models.Forms._
 import models.{Forms, UserUpdateRequest}
 import play.api.data.Form
@@ -63,10 +64,10 @@ trait SaveAction extends Controller with Logging{
   }
 }
 
-class UpdateUser @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SaveAction {
+class UpdateUser @Inject() (val adminApi: AdminApi, conf: Config) extends Controller with AuthActions with SaveAction {
 
-  val publicProfileUrl: String = current.configuration.getString("identity-admin.editUser.baseProfileUrl").get
-  val avatarUrl: String = current.configuration.getString("identity-admin.avatar.baseUrl").get
+  val publicProfileUrl = conf.publicProfileUrl
+  val avatarUrl = conf.avatarUrl
 
   def save(searchQuery: String) = AuthAction.async { implicit request =>
     val form = userForm.bindFromRequest()

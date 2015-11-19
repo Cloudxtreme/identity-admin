@@ -1,6 +1,7 @@
 package controllers
 
 import javax.inject.Inject
+import config.Config
 import models.Forms._
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
@@ -12,7 +13,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.language.implicitConversions
 
-class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActions with Logging {
+class AccessUser @Inject() (adminApi: AdminApi, conf: Config) extends Controller with AuthActions with Logging {
 
   def getUser(searchQuery: String, userId: String) = AuthAction.async { implicit request =>
     adminApi.getFullUser(userId).map {
@@ -26,8 +27,8 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
             Some(searchQuery),
             formWithErrors,
             request.flash.get("message"),
-            current.configuration.getString("identity-admin.editUser.baseProfileUrl").get,
-            current.configuration.getString("identity-admin.avatar.baseUrl").get
+            conf.publicProfileUrl,
+            conf.avatarUrl
           )
         )
       case Left(error) =>
