@@ -3,6 +3,7 @@
 @import views.html.helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
+<<<<<<< HEAD
 @(
         pageTitle: String,
         searchQuery: Option[String],
@@ -11,6 +12,10 @@
         publicProfileUrl: String,
         avatarUrl: String
     )
+=======
+@import helper._
+@(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String], publicProfileUrl: String)(implicit request: RequestHeader)
+>>>>>>> master
 @implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
 @checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
 @userId = @{form("id").value.getOrElse("")}
@@ -142,6 +147,7 @@
 
         </div>
         <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse("")).url">
+            @CSRF.formField
             <input type="hidden" name="@form("id").name" value="@form("id").value"/>
             <input type="hidden" name="@form("personalDetails.gender").name" value="@form("personalDetails.gender").value"/>
             <input type="hidden" name="@form("personalDetails.dateOfBirth").name" value="@form("personalDetails.dateOfBirth").value"/>
@@ -202,7 +208,7 @@
     <div class="row">
         <div class="col-md-10 uneditable-fields">
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-12">
                     <h4>@Messages("editUser.personalDetailsHeader")</h4>
                     <div class="row">
                         <div class="col-xs-6">
@@ -231,7 +237,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+
+            </div>
+            <div class="row">
+                <div class="col-md-6">
                     <h4>@Messages("editUser.deliveryAddressHeader")</h4>
                     <div class="row">
                         <div class="col-xs-6">
@@ -282,7 +291,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <h4>@Messages("editUser.billingAddressHeader")</h4>
                     <div class="row">
                         <div class="col-xs-6">

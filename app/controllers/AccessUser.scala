@@ -14,7 +14,7 @@ import scala.language.implicitConversions
 
 class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActions with Logging {
 
-  def getUser(searchQuery: String, userId: String) = AuthAction.async { request =>
+  def getUser(searchQuery: String, userId: String) = AuthAction.async { implicit request =>
     adminApi.getFullUser(userId).map {
       case Right(user) =>
         val form = createForm(user)
