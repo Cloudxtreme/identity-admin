@@ -14,7 +14,7 @@ import scala.language.implicitConversions
 
 class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActions with Logging {
 
-  def getUser(searchQuery: String, userId: String) = AuthAction.async { request =>
+  def getUser(searchQuery: String, userId: String) = AuthAction.async { implicit request =>
     adminApi.getFullUser(userId).map {
       case Right(user) =>
         val form = createForm(user)
@@ -27,7 +27,7 @@ class AccessUser @Inject() (adminApi: AdminApi) extends Controller with AuthActi
             formWithErrors,
             request.flash.get("message"),
             current.configuration.getString("identity-admin.editUser.baseProfileUrl").get
-          )(request)
+          )
         )
       case Left(error) =>
         logger.error(s"Failed to find user. error: $error")
