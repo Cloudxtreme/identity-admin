@@ -16,6 +16,7 @@ import scala.concurrent.Future
 
 trait SaveAction extends Controller with Logging{
   val adminApi: AdminApi
+  val conf: Config
   val publicProfileUrl: String
   val avatarUrl: String
 
@@ -64,7 +65,7 @@ trait SaveAction extends Controller with Logging{
   }
 }
 
-class UpdateUser @Inject() (val adminApi: AdminApi, conf: Config) extends Controller with AuthActions with SaveAction {
+class UpdateUser @Inject() (val adminApi: AdminApi, val conf: Config) extends Controller with AuthActions with SaveAction {
 
   val publicProfileUrl = conf.publicProfileUrl
   val avatarUrl = conf.avatarUrl
