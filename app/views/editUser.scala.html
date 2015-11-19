@@ -3,7 +3,7 @@
 @import views.html.helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
-<<<<<<< HEAD
+@import helper._
 @(
         pageTitle: String,
         searchQuery: Option[String],
@@ -11,11 +11,7 @@
         message: Option[String],
         publicProfileUrl: String,
         avatarUrl: String
-    )
-=======
-@import helper._
-@(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String], publicProfileUrl: String)(implicit request: RequestHeader)
->>>>>>> master
+    )(implicit request: RequestHeader)
 @implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
 @checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
 @userId = @{form("id").value.getOrElse("")}
