@@ -1,6 +1,7 @@
 package controllers
 
 import javax.inject.Inject
+import config.Config
 import models.Forms._
 import models.{Forms, UserUpdateRequest}
 import play.api.data.Form
@@ -15,9 +16,11 @@ import scala.concurrent.Future
 
 trait SaveAction extends Controller with Logging{
   val adminApi: AdminApi
+  val conf: Config
   val publicProfileUrl: String
+  val avatarUrl: String
 
-  private[controllers] def doSave(searchQuery: String, form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
+  private[controllers] def doSave(searchQuery: String, userId: String, form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
     form.fold(
       errorForm => {
         Future(BadRequest(views.html.editUser(
@@ -25,7 +28,8 @@ trait SaveAction extends Controller with Logging{
           Some(searchQuery),
           errorForm,
           None,
-          publicProfileUrl
+          publicProfileUrl + userId,
+          avatarUrl + userId
         )))
       },
       userData => {
@@ -53,17 +57,21 @@ trait SaveAction extends Controller with Logging{
             Some(searchQuery),
             form.withGlobalError(error.toString),
             None,
-            publicProfileUrl
+            publicProfileUrl + userId,
+            avatarUrl + userId
           )
         )
     }
   }
 }
 
-class UpdateUser @Inject() (val adminApi: AdminApi, val publicProfileUrl: String) extends Controller with AuthActions with SaveAction {
+class UpdateUser @Inject() (val adminApi: AdminApi, val conf: Config) extends Controller with AuthActions with SaveAction {
 
-  def save(searchQuery: String) = AuthAction.async { implicit request =>
+  val publicProfileUrl = conf.baseProfileUrl
+  val avatarUrl = conf.baseAvatarUrl
+
+  def save(searchQuery: String, userId: String) = AuthAction.async { implicit request =>
     val form = userForm.bindFromRequest()
-    doSave(searchQuery, form)
+    doSave(searchQuery, userId, form)
   }
 }

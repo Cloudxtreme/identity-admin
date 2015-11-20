@@ -4,7 +4,14 @@
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 @import helper._
-@(pageTitle: String, searchQuery: Option[String],form: Form[UserForm], message: Option[String], publicProfileUrl: String)(implicit request: RequestHeader)
+@(
+        pageTitle: String,
+        searchQuery: Option[String],
+        form: Form[UserForm],
+        message: Option[String],
+        publicProfileUrl: String,
+        avatarUrl: String
+    )(implicit request: RequestHeader)
 @implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
 @checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
 @userId = @{form("id").value.getOrElse("")}
@@ -28,10 +35,12 @@
                 }
 
                 <div class="row uneditable-fields">
-                    <div class="col-sm-2">
-                        <img src="@routes.Assets.at("images/darkUserIcon.svg")" />
+                    <div class="col-sm-1">
+                        <div class="avatar--margin--margin-top">
+                            <img class="avatar__circular__fixed-size" src="@avatarUrl">
+                        </div>
                     </div>
-                    <div class="col-sm-10">
+                    <div class="col-sm-11">
                         <h1>@form("personalDetails.firstName").value @form("personalDetails.lastName").value</h1>
                         <div class="row">
                             <div class="col-sm-2">
@@ -95,7 +104,7 @@
             </div>
             <div class="col-md-2">
                 <div class="btn-group-vertical center-block">
-                    <a class="btn btn-default btn--bottomMargin" href= "@publicProfileUrl@userId" target="_blank">
+                    <a class="btn btn-default btn--bottomMargin" href= "@publicProfileUrl" target="_blank">
                         @Messages("editUser.profileBtn")
                     </a>
                     <a class="btn btn-danger btn--bottomMargin" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">
@@ -133,7 +142,7 @@
             </div>
 
         </div>
-        <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse("")).url" autocomplete="off">
+        <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse(""), userId).url" autocomplete="off">
             @CSRF.formField
             <input type="hidden" name="@form("id").name" value="@form("id").value"/>
             <input type="hidden" name="@form("personalDetails.gender").name" value="@form("personalDetails.gender").value"/>

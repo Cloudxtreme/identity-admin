@@ -1,5 +1,6 @@
 package controllers
 
+import config.Config
 import models.{Forms, User, UserUpdateRequest}
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -15,10 +16,17 @@ class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
 
   val fakeApp = FakeApplication(additionalConfiguration = Map("play.crypto.secret" -> "test"))
   val adminApiMock = mock[AdminApi]
-  val publicProfileUrlMock = "http://mockProfilePage.com/"
   val controller = new SaveAction {
     override val adminApi: AdminApi = adminApiMock
-    override val publicProfileUrl = publicProfileUrlMock
+    override val conf = new Config {
+      val baseUrl = "baseUrl"
+      val baseRootUrl = "baseRootUrl"
+      val errorEmail = "errorEmail"
+      override val baseProfileUrl: String = "publicProfileUrl"
+      override val baseAvatarUrl: String = "baseAvatarUrl"
+    }
+    override val publicProfileUrl: String = conf.baseProfileUrl
+    override val avatarUrl: String = conf.baseAvatarUrl
   }
 
   val searchQuery = "search query"
