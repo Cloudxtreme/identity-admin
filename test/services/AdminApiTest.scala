@@ -18,7 +18,7 @@ class AdminApiTest extends WordSpec with Matchers{
     val baseRootUrl = "baseRootUrl"
     val errorEmail = "errorEmail"
     override val baseProfileUrl: String = "baseProfileUrl"
-    override val avatarUrl: String = "avatarUrl"
+    override val baseAvatarUrl: String = "baseAvatarUrl"
   }
 
   val adminApi = new AdminApi(conf, requestSigner)

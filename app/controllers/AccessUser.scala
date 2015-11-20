@@ -28,7 +28,7 @@ class AccessUser @Inject() (adminApi: AdminApi, conf: Config) extends Controller
             formWithErrors,
             request.flash.get("message"),
             conf.baseProfileUrl + userId,
-            conf.avatarUrl + userId
+            conf.baseAvatarUrl + userId
           )
         )
       case Left(error) =>

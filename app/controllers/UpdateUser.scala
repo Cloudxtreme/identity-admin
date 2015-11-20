@@ -68,7 +68,7 @@ trait SaveAction extends Controller with Logging{
 class UpdateUser @Inject() (val adminApi: AdminApi, val conf: Config) extends Controller with AuthActions with SaveAction {
 
   val publicProfileUrl = conf.baseProfileUrl
-  val avatarUrl = conf.avatarUrl
+  val avatarUrl = conf.baseAvatarUrl
 
   def save(searchQuery: String, userId: String) = AuthAction.async { implicit request =>
     val form = userForm.bindFromRequest()

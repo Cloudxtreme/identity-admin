@@ -9,7 +9,7 @@ trait Config {
   val baseRootUrl: String
   val errorEmail: String
   val baseProfileUrl: String
-  val avatarUrl: String
+  val baseAvatarUrl: String
 }
 
 class MainConfig extends Config {
@@ -25,6 +25,6 @@ class MainConfig extends Config {
   val baseProfileUrl = current.configuration.getString("identity-admin.editUser.baseProfileUrl")
     .getOrElse(throw new IllegalStateException("Missing configuration: identity-admin.editUser.baseProfileUrl"))
 
-  val avatarUrl = current.configuration.getString("identity-admin.avatar.baseUrl")
+  val baseAvatarUrl = current.configuration.getString("identity-admin.avatar.baseUrl")
     .getOrElse(throw new IllegalStateException("Missing configuration: identity-admin.avatar.baseUrl"))
 }

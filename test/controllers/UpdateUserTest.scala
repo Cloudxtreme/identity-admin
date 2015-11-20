@@ -23,10 +23,10 @@ class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
       val baseRootUrl = "baseRootUrl"
       val errorEmail = "errorEmail"
       override val baseProfileUrl: String = "publicProfileUrl"
-      override val avatarUrl: String = "avatarUrl"
+      override val baseAvatarUrl: String = "baseAvatarUrl"
     }
     override val publicProfileUrl: String = conf.baseProfileUrl
-    override val avatarUrl: String = conf.avatarUrl
+    override val avatarUrl: String = conf.baseAvatarUrl
   }
 
   val searchQuery = "search query"
