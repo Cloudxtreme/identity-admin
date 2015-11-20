@@ -7,5 +7,5 @@ import play.filters.csrf.CSRFFilter
 import play.filters.headers.SecurityHeadersFilter
 
 class Filters @Inject() (securityHeadersFilter: SecurityHeadersFilter, csrfFilter: CSRFFilter) extends HttpFilters {
-  def filters = Seq(securityHeadersFilter, csrfFilter, StrictTransportSecurityHeaderFilter)
+  def filters = Seq(securityHeadersFilter, csrfFilter, NoCacheFilter, StrictTransportSecurityHeaderFilter)
 }
