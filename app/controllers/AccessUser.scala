@@ -27,7 +27,7 @@ class AccessUser @Inject() (adminApi: AdminApi, conf: Config) extends Controller
             Some(searchQuery),
             formWithErrors,
             request.flash.get("message"),
-            conf.publicProfileUrl,
+            conf.baseProfileUrl,
             conf.avatarUrl
           )
         )
