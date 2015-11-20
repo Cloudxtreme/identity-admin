@@ -32,7 +32,7 @@ trait DeleteAction extends Controller with Logging{
 class Delete @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with DeleteAction {
 
   def delete(searchQuery: String) = AuthAction.async {  implicit request =>
-    val id = deleteForm.bindFromRequest.get.id
+    val id = idForm.bindFromRequest.get.id
     doDelete(searchQuery, id)
   }
 }

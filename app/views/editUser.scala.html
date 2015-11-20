@@ -101,12 +101,16 @@
                     <a class="btn btn-danger btn--bottomMargin" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">
                         @Messages("editUser.deleteBtn")
                     </a>
-                    <a class="btn btn-warning btn--bottomMargin" href="@routes.SendEmailValidation.sendEmailValidation(query, userId)">
-                        @Messages("editUser.validateBtn")
-                    </a>
-                    <a class="btn btn-success btn--bottomMargin" href="@routes.SendEmailValidation.validateEmail(query, userId)">
-                        @Messages("editUser.validateEmailBtn")
-                    </a>
+                    <form method="post" action="@routes.SendEmailValidation.sendEmailValidation(query)">
+                        @CSRF.formField
+                        <button class="btn btn-warning btn--bottomMargin btn-block" type="submit">@Messages("editUser.validateBtn")</button>
+                        <input type="hidden" name="id" value="@userId" />
+                    </form>
+                    <form method="post" action="@routes.SendEmailValidation.validateEmail(query)">
+                        @CSRF.formField
+                        <button class="btn btn-success btn--bottomMargin btn-block" type="submit">@Messages("editUser.validateEmailBtn")</button>
+                        <input type="hidden" name="id" value="@userId" />
+                    </form>
                 </div>
             </div>
 
@@ -129,7 +133,6 @@
                                 <button class="btn btn-danger" type="submit">@Messages("editUser.deleteBtn")</button>
                                 <input type="hidden" name="id" value="@userId" />
                             </form>
-
                         </div>
                     </div>
                 </div>

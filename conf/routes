@@ -17,9 +17,9 @@ GET        /assets/*file                  @controllers.Assets.at(path="/public",
 
 GET        /search                        @controllers.Search.search(searchQuery: String)
 
-GET        /validateEmail                 @controllers.SendEmailValidation.validateEmail(searchQuery: String, userId: String)
+POST        /validateEmail                 @controllers.SendEmailValidation.validateEmail(searchQuery: String)
 
-GET        /sendEmailValidation           @controllers.SendEmailValidation.sendEmailValidation(searchQuery: String, userId: String)
+POST        /sendEmailValidation           @controllers.SendEmailValidation.sendEmailValidation(searchQuery: String)
 
 GET        /edit                          @controllers.AccessUser.getUser(searchQuery: String, userId: String)
 

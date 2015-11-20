@@ -3,6 +3,7 @@ package controllers
 
 import javax.inject.Inject
 
+import models.Forms._
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.{Result, Controller}
@@ -41,11 +42,13 @@ trait SendEmailValidationAction extends Controller with Logging{
 
 class SendEmailValidation @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SendEmailValidationAction {
 
-  def sendEmailValidation(searchQuery: String, userId: String) = AuthAction.async {
-    doSendEmailValidation(searchQuery, userId)
+  def sendEmailValidation(searchQuery: String) = AuthAction.async { implicit request =>
+    val id = idForm.bindFromRequest.get.id
+    doSendEmailValidation(searchQuery, id)
   }
 
-  def validateEmail(searchQuery: String, userId: String) = AuthAction.async {
-    doValidateEmail(searchQuery, userId)
+  def validateEmail(searchQuery: String) = AuthAction.async {implicit request =>
+    val id = idForm.bindFromRequest.get.id
+    doValidateEmail(searchQuery, id)
   }
 }

@@ -110,7 +110,7 @@ object Forms {
     ))
   }
 
-  val deleteForm = Form(
+  val idForm = Form(
     mapping("id" -> text)(IdForm.apply)(IdForm.unapply)
   )
 }
