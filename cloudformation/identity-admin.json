@@ -278,13 +278,13 @@
                 "Ref": "Stage"
               }, "'\n",
 
-              "apt-get update\n",
-              "apt-get install -y unattended-upgrades\n",
-              "unattended-upgrade --debug\n",
-
               "aws s3 cp s3://gu-identity-dist/cwlogs-setup.sh .\n",
               "chmod +x cwlogs-setup.sh\n",
               "./cwlogs-setup.sh\n",
+
+              "aws s3 cp s3://gu-identity-dist/security-updates.sh .\n",
+              "chmod +x security-updates.sh\n",
+              "./security-updates.sh\n",
 
               "aws s3 cp s3://gu-identity-dist/cron-setup.sh .\n",
               "chmod +x cron-setup.sh\n",
