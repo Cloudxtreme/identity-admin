@@ -18,15 +18,23 @@
     <appender name="ACCESSLOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${logs.home}/identity-admin-access.log</file>
 
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logs.home}/identity-admin-access.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <maxHistory>30</maxHistory>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${logs.home}/identity-admin-access.log.%i.gz</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>2</maxIndex>
         </rollingPolicy>
 
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
         <encoder>
             <pattern>%date %msg%n</pattern>
         </encoder>
     </appender>
+
+    <logger name="filters.LogRequestsFilter" level="INFO" additivity="false">
+        <appender-ref ref="ACCESSLOGFILE"/>
+    </logger>
 
     <root level="WARN">
         <appender-ref ref="LOGFILE"/>
