@@ -133,7 +133,7 @@
             </div>
 
         </div>
-        <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse("")).url">
+        <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse("")).url" autocomplete="off">
             @CSRF.formField
             <input type="hidden" name="@form("id").name" value="@form("id").value"/>
             <input type="hidden" name="@form("personalDetails.gender").name" value="@form("personalDetails.gender").value"/>
