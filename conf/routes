@@ -25,4 +25,4 @@ GET        /edit                          @controllers.AccessUser.getUser(search
 
 POST       /save                          @controllers.UpdateUser.save(searchQuery: String)
 
-POST       /deleteUser                    @controllers.Delete.delete
+POST       /deleteUser                    @controllers.Delete.delete(searchQuery: String)
