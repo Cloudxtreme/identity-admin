@@ -17,14 +17,12 @@ GET        /assets/*file                  @controllers.Assets.at(path="/public",
 
 GET        /search                        @controllers.Search.search(searchQuery: String)
 
-GET        /delete                        @controllers.Delete.delete(searchQuery: String, userId: String)
+POST        /validateEmail                 @controllers.SendEmailValidation.validateEmail(searchQuery: String)
 
-GET        /validateEmail                 @controllers.SendEmailValidation.validateEmail(searchQuery: String, userId: String)
-
-GET        /sendEmailValidation           @controllers.SendEmailValidation.sendEmailValidation(searchQuery: String, userId: String)
+POST        /sendEmailValidation           @controllers.SendEmailValidation.sendEmailValidation(searchQuery: String)
 
 GET        /edit                          @controllers.AccessUser.getUser(searchQuery: String, userId: String)
 
 POST       /save                          @controllers.UpdateUser.save(searchQuery: String, userId: String)
 
-
+POST       /deleteUser                    @controllers.Delete.delete(searchQuery: String)
