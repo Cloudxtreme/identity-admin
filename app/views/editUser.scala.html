@@ -123,10 +123,11 @@
                             <p class="text-center"> This change cannot be undone</p>
                         </div>
                         <div class="modal-footer">
-                            <form action="/actions?_method=DELETE" method="POST">
+                            <form method="post" action="@routes.Delete.delete">
+                                @CSRF.formField
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <input type="hidden" name="userid" value="@userId" />
                                 <button class="btn btn-danger" type="submit">@Messages("editUser.deleteBtn")</button>
+                                <input type="hidden" name="id" value="@userId" />
                             </form>
 
                         </div>

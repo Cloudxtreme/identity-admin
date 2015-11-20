@@ -17,8 +17,6 @@ GET        /assets/*file                  @controllers.Assets.at(path="/public",
 
 GET        /search                        @controllers.Search.search(searchQuery: String)
 
-GET        /delete                        @controllers.Delete.delete(searchQuery: String, userId: String)
-
 GET        /validateEmail                 @controllers.SendEmailValidation.validateEmail(searchQuery: String, userId: String)
 
 GET        /sendEmailValidation           @controllers.SendEmailValidation.sendEmailValidation(searchQuery: String, userId: String)
@@ -27,4 +25,4 @@ GET        /edit                          @controllers.AccessUser.getUser(search
 
 POST       /save                          @controllers.UpdateUser.save(searchQuery: String)
 
-
+POST       /deleteUser                    @controllers.Delete.delete

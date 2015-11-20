@@ -9,6 +9,7 @@ import services.AdminApi
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import util.Logging
+import models.Forms._
 
 import scala.concurrent.Future
 
@@ -30,7 +31,9 @@ trait DeleteAction extends Controller with Logging{
 
 class Delete @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with DeleteAction {
 
-  def delete(searchQuery: String, userId: String) = AuthAction.async {
-    doDelete(searchQuery, userId)
+  def delete = AuthAction.async {  implicit request =>
+    val id = deleteForm.bindFromRequest.get.id
+    //searchQuery: String, userId: String
+    doDelete("", id)
   }
 }
