@@ -20,7 +20,7 @@ trait SaveAction extends Controller with Logging{
   val publicProfileUrl: String
   val avatarUrl: String
 
-  private[controllers] def doSave(searchQuery: String, form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
+  private[controllers] def doSave(searchQuery: String, userId: String, form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
     form.fold(
       errorForm => {
         Future(BadRequest(views.html.editUser(
@@ -28,8 +28,8 @@ trait SaveAction extends Controller with Logging{
           Some(searchQuery),
           errorForm,
           None,
-          publicProfileUrl,
-          avatarUrl
+          publicProfileUrl + userId,
+          avatarUrl + userId
         )))
       },
       userData => {
@@ -57,8 +57,8 @@ trait SaveAction extends Controller with Logging{
             Some(searchQuery),
             form.withGlobalError(error.toString),
             None,
-            publicProfileUrl,
-            avatarUrl
+            publicProfileUrl + userId,
+            avatarUrl + userId
           )
         )
     }
@@ -70,8 +70,8 @@ class UpdateUser @Inject() (val adminApi: AdminApi, val conf: Config) extends Co
   val publicProfileUrl = conf.baseProfileUrl
   val avatarUrl = conf.avatarUrl
 
-  def save(searchQuery: String) = AuthAction.async { implicit request =>
+  def save(searchQuery: String, userId: String) = AuthAction.async { implicit request =>
     val form = userForm.bindFromRequest()
-    doSave(searchQuery, form)
+    doSave(searchQuery, userId, form)
   }
 }

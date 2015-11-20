@@ -37,7 +37,7 @@
                 <div class="row uneditable-fields">
                     <div class="col-sm-1">
                         <div class="avatar--margin--margin-top">
-                            <img class="avatar__circular__fixed-size" src="@avatarUrl@userId">
+                            <img class="avatar__circular__fixed-size" src="@avatarUrl">
                         </div>
                     </div>
                     <div class="col-sm-11">
@@ -104,7 +104,7 @@
             </div>
             <div class="col-md-2">
                 <div class="btn-group-vertical center-block">
-                    <a class="btn btn-default btn--bottomMargin" href= "@publicProfileUrl@userId" target="_blank">
+                    <a class="btn btn-default btn--bottomMargin" href= "@publicProfileUrl" target="_blank">
                         @Messages("editUser.profileBtn")
                     </a>
                     <a class="btn btn-danger btn--bottomMargin" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">
@@ -142,7 +142,7 @@
             </div>
 
         </div>
-        <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse("")).url">
+        <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse(""), userId).url">
             @CSRF.formField
             <input type="hidden" name="@form("id").name" value="@form("id").value"/>
             <input type="hidden" name="@form("personalDetails.gender").name" value="@form("personalDetails.gender").value"/>
