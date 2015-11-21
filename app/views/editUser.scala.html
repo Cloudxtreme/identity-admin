@@ -108,7 +108,7 @@
                     <a class="btn btn-danger btn--bottomMargin" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">
                         @Messages("editUser.deleteBtn")
                     </a>
-                    <form method="post" action="@routes.SendEmailValidation.sendEmailValidation)">
+                    <form method="post" action="@routes.SendEmailValidation.sendEmailValidation">
                         @CSRF.formField
                         <button class="btn btn-warning btn--bottomMargin btn-block" type="submit">@Messages("editUser.validateBtn")</button>
                         <input type="hidden" name="id" value="@userId" />
