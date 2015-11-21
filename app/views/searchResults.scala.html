@@ -5,7 +5,7 @@
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 
-@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, message: Option[String], error: Option[String])
+@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, message: Option[String], error: Option[String])(implicit request: RequestHeader)
     @query = @{searchBarText.getOrElse("")}
     @main(pageTitle)(Some(searchBar(searchBarText))){
         <div class="container">
