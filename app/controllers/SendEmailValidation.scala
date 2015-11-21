@@ -17,25 +17,25 @@ import scala.concurrent.Future
 trait SendEmailValidationAction extends Controller with Logging{
   val adminApi: AdminApi
 
-  private[controllers] def doSendEmailValidation(searchQuery: String, userId: String): Future[Result] = {
+  private[controllers] def doSendEmailValidation(userId: String): Future[Result] = {
     logger.info(s"Sending email validation for user with id: $userId")
     adminApi.sendEmailValidation(userId).map {
       case Right(result) =>
-        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("message" -> Messages("sendEmailValidation.success", userId))
+        Redirect(routes.AccessUser.getUser(userId)).flashing("message" -> Messages("sendEmailValidation.success", userId))
       case Left(error) =>
         logger.error(s"Failed to send email validation for user with id: $userId. error: $error")
-        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("error" -> error.message)
+        Redirect(routes.AccessUser.getUser(userId)).flashing("error" -> error.message)
     }
   }
 
-  private[controllers] def doValidateEmail(searchQuery: String, userId: String): Future[Result] = {
+  private[controllers] def doValidateEmail(userId: String): Future[Result] = {
     logger.info(s"Validating email for user with id: $userId")
     adminApi.validateEmail(userId).map {
       case Right(result) =>
-        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("message" -> Messages("validateEmail.success", userId))
+        Redirect(routes.AccessUser.getUser(userId)).flashing("message" -> Messages("validateEmail.success", userId))
       case Left(error) =>
         logger.error(s"Failed to validate email for user with id: $userId. error: $error")
-        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("error" -> error.message)
+        Redirect(routes.AccessUser.getUser(userId)).flashing("error" -> error.message)
     }
   }
 }
@@ -44,15 +44,11 @@ class SendEmailValidation @Inject() (val adminApi: AdminApi) extends Controller 
 
   def sendEmailValidation = AuthAction.async { implicit request =>
     val id = idForm.bindFromRequest.get.id
-    val searchQuery = request.session.get("query").getOrElse("")
-    request.session - "query"
-    doSendEmailValidation(searchQuery, id)
+    doSendEmailValidation(id)
   }
 
   def validateEmail = AuthAction.async {implicit request =>
     val id = idForm.bindFromRequest.get.id
-    val searchQuery = request.session.get("query").getOrElse("")
-    request.session - "query"
-    doValidateEmail(searchQuery, id)
+    doValidateEmail(id)
   }
 }

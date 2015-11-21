@@ -50,7 +50,7 @@
                         @response.lastActiveIpAddress.map(o => s"($o)")
                         <p></div>
                     <div class="col-sm-1">
-                        <a class="btn btn-primary btn-block" href="@routes.AccessUser.getUser(query, response.id)">
+                        <a class="btn btn-primary btn-block" href="@routes.AccessUser.getUser(response.id)">
                             @Messages("searchResults.editBtn")
                         </a>
                     </div>

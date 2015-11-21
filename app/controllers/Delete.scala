@@ -16,7 +16,7 @@ import scala.concurrent.Future
 trait DeleteAction extends Controller with Logging{
   val adminApi: AdminApi
 
-  private[controllers] def doDelete(searchQuery: String, userId: String): Future[Result] = {
+  private[controllers] def doDelete(userId: String): Future[Result] = {
     logger.info(s"Deleting user with id: $userId")
     adminApi.delete(userId).map {
       case Right(result) =>
@@ -24,7 +24,7 @@ trait DeleteAction extends Controller with Logging{
         Redirect(routes.Search.search()).flashing("message" -> Messages("deleteUser.success", userId))
       case Left(error) =>
         logger.error(s"Failed to delete user. error: $error")
-        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("error" -> error.message)
+        Redirect(routes.AccessUser.getUser(userId)).flashing("error" -> error.message)
     }
   }
 }
@@ -33,8 +33,6 @@ class Delete @Inject() (val adminApi: AdminApi) extends Controller with AuthActi
 
   def delete = AuthAction.async {  implicit request =>
     val id = idForm.bindFromRequest.get.id
-    val searchQuery = request.session.get("query").getOrElse("")
-    request.session - "query"
-    doDelete(searchQuery, id)
+    doDelete(id)
   }
 }

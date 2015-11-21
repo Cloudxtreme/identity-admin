@@ -23,7 +23,7 @@ trait SearchAction extends Results {
     adminApi.getUsers(searchQuery) map {
       case Right(searchResult) =>
         if(searchResult.total == 1 && !searchResult.results.isEmpty) {
-          Redirect(routes.AccessUser.getUser(searchQuery, searchResult.results.head.id)).flashing(request.flash)
+          Redirect(routes.AccessUser.getUser(searchResult.results.head.id)).flashing(request.flash)
         } else {
           Ok(
             views.html.searchResults(
@@ -52,7 +52,6 @@ trait SearchAction extends Results {
 class Search @Inject() (val adminApi: AdminApi) extends Controller with SearchAction with AuthActions with Logging {
 
   def search = AuthAction.async { implicit request =>
-    println("Search action")
     val searchQuery = searchForm.bindFromRequest.get.query
     doSearch(searchQuery)
   }

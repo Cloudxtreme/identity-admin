@@ -21,7 +21,7 @@ POST        /validateEmail                 @controllers.SendEmailValidation.vali
 
 POST        /sendEmailValidation           @controllers.SendEmailValidation.sendEmailValidation
 
-GET        /edit                          @controllers.AccessUser.getUser(searchQuery: String, userId: String)
+GET        /edit                          @controllers.AccessUser.getUser(userId: String)
 
 POST       /save                          @controllers.UpdateUser.save(userId: String)
 
