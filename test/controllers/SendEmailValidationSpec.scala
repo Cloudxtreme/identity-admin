@@ -22,18 +22,18 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
 
     "redirect to edit page on success" in {
       when(adminApiMock.sendEmailValidation(userId)).thenReturn(Future.successful(Right(true)))
-      val result = controller.doSendEmailValidation(searchQuery, userId)
+      val result = controller.doSendEmailValidation(userId)
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(searchQuery, userId).url)
+      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
       flash(result).get("message") mustEqual Some(s"Email validation for user $userId has been sent")
     }
 
     "redirect to edit user with customerror message on failure" in {
       val error = CustomError("Fatal customerror", "Boom")
       when(adminApiMock.sendEmailValidation(userId)).thenReturn(Future.successful(Left(error)))
-      val result = controller.doSendEmailValidation(searchQuery, userId)
+      val result = controller.doSendEmailValidation(userId)
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(searchQuery, userId).url)
+      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
       flash(result).get("error") mustEqual Some(error.message)
     }
   }
@@ -44,18 +44,18 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
 
     "redirect to edit page on success" in {
       when(adminApiMock.validateEmail(userId)).thenReturn(Future.successful(Right(true)))
-      val result = controller.doValidateEmail(searchQuery, userId)
+      val result = controller.doValidateEmail(userId)
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(searchQuery, userId).url)
+      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
       flash(result).get("message") mustEqual Some(s"Email has been validated for user $userId")
     }
 
     "redirect to edit user with customerror message on failure" in {
       val error = CustomError("Fatal customerror", "Boom")
       when(adminApiMock.validateEmail(userId)).thenReturn(Future.successful(Left(error)))
-      val result = controller.doValidateEmail(searchQuery, userId)
+      val result = controller.doValidateEmail(userId)
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(searchQuery, userId).url)
+      redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
       flash(result).get("error") mustEqual Some(error.message)
     }
   }

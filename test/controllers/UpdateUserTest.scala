@@ -43,19 +43,19 @@ class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
         when(adminApiMock.updateUserData(userId, userUpdateData)).thenReturn(
           Future.successful(Right(blankUser))
         )
-        val request = FakeRequest().withSession("csrfToken" -> CSRF.SignedTokenProvider.generateToken)
-        val result = controller.update(userId, searchQuery, userUpdateData, blankUserForm)(request)
-        redirectLocation(result) mustEqual Some(routes.Search.search(searchQuery).url)
+        implicit val request = FakeRequest().withSession("csrfToken" -> CSRF.SignedTokenProvider.generateToken)
+        val result = controller.update(userId, userUpdateData, blankUserForm)
+        redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
         flash(result).get("message") mustEqual Some("User has been updated")
       }
     }
 
     "when form input is invalid return to the edit user page" in {
       running(fakeApp) {
-        val request = FakeRequest().withSession("csrfToken" -> CSRF.SignedTokenProvider.generateToken)
         when(adminApiMock.updateUserData(userId, userUpdateData)).thenReturn(
           Future.successful(Left(customError)))
-        val result = controller.update(userId, searchQuery, userUpdateData, blankUserForm)(request)
+        implicit val request = FakeRequest().withSession("csrfToken" -> CSRF.SignedTokenProvider.generateToken)
+        val result = controller.update(userId, userUpdateData, blankUserForm)
         status(result) mustEqual OK
       }
     }
