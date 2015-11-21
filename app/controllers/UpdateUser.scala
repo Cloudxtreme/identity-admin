@@ -46,7 +46,7 @@ trait SaveAction extends Controller with Logging{
     adminApi.updateUserData(userId, userRequest).map {
       case Right(_) =>
         logger.info("Successfully updated user in database. Redirecting to search.")
-        Redirect(routes.Search.search).flashing("message" -> "User has been updated")
+        Redirect(routes.AccessUser.getUser(userId)).flashing("message" -> "User has been updated")
       case Left(error) =>
         logger.error(s"Failed to update user. error: $error")
         Ok(
