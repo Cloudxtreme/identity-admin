@@ -42,13 +42,17 @@ trait SendEmailValidationAction extends Controller with Logging{
 
 class SendEmailValidation @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SendEmailValidationAction {
 
-  def sendEmailValidation(searchQuery: String) = AuthAction.async { implicit request =>
+  def sendEmailValidation = AuthAction.async { implicit request =>
     val id = idForm.bindFromRequest.get.id
+    val searchQuery = request.session.get("query").getOrElse("")
+    request.session - "query"
     doSendEmailValidation(searchQuery, id)
   }
 
-  def validateEmail(searchQuery: String) = AuthAction.async {implicit request =>
+  def validateEmail = AuthAction.async {implicit request =>
     val id = idForm.bindFromRequest.get.id
+    val searchQuery = request.session.get("query").getOrElse("")
+    request.session - "query"
     doValidateEmail(searchQuery, id)
   }
 }

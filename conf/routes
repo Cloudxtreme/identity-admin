@@ -15,14 +15,14 @@ GET        /oauth2callback                @controllers.Login.oauth2Callback
 
 GET        /assets/*file                  @controllers.Assets.at(path="/public", file)
 
-GET        /search                        @controllers.Search.search(searchQuery: String)
+POST        /search                        @controllers.Search.search
 
-POST        /validateEmail                 @controllers.SendEmailValidation.validateEmail(searchQuery: String)
+POST        /validateEmail                 @controllers.SendEmailValidation.validateEmail
 
-POST        /sendEmailValidation           @controllers.SendEmailValidation.sendEmailValidation(searchQuery: String)
+POST        /sendEmailValidation           @controllers.SendEmailValidation.sendEmailValidation
 
 GET        /edit                          @controllers.AccessUser.getUser(searchQuery: String, userId: String)
 
-POST       /save                          @controllers.UpdateUser.save(searchQuery: String, userId: String)
+POST       /save                          @controllers.UpdateUser.save(userId: String)
 
-POST       /deleteUser                    @controllers.Delete.delete(searchQuery: String)
+POST       /deleteUser                    @controllers.Delete.delete

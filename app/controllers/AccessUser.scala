@@ -24,7 +24,6 @@ class AccessUser @Inject() (adminApi: AdminApi, conf: Config) extends Controller
         Ok(
           views.html.editUser(
             Messages("editUser.title"),
-            Some(searchQuery),
             formWithErrors,
             request.flash.get("message"),
             conf.baseProfileUrl + userId,
@@ -33,7 +32,7 @@ class AccessUser @Inject() (adminApi: AdminApi, conf: Config) extends Controller
         )
       case Left(error) =>
         logger.error(s"Failed to find user. error: $error")
-        Redirect(routes.Search.search(searchQuery)).flashing("error" -> error.toString)
+        Redirect(routes.Search.search()).flashing("error" -> error.toString)
       }
     }
 }

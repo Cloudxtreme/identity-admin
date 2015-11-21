@@ -1,7 +1,9 @@
 package controllers
 
 import javax.inject.Inject
+import auth.CSRF._
 import com.google.inject.ImplementedBy
+import models.Forms._
 import models.SearchResponse
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
@@ -49,7 +51,8 @@ trait SearchAction extends Results {
 
 class Search @Inject() (val adminApi: AdminApi) extends Controller with SearchAction with AuthActions with Logging {
 
-  def search(searchQuery: String) = AuthAction.async { implicit request =>
+  def search = AuthAction.async { implicit request =>
+    val searchQuery = searchForm.bindFromRequest.get.query
     doSearch(searchQuery)
   }
 }

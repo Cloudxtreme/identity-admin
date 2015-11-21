@@ -9,6 +9,7 @@ object Forms {
   val DateTimeFormat: String = "dd-MM-YYYY, HH:mm:ss"
 
   case class IdForm(id: String)
+  case class SearchForm(query: String)
 
   case class UserForm(
     id: String,
@@ -112,5 +113,9 @@ object Forms {
 
   val idForm = Form(
     mapping("id" -> text)(IdForm.apply)(IdForm.unapply)
+  )
+
+  val searchForm = Form(
+    mapping("searchQuery" -> text)(SearchForm.apply)(SearchForm.unapply)
   )
 }

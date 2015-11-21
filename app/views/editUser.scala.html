@@ -6,7 +6,6 @@
 @import helper._
 @(
         pageTitle: String,
-        searchQuery: Option[String],
         form: Form[UserForm],
         message: Option[String],
         publicProfileUrl: String,
@@ -15,9 +14,8 @@
 @implicitField = @{ FieldConstructor(fields.customFieldConstructor.f) }
 @checkboxFieldConstructor = @{ FieldConstructor(fields.checkboxFieldConstructor.f) }
 @userId = @{form("id").value.getOrElse("")}
-@query = @{searchQuery.getOrElse("")}
 
-    @main(pageTitle)(Some(searchBar(searchQuery))){
+    @main(pageTitle)(Some(searchBar(None))){
         <div class="row">
             <div class="col-md-10">
                 @message.map { msg =>
@@ -110,12 +108,12 @@
                     <a class="btn btn-danger btn--bottomMargin" href="#deleteModal" data-toggle="modal"  data-target="#deleteModal">
                         @Messages("editUser.deleteBtn")
                     </a>
-                    <form method="post" action="@routes.SendEmailValidation.sendEmailValidation(query)">
+                    <form method="post" action="@routes.SendEmailValidation.sendEmailValidation)">
                         @CSRF.formField
                         <button class="btn btn-warning btn--bottomMargin btn-block" type="submit">@Messages("editUser.validateBtn")</button>
                         <input type="hidden" name="id" value="@userId" />
                     </form>
-                    <form method="post" action="@routes.SendEmailValidation.validateEmail(query)">
+                    <form method="post" action="@routes.SendEmailValidation.validateEmail">
                         @CSRF.formField
                         <button class="btn btn-success btn--bottomMargin btn-block" type="submit">@Messages("editUser.validateEmailBtn")</button>
                         <input type="hidden" name="id" value="@userId" />
@@ -136,7 +134,7 @@
                             <p class="text-center"> This change cannot be undone</p>
                         </div>
                         <div class="modal-footer">
-                            <form method="post" action="@routes.Delete.delete(query)">
+                            <form method="post" action="@routes.Delete.delete">
                                 @CSRF.formField
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                 <button class="btn btn-danger" type="submit">@Messages("editUser.deleteBtn")</button>
@@ -148,7 +146,7 @@
             </div>
 
         </div>
-        <form method="post" action="@routes.UpdateUser.save(searchQuery.getOrElse(""), userId).url" autocomplete="off">
+        <form method="post" action="@routes.UpdateUser.save(userId).url" autocomplete="off">
             @CSRF.formField
             <input type="hidden" name="@form("id").name" value="@form("id").value"/>
             <input type="hidden" name="@form("personalDetails.gender").name" value="@form("personalDetails.gender").value"/>
