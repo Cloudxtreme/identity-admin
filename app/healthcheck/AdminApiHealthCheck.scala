@@ -2,13 +2,14 @@ package healthcheck
 
 import akka.actor.ActorSystem
 import akka.agent.Agent
+import monitoring.CloudWatch
 import services.AdminApi
 import util.Logging
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.language.postfixOps
 
-class AdminApiHealthCheck(sns: SNS, adminApi: AdminApi, actorSystem: ActorSystem) extends Logging {
+class AdminApiHealthCheck(adminApi: AdminApi, actorSystem: ActorSystem) extends Logging {
 
   private val healthy = Agent[Boolean](false)(actorSystem.dispatcher)
 
@@ -20,6 +21,7 @@ class AdminApiHealthCheck(sns: SNS, adminApi: AdminApi, actorSystem: ActorSystem
     adminApi.authHealthCheck.map {
       case Right(_) =>
         logger.debug("Admin API Auth service is available")
+        CloudWatch.publishMetric("AdminApiHealth", 1)
         healthy send { _ => true }
       case Left(err) =>
         logger.error("Admin API Auth service is unavailable: {}", err.details)
@@ -27,26 +29,12 @@ class AdminApiHealthCheck(sns: SNS, adminApi: AdminApi, actorSystem: ActorSystem
     }
   }
 
-  private def checkAdminApiHealthy(): Unit = {
-    logger.debug("Checking if Admin API HealthCheck agent is healthy")
-    if (!get) {
-      sns.notifyAdminApiUnhealthy()
-    }
-  }
-
   def start() {
     logger.info("Admin API HealthCheck agent started")
-    // trigger immediately
-    triggerUpdate()
+    triggerUpdate() // trigger immediately
 
-    // trigger every minute
-    actorSystem.scheduler.schedule(1 minute, 10 minutes) {
+    actorSystem.scheduler.schedule(1 minute, 5 minutes) {
       triggerUpdate()
     }
-
-    actorSystem.scheduler.schedule(2 minutes, 6 hours) {
-      checkAdminApiHealthy()
-    }
   }
-
 }
