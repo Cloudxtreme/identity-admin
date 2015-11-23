@@ -16,23 +16,29 @@ import scala.concurrent.Future
 trait DeleteAction extends Controller with Logging{
   val adminApi: AdminApi
 
-  private[controllers] def doDelete(searchQuery: String, userId: String): Future[Result] = {
+  private[controllers] def doDelete(userId: String): Future[Result] = {
     logger.info(s"Deleting user with id: $userId")
     adminApi.delete(userId).map {
       case Right(result) =>
         logger.info("Successfully deleted user. Redirecting to search.")
-        Redirect(routes.Search.search(searchQuery)).flashing("message" -> Messages("deleteUser.success", userId))
+        Redirect(routes.Application.index()).flashing("message" -> Messages("deleteUser.success", userId))
       case Left(error) =>
         logger.error(s"Failed to delete user. error: $error")
-        Redirect(routes.AccessUser.getUser(searchQuery, userId)).flashing("error" -> error.message)
+        Redirect(routes.AccessUser.getUser(userId)).flashing("error" -> error.message)
     }
   }
 }
 
 class Delete @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with DeleteAction {
 
-  def delete(searchQuery: String) = AuthAction.async {  implicit request =>
-    val id = idForm.bindFromRequest.get.id
-    doDelete(searchQuery, id)
+  def delete = AuthAction.async {  implicit request =>
+    idForm.bindFromRequest.fold(
+      errorForm => {
+        Future(Redirect(routes.Application.index()).flashing("error" -> Messages("deleteUser.failed")))
+      },
+      userData => {
+        doDelete(userData.id)
+      }
+    )
   }
 }

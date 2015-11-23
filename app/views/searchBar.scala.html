@@ -1,8 +1,10 @@
 @import play.api.i18n._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
+@import views.html.helper._
+@import helper._
 
-@(searchText: Option[String])
+@(searchText: Option[String])(implicit request: RequestHeader)
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -15,14 +17,15 @@
                 </div>
             </div>
             <div class="col-md-11">
-                <form class="search-bar-width navbar-form navbar-left" action="search" role="search" autocomplete="off">
+                <form method="post" class="search-bar-width navbar-form navbar-left" action="search" role="search" autocomplete="off">
+                    @CSRF.formField
                     <div class="search-bar-width form-group">
                         <input
                         autofocus
                         class="form-control" type="text"
                         name="searchQuery"
                         placeholder="@Messages("main.placeholderSearchBarText")"
-                        value=@searchText
+                        value="@searchText"
                         >
                     </div>
                 </form>

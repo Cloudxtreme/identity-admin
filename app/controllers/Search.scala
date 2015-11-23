@@ -1,7 +1,9 @@
 package controllers
 
 import javax.inject.Inject
+import auth.CSRF._
 import com.google.inject.ImplementedBy
+import models.Forms._
 import models.SearchResponse
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
@@ -21,7 +23,7 @@ trait SearchAction extends Results {
     adminApi.getUsers(searchQuery) map {
       case Right(searchResult) =>
         if(searchResult.total == 1 && !searchResult.results.isEmpty) {
-          Redirect(routes.AccessUser.getUser(searchQuery, searchResult.results.head.id)).flashing(request.flash)
+          Redirect(routes.AccessUser.getUser(searchResult.results.head.id)).flashing(request.flash)
         } else {
           Ok(
             views.html.searchResults(
@@ -49,7 +51,14 @@ trait SearchAction extends Results {
 
 class Search @Inject() (val adminApi: AdminApi) extends Controller with SearchAction with AuthActions with Logging {
 
-  def search(searchQuery: String) = AuthAction.async { implicit request =>
-    doSearch(searchQuery)
+  def search = AuthAction.async { implicit request =>
+    searchForm.bindFromRequest.fold(
+      errorForm => {
+        Future(Redirect(routes.Application.index()).flashing("error" -> Messages("search.failed")))
+      },
+      userData => {
+        doSearch(userData.query)
+      }
+    )
   }
 }

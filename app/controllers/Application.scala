@@ -9,7 +9,11 @@ import util.Logging
 
 class Application @Inject() extends Controller with AuthActions with Logging {
 
-  def index = AuthAction {
-    Ok(views.html.index(Messages("index.title"), None))
+  def index = AuthAction { implicit request =>
+    Ok(views.html.index(
+      Messages("index.title"),
+      None,
+      request.flash.get("message"),
+      request.flash.get("error")))
   }
 }

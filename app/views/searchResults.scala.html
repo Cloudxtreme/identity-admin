@@ -5,7 +5,7 @@
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 
-@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, message: Option[String], error: Option[String])
+@(pageTitle: String, searchBarText: Option[String],searchResponse: SearchResponse, message: Option[String], error: Option[String])(implicit request: RequestHeader)
     @query = @{searchBarText.getOrElse("")}
     @main(pageTitle)(Some(searchBar(searchBarText))){
         <div class="container">
@@ -50,7 +50,7 @@
                         @response.lastActiveIpAddress.map(o => s"($o)")
                         <p></div>
                     <div class="col-sm-1">
-                        <a class="btn btn-primary btn-block" href="@routes.AccessUser.getUser(query, response.id)">
+                        <a class="btn btn-primary btn-block" href="@routes.AccessUser.getUser(response.id)">
                             @Messages("searchResults.editBtn")
                         </a>
                     </div>

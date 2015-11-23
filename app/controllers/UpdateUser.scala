@@ -20,12 +20,11 @@ trait SaveAction extends Controller with Logging{
   val publicProfileUrl: String
   val avatarUrl: String
 
-  private[controllers] def doSave(searchQuery: String, userId: String, form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
+  private[controllers] def doSave(userId: String, form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
     form.fold(
       errorForm => {
         Future(BadRequest(views.html.editUser(
           Messages("editUser.title"),
-          Some(searchQuery),
           errorForm,
           None,
           publicProfileUrl + userId,
@@ -35,26 +34,24 @@ trait SaveAction extends Controller with Logging{
       userData => {
         val userRequest = userData.convertToUserUpdateRequest
         val userId = userData.id
-        update(userId, searchQuery, userRequest, form)
+        update(userId, userRequest, form)
       }
     )
   }
 
   private[controllers] def update(userId: String,
-                     searchQuery: String,
                      userRequest: UserUpdateRequest,
                      form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
 
     adminApi.updateUserData(userId, userRequest).map {
       case Right(_) =>
         logger.info("Successfully updated user in database. Redirecting to search.")
-        Redirect(routes.Search.search(searchQuery)).flashing("message" -> "User has been updated")
+        Redirect(routes.AccessUser.getUser(userId)).flashing("message" -> "User has been updated")
       case Left(error) =>
         logger.error(s"Failed to update user. error: $error")
         Ok(
           views.html.editUser(
             Messages("editUser.title"),
-            Some(searchQuery),
             form.withGlobalError(error.toString),
             None,
             publicProfileUrl + userId,
@@ -70,8 +67,8 @@ class UpdateUser @Inject() (val adminApi: AdminApi, val conf: Config) extends Co
   val publicProfileUrl = conf.baseProfileUrl
   val avatarUrl = conf.baseAvatarUrl
 
-  def save(searchQuery: String, userId: String) = AuthAction.async { implicit request =>
+  def save(userId: String) = AuthAction.async { implicit request =>
     val form = userForm.bindFromRequest()
-    doSave(searchQuery, userId, form)
+    doSave(userId, form)
   }
 }

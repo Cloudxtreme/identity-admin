@@ -4,6 +4,8 @@ index.title=User Admin
 index.mainHeader=Welcome
 index.subHeader=Search for an Identity using the search bar above
 
+search.failed=Search failed
+
 searchResults.title=Search Results
 searchResults.mainHeader=Accounts matching your search criteria...
 searchResults.emailHeader=Email
@@ -57,5 +59,8 @@ error.email=A valid email address is required
 error.username=Username is required and must be alphanumeric and between 6 and 20 characters
 
 deleteUser.success=User {0} has been deleted
+deleteUser.failed=User deletion failed
 validateEmail.success=Email has been validated for user {0}
+validateEmail.failed=Failed to validate email
 sendEmailValidation.success=Email validation for user {0} has been sent
+sendEmailValidation.failed=Failed to send validation email
