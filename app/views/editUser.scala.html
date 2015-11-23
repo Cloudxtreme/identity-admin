@@ -347,10 +347,10 @@
 
             @helper.repeat(form("groups"), min=1) {userGroup =>
                 <div class="row">
-                    <div class="col-xs-2">
+                    <div class="col-xs-6">
                         <p>@form(userGroup.name + ".name").value</p>
                     </div>
-                    <div>
+                    <div class="col-xs-6">
                     <p>@form(userGroup.name + ".joinDate").value</p>
                     </div>
                 </div>
