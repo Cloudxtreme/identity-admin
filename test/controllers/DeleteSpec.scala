@@ -24,7 +24,7 @@ class DeleteSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
       when(adminApiMock.delete(userId)).thenReturn(Future.successful(Right(true)))
       val result = controller.doDelete(userId)
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustEqual Some(routes.Search.search().url)
+      redirectLocation(result) mustEqual Some(routes.Application.index().url)
       flash(result).get("message") mustEqual Some(s"User $userId has been deleted")
     }
 
