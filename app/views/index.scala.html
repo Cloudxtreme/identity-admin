@@ -1,6 +1,12 @@
 @import play.i18n._
-@(pageTitle: String, searchBarDescription: Option[String])(implicit request: RequestHeader)
+@(pageTitle: String, searchBarDescription: Option[String], message: Option[String], error: Option[String])(implicit request: RequestHeader)
 @main(pageTitle)(Some(searchBar(searchBarDescription))){
+    @message.map { msg =>
+        <div class="alert alert-success" role="alert">@msg</div>
+    }
+    @error.map { err =>
+        <div class="alert alert-danger" role="alert">@err</div>
+    }
     <div class="col-sm-6 col-sm-push-6">
         <div class="hidden-xs">
             <img src="@routes.Assets.at("images/ArrowLargeScreen.svg")">
@@ -13,4 +19,5 @@
         <h1>@Messages.get("index.mainHeader")</h1>
         <h2>@Messages.get("index.subHeader")</h2>
     </div>
+
 }

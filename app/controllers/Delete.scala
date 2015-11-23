@@ -21,7 +21,7 @@ trait DeleteAction extends Controller with Logging{
     adminApi.delete(userId).map {
       case Right(result) =>
         logger.info("Successfully deleted user. Redirecting to search.")
-        Redirect(routes.Search.search()).flashing("message" -> Messages("deleteUser.success", userId))
+        Redirect(routes.Application.index()).flashing("message" -> Messages("deleteUser.success", userId))
       case Left(error) =>
         logger.error(s"Failed to delete user. error: $error")
         Redirect(routes.AccessUser.getUser(userId)).flashing("error" -> error.message)
@@ -32,7 +32,13 @@ trait DeleteAction extends Controller with Logging{
 class Delete @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with DeleteAction {
 
   def delete = AuthAction.async {  implicit request =>
-    val id = idForm.bindFromRequest.get.id
-    doDelete(id)
+    idForm.bindFromRequest.fold(
+      errorForm => {
+        Future(Redirect(routes.Application.index()).flashing("error" -> Messages("deleteUser.failed")))
+      },
+      userData => {
+        doDelete(userData.id)
+      }
+    )
   }
 }

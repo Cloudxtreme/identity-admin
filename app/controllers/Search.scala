@@ -52,7 +52,13 @@ trait SearchAction extends Results {
 class Search @Inject() (val adminApi: AdminApi) extends Controller with SearchAction with AuthActions with Logging {
 
   def search = AuthAction.async { implicit request =>
-    val searchQuery = searchForm.bindFromRequest.get.query
-    doSearch(searchQuery)
+    searchForm.bindFromRequest.fold(
+      errorForm => {
+        Future(Redirect(routes.Application.index()).flashing("error" -> Messages("search.failed")))
+      },
+      userData => {
+        doSearch(userData.query)
+      }
+    )
   }
 }
