@@ -88,6 +88,20 @@
     "PagerDutyUrl": {
       "Description": "HTTPS url for pager duty notifications",
       "Type": "String"
+    },
+    "Stack": {
+      "Description": "Application stack",
+      "Type": "String",
+      "Default": "identity"
+    },
+    "App": {
+      "Description": "Application name",
+      "Type": "String",
+      "Default": "identity-admin"
+    },
+    "LoadBalancerLogsS3Bucket":{
+      "Description": "S3 Bucket to write ELB logs to",
+      "Type": "String"
     }
   },
 
@@ -97,15 +111,13 @@
         "AutoscalingNotificationsARN": "arn:aws:sns:eu-west-1:942464564246:AutoscalingNotificationsPROD",
         "LatencyAlarmThreshold": 0.5,
         "LatencyAlarmPeriod": 60,
-        "NotificationAlarmPeriod": 1200,
-        "InstanceName": "PROD:identity-admin"
+        "NotificationAlarmPeriod": 1200
       },
       "CODE": {
         "AutoscalingNotificationsARN": "arn:aws:sns:eu-west-1:942464564246:AutoscalingNotificationsCODE",
         "LatencyAlarmThreshold": 5,
         "LatencyAlarmPeriod": 1200,
-        "NotificationAlarmPeriod": 1200,
-        "InstanceName": "CODE:identity-admin"
+        "NotificationAlarmPeriod": 1200
       }
     },
     "CertsMap": {
@@ -190,7 +202,21 @@
         "Subnets": { "Ref": "PublicVpcSubnets" },
         "SecurityGroups": [
           { "Ref": "LoadBalancerSecurityGroup" }
-        ]
+        ],
+        "AccessLoggingPolicy" : {
+          "EmitInterval": 5,
+          "Enabled": true,
+          "S3BucketName": {"Ref": "LoadBalancerLogsS3Bucket"},
+          "S3BucketPrefix": {
+            "Fn::Join": ["/", [
+                "ELBLogs",
+                {"Ref": "Stack"},
+                {"Ref": "App"},
+                {"Ref": "Stage"}
+              ]
+            ]
+          }
+        }
       }
     },
 
@@ -218,25 +244,23 @@
           {
             "Key": "Name",
             "Value": {
-              "Fn::FindInMap": ["StageVariables", {
-                "Ref": "Stage"
-              }, "InstanceName"]
+              "Fn::Join": [":", [{"Ref":"Stage"}, {"Ref":"App"}]]
             },
             "PropagateAtLaunch": "true"
           },
           {
             "Key": "Stack",
-            "Value": "identity",
+            "Value": {"Ref": "Stack"},
             "PropagateAtLaunch": "true"
           },
           {
             "Key": "App",
-            "Value": "identity-admin",
+            "Value": {"Ref": "App"},
             "PropagateAtLaunch": "true"
           },
           {
             "Key": "Role",
-            "Value": "identity-admin",
+            "Value": {"Ref": "App"},
             "PropagateAtLaunch": "true"
           }
         ],
