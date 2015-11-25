@@ -25,6 +25,7 @@ class AdminApiHealthCheck(adminApi: AdminApi, actorSystem: ActorSystem) extends 
         healthy send { _ => true }
       case Left(err) =>
         logger.error("Admin API Auth service is unavailable: {}", err.details)
+        CloudWatch.publishMetric("AdminApiHealth", 0)
         healthy send { _ => false }
     }
   }
@@ -33,7 +34,7 @@ class AdminApiHealthCheck(adminApi: AdminApi, actorSystem: ActorSystem) extends 
     logger.info("Admin API HealthCheck agent started")
     triggerUpdate() // trigger immediately
 
-    actorSystem.scheduler.schedule(1 minute, 5 minutes) {
+    actorSystem.scheduler.schedule(1 minute, 1 minutes) {
       triggerUpdate()
     }
   }
