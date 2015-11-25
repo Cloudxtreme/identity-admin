@@ -456,6 +456,34 @@
           }
         ]
       }
+    },
+
+    "alarmAdminApiLinkUnhealthy": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ActionsEnabled": "true",
+        "AlarmDescription": "identity-admin cannot communicate with identity-admin-api",
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": "1",
+        "MetricName": "AdminApiHealth",
+        "Namespace": "identity-admin",
+        "Period": "300",
+        "Statistic": "Average",
+        "Threshold": "1",
+        "AlarmActions": [
+          { "Ref": "TopicSendEmail" },
+          { "Ref": "TopicPagerDutyAlerts" }
+        ],
+        "OKActions": [
+          { "Ref": "TopicPagerDutyAlerts" }
+        ],
+        "Dimensions": [
+          {
+            "Name": "Stage",
+            "Value": { "Ref": "Stage" }
+          }
+        ]
+      }
     }
   },
 
