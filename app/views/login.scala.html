@@ -1,5 +1,6 @@
 @import auth.GroupsValidationFailed
 @import auth.IdentityValidationFailed
+@import auth.AccessForbidden
 @import auth.LoginError
 
 @(loginError: Option[LoginError] = None, contactEmail: Option[String])
@@ -16,6 +17,12 @@
             case (Some(IdentityValidationFailed()), Some(email)) => {
                 <div class="alert alert-danger" role="alert">
                     We could not log you in. Please contact @email if the problem persists.
+                </div>
+            }
+            case (Some(AccessForbidden()), _) => {
+                <div class="alert alert-danger" role="alert">
+                    We could not fulfill that request.
+                    Please log in and try again.
                 </div>
             }
             case (Some(_), _) => {
