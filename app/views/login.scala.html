@@ -1,3 +1,6 @@
+@import play.api.i18n._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 @import auth.GroupsValidationFailed
 @import auth.IdentityValidationFailed
 @import auth.AccessForbidden
@@ -10,28 +13,26 @@
         @(loginError, contactEmail) match {
             case (Some(GroupsValidationFailed()), Some(email)) => {
                 <div class="alert alert-danger" role="alert">
-                   Sorry, you do not have access to User Admin. If you would like access, please email @email.
-                   Please state the reason why you need access.
+                    @Messages("login.groupsValidationFailed", email)
                 </div>
             }
             case (Some(IdentityValidationFailed()), Some(email)) => {
                 <div class="alert alert-danger" role="alert">
-                    We could not log you in. Please contact @email if the problem persists.
+                    @Messages("login.identityValidationFailed", email)
                 </div>
             }
             case (Some(AccessForbidden()), _) => {
                 <div class="alert alert-danger" role="alert">
-                    We could not fulfill that request.
-                    Please log in and try again.
+                    @Messages("login.accessForbidden")
                 </div>
             }
             case (Some(_), _) => {
                 <div class="alert alert-danger" role="alert">
-                    Failed to login. Please try again.
+                    @Messages("login.defaultError")
                 </div>
             }
             case (None, _) => {
-                <p>Click the button below to login.</p>
+                <p>@Messages("login.loginMessage")</p>
             }
         }
         <form action="@routes.Login.loginAction()" method="get">
