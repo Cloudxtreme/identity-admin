@@ -28,8 +28,7 @@ class AuthSpec extends FeatureSpec
       go to new Homepage
 
       Then("Google OpenID Connect authentication process should start")
-      assert(pageHasElement(id("Email")))
-      assert(currentUrl.startsWith(Config.googleAccountsUrl))
+      assert(pageContainsUrl(Config.googleAccountsUrl))
     }
 
     scenario("Un-authenticated user tries to search ID database.") {
@@ -40,8 +39,7 @@ class AuthSpec extends FeatureSpec
       go to s"${Config.baseUrl}/search?searchQuery=test"
 
       Then("Google OpenID Connect authentication process should start")
-      assert(pageHasElement(id("Email")))
-      assert(currentUrl.startsWith(Config.googleAccountsUrl))
+      assert(pageContainsUrl(Config.googleAccountsUrl))
     }
 
     scenario("Un-authenticated user tries to delete a record in ID database.") {
@@ -52,8 +50,7 @@ class AuthSpec extends FeatureSpec
       go to s"${Config.baseUrl}/delete?searchQuery=98f36ffbc%40gu.com&userId=11111111"
 
       Then("Google OpenID Connect authentication process should start")
-      assert(pageHasElement(id("Email")))
-      assert(currentUrl.startsWith(Config.googleAccountsUrl))
+      assert(pageContainsUrl(Config.googleAccountsUrl))
     }
   }
 }

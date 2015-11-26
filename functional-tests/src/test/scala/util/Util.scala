@@ -32,6 +32,13 @@ trait Util { this: WebBrowser => implicit val driver: WebDriver
     }.isSuccess
   }
 
+  protected def pageContainsUrl(urlFraction: String, timeoutSecs: Int=defaultTimeOut): Boolean = {
+    val pred = ExpectedConditions.urlContains(urlFraction)
+    Try {
+      new WebDriverWait(driver, timeoutSecs).until(pred)
+    }.isSuccess
+  }
+
   def hasSessionCookie: Boolean = {
     (Try { cookie("PLAY_SESSION") }.isSuccess
        && (cookie("PLAY_SESSION").domain == baseUrl.substring("https://".length)))
