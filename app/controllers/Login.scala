@@ -29,8 +29,9 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
   def loginAction = Action.async { implicit request =>
     val antiForgeryToken = GoogleAuth.generateAntiForgeryToken()
     GoogleAuth.redirectToGoogle(authConfig, antiForgeryToken).map {
+      //Creates a new session
       _.withSession {
-        request.session + (ANTI_FORGERY_KEY -> antiForgeryToken)
+        (ANTI_FORGERY_KEY -> antiForgeryToken)
       }
     }
   }
