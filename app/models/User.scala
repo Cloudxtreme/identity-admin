@@ -35,7 +35,8 @@ object UserStatus {
   implicit val format = Json.format[UserStatus]
 }
 
-case class UserGroup(name: String,
+case class UserGroup(packageCode: String,
+                     path: String,
                      joinDate: Option[DateTime])
 
 object UserGroup {

@@ -84,7 +84,8 @@ object Forms {
       )(UserStatus.apply)(UserStatus.unapply),
       "groups" -> seq(
         mapping(
-          "name" -> text,
+          "packageCode" -> text,
+          "path" -> text,
           "joinDate" -> optional(jodaDate(DateTimeFormat))
         )(UserGroup.apply)(UserGroup.unapply)
       )
