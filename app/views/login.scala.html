@@ -7,9 +7,8 @@
 @import auth.LoginError
 
 @(loginError: Option[LoginError] = None, contactEmail: Option[String])
-
-<div class="jumbotron">
     @main("Login")(None){
+    <div class="jumbotron">
         @(loginError, contactEmail) match {
             case (Some(GroupsValidationFailed()), Some(email)) => {
                 <div class="alert alert-danger" role="alert">
@@ -38,5 +37,5 @@
         <form action="@routes.Login.loginAction()" method="get">
             <input class="btn btn-default" value="Log In" type="submit">
         </form>
+    </div>
     }
-</div>
