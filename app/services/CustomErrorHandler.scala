@@ -20,11 +20,17 @@ class CustomErrorHandler @Inject() (
                                    ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router){
 
   //Client Errors 4xx series
-  override def onForbidden(request: RequestHeader, message: String) = {
-        Future.successful(Redirect(routes.Login.login(Some(AccessForbidden()))))
+  override def onBadRequest(request: RequestHeader, message: String): Future[Result] = {
+        Future.successful(loginRedirect)
+  }
+
+  override def onForbidden(request: RequestHeader, message: String):Future[Result] = {
+        Future.successful(loginRedirect)
   }
 
   override def onNotFound(request: RequestHeader, message: String): Future[Result] = {
         Future.successful(Redirect(routes.Application.index()).flashing("error" -> "404 resource not found."))
   }
+
+  private val loginRedirect = Redirect(routes.Login.login(Some(AccessForbidden())))
 }
