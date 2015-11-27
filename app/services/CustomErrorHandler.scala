@@ -32,5 +32,9 @@ class CustomErrorHandler @Inject() (
         Future.successful(Redirect(routes.Application.index()).flashing("error" -> "404 resource not found."))
   }
 
+  override def onOtherClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
+    Future.successful(loginRedirect)
+  }
+
   private val loginRedirect = Redirect(routes.Login.login(Some(AccessForbidden())))
 }
