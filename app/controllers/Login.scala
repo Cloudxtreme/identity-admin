@@ -59,30 +59,6 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
     }
   }
 
-    /*
-    val result = for {
-      identity <- validatedUserIdentity
-      admin <- GoogleGroups.isUserAdmin(identity.email)
-    } yield if (admin) identity
-
-    result map {
-      case identity: UserIdentity => {
-
-      }
-      case _ => {
-        val redirect = loginErrorRedirect(GroupsValidationFailed())
-        redirect.withSession { session.loginError }
-      }
-    } recover {
-      case ex => {
-        val redirect = loginErrorRedirect(IdentityValidationFailed())
-        redirect.withSession { session.loginError }
-      }
-    }
-      }
-    */
-
-
   private def successfulLoginRedirect(session: Session): Result =
     session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
 
