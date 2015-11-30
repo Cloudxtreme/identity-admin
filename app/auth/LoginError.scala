@@ -8,6 +8,7 @@ case class GroupsValidationFailed() extends LoginError
 case class DomainValidationFailed() extends LoginError
 case class IdentityValidationFailed() extends LoginError
 case class CSRFValidationFailed() extends LoginError
+case class UnexpectedError() extends LoginError
 case class AccessForbidden() extends LoginError
 
 object LoginError {

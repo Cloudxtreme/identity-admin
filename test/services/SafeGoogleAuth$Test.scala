@@ -10,6 +10,8 @@ import play.api.test.{FakeApplication, FakeRequest}
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import scalaz.{\/-, -\/, \/}
+
 class SafeGoogleAuth$Test extends FlatSpec with Matchers with ScalaFutures with ParallelTestExecution with AsyncAssertions {
 
   val identity = UserIdentity("sub","test.com","firstName","lastName",1234,None)
@@ -23,16 +25,16 @@ class SafeGoogleAuth$Test extends FlatSpec with Matchers with ScalaFutures with 
   it should "validateUserIdentity" in {
     running(app) {
       whenReady(SafeGoogleAuth.validateUserIdentity(validUserIdentity, googleAuthConfig, "test")) { result =>
-        result should be(Right(identity))
+        result should be(\/-(identity))
       }
       whenReady(SafeGoogleAuth.validateUserIdentity(incorrectDomainUserIdentity, googleAuthConfig, "test")) { result =>
-        result should be(Left(DomainValidationFailed()))
+        result should be(-\/(DomainValidationFailed()))
       }
       whenReady(SafeGoogleAuth.validateUserIdentity(futureFailed, googleAuthConfig, "test")) { result =>
-        result should be(Left(IdentityValidationFailed()))
+        result should be(-\/(IdentityValidationFailed()))
       }
       whenReady(SafeGoogleAuth.validateUserIdentity(csrfError, googleAuthConfig, "test")) { result =>
-        result should be(Left(CSRFValidationFailed()))
+        result should be(-\/(CSRFValidationFailed()))
       }
     }
   }

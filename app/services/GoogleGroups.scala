@@ -11,6 +11,8 @@ import util.Logging
 import scala.concurrent.Future
 import scala.util.Try
 
+import scalaz.{\/-, -\/, \/}
+
 object GoogleGroups extends Logging {
   import Authorisation._
 
@@ -26,20 +28,20 @@ object GoogleGroups extends Logging {
     GoogleCredential.fromStream(fileInputStream.get)
   }
 
-  def userGroups(email: String): Future[Either[LoginError, Set[String]]] = {
+  def userGroups(email: String): Future[\/[LoginError, Set[String]]] = {
     val checker = new GoogleGroupChecker(serviceAccount)
     val f = checker.retrieveGroupsFor(email)
-    f.map(Right(_)) recover {
-      case e => Left(GroupsValidationFailed())
+    f.map(\/-(_)) recover {
+      case e => -\/(GroupsValidationFailed())
     }
   }
 
-  def isUserAdmin(identity: UserIdentity): Future[Either[LoginError, UserIdentity]] = {
+  def isUserAdmin(identity: UserIdentity): Future[\/[LoginError, UserIdentity]] = {
     userGroups(identity.email).map {
-      case Right(groups) if isAuthorised(required = requiredGroups, groups = groups) => Right(identity)
-      case Left(error) =>
+      case \/-(groups) if isAuthorised(required = requiredGroups, groups = groups) => \/-(identity)
+      case -\/(error) =>
         logger.info("{} is not in correct groups", identity.email)
-        Left(GroupsValidationFailed())
+        -\/(GroupsValidationFailed())
     }
   }
 }

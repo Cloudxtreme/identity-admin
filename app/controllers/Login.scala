@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import auth.{IdentityValidationFailed, GroupsValidationFailed, LoginError, CSRFAction}
+import auth._
 import auth.CSRF.ANTI_FORGERY_KEY
 import auth.LoginSession.SessionOps
 import config.Config
@@ -12,15 +12,18 @@ import com.gu.googleauth._
 import play.api.Play.current
 import services.{GoogleAuthConf, GoogleGroups}
 import services.SafeGoogleAuth._
+import util.Logging
 
 import scala.concurrent.{Await, Future}
+import scalaz.{-\/, \/-, EitherT}
+import scalaz.std.scalaFuture._
 
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
   val authConfig = GoogleAuthConf.googleAuthConfig
 }
 
-class Login @Inject() (conf: Config) extends Controller with AuthActions {
+class Login @Inject() (conf: Config) extends Controller with AuthActions with Logging {
 
   val indexCall = routes.Application.index()
   val contactEmail = conf.errorEmail
@@ -42,19 +45,28 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
   def oauth2Callback = CSRFAction.async { implicit request =>
     val session = request.session
 
-    validateUser(authConfig).map {
-      case Right(identity: UserIdentity) => {
+    type FutureEither[A] = EitherT[Future, LoginError, A]
+
+    val result: FutureEither[UserIdentity] = for {
+      identity <- EitherT[Future, LoginError, UserIdentity](validateUser(authConfig))
+      validUserAdmin <- EitherT[Future, LoginError, UserIdentity](GoogleGroups.isUserAdmin(identity))
+    } yield validUserAdmin
+
+    result.run map {
+      case \/-(identity) => {
         val redirect = successfulLoginRedirect(session)
         val sessionLengthInSeconds = (System.currentTimeMillis + GoogleAuthConf.sessionMaxAge) / 1000
-        redirect.withSession {
-          session.loggedIn(identity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)
-        }
+        redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
       }
-      case Left(error) => {
+      case -\/(error) => {
         val redirect = loginErrorRedirect(error)
-        redirect.withSession {
-          session.loginError
-        }
+        redirect.withSession { session.loginError }
+      }
+    } recover {
+      case ex => {
+        logger.error(s"$UnexpectedError: $ex")
+        val redirect = loginErrorRedirect(UnexpectedError())
+        redirect.withSession { session.loginError }
       }
     }
   }

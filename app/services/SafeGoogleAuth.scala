@@ -5,31 +5,29 @@ import com.gu.googleauth.{GoogleAuthConfig, GoogleAuth, UserIdentity}
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.duration._
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Future}
 import scala.util.Try
 import play.api.Play.current
+
+import scalaz.{\/-, -\/, \/}
 
 object SafeGoogleAuth {
 
   def correctHostedDomain(identity: UserIdentity, googleAuthConfig: GoogleAuthConfig): Boolean = Some(identity.emailDomain) == googleAuthConfig.domain
 
   def validateUserIdentity[A](f: (GoogleAuthConfig, String) => Future[UserIdentity], googleAuthConfig: GoogleAuthConfig, expectedAntiForgeryToken: String)
-                             (implicit request: CSRFRequest[A]): Future[Either[LoginError, UserIdentity]] = {
+                             (implicit request: CSRFRequest[A]): Future[\/[LoginError, UserIdentity]] = {
     val t = Try(f(googleAuthConfig, expectedAntiForgeryToken).map { identity =>
-      if (correctHostedDomain(identity, googleAuthConfig)) Right(identity)
-      else Left(DomainValidationFailed())
+      if (correctHostedDomain(identity, googleAuthConfig)) \/-(identity)
+      else -\/(DomainValidationFailed())
     }.recover {
-      case _ => Left(IdentityValidationFailed())
+      case _ => -\/(IdentityValidationFailed())
     }).recover {
-      case e: IllegalArgumentException => Future(Left(CSRFValidationFailed()))
+      case e: IllegalArgumentException => Future(-\/(CSRFValidationFailed()))
     }
     t.get
   }
 
-  def validateUser[A](googleAuthConfig: GoogleAuthConfig)(implicit request: CSRFRequest[A]): Future[Either[LoginError, UserIdentity]] = {
-    validateUserIdentity(GoogleAuth.validatedUserIdentity(_, _), googleAuthConfig, request.csrfToken).map {
-      case Right(identity: UserIdentity) => Await.result(GoogleGroups.isUserAdmin(identity), 5.seconds)
-      case _ => Left(IdentityValidationFailed())
-    }
-  }
+  def validateUser[A](googleAuthConfig: GoogleAuthConfig)(implicit request: CSRFRequest[A]): Future[\/[LoginError, UserIdentity]] =
+    validateUserIdentity(GoogleAuth.validatedUserIdentity(_, _), googleAuthConfig, request.csrfToken)
 }
