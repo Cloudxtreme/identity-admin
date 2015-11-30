@@ -42,7 +42,7 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
   def oauth2Callback = CSRFAction.async { implicit request =>
     val session = request.session
 
-    validateUser.map {
+    validateUser(authConfig).map {
       case Right(identity: UserIdentity) => {
         val redirect = successfulLoginRedirect(session)
         val sessionLengthInSeconds = (System.currentTimeMillis + GoogleAuthConf.sessionMaxAge) / 1000
