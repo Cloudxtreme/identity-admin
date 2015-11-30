@@ -20,10 +20,6 @@ class CustomErrorHandler @Inject() (
                                    ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router){
 
   //Client Errors 4xx series
-  override def onBadRequest(request: RequestHeader, message: String): Future[Result] = {
-        Future.successful(loginRedirect)
-  }
-
   override def onForbidden(request: RequestHeader, message: String):Future[Result] = {
         Future.successful(loginRedirect)
   }
