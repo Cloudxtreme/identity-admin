@@ -1,26 +1,34 @@
 package services
 
-import com.gu.googleauth.{GoogleAuthConfig, UserIdentity, GoogleAuth}
-import auth.{IdentityValidationFailed, LoginError, CSRFRequest}
-import play.api.mvc.RequestHeader
-
-import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
-import play.api.libs.concurrent.Execution.Implicits._
+import auth._
+import com.gu.googleauth.{GoogleAuth, UserIdentity}
 import play.api.Play.current
+import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.duration._
+
+import scala.concurrent.{Await, Future}
 
 object SafeGoogleAuth {
 
   val authConfig = GoogleAuthConf.googleAuthConfig
 
-  def correctHostedDomain(identity: UserIdentity): Future[Boolean] =
-    Future.successful(Some(identity.emailDomain) == authConfig.domain)
+  def correctHostedDomain(identity: UserIdentity): Boolean = Some(identity.emailDomain) == authConfig.domain
 
-  def validatedUserIdentity[A](implicit request: CSRFRequest[A]): Future[UserIdentity] = {
-    val t = Try(GoogleAuth.validatedUserIdentity(GoogleAuthConf.googleAuthConfig, request.csrfToken)) recover {
-      case e: IllegalArgumentException => Future.failed(e)
+  def validatedUserIdentity[A](implicit request: CSRFRequest[A]): Future[Either[LoginError, UserIdentity]] = {
+    GoogleAuth.validatedUserIdentity(GoogleAuthConf.googleAuthConfig, request.csrfToken).map {
+      case identity: UserIdentity if correctHostedDomain(identity) => Right(identity)
+      case identity: UserIdentity => Left(DomainValidationFailed())
+      case _ => Left(IdentityValidationFailed())
+    }.recover {
+      case ex: IllegalArgumentException => Left(CSRFValidationFailed())
+      case _ => Left(IdentityValidationFailed())
     }
-    t.get
   }
 
+  def validatedUser[A](implicit request: CSRFRequest[A]): Future[Either[LoginError, UserIdentity]] = {
+    validatedUserIdentity.map {
+      case Right(identity: UserIdentity) => Await.result(GoogleGroups.isUserAdmin(identity), 5.seconds)
+      case Left => Left(IdentityValidationFailed())
+    }
+  }
 }

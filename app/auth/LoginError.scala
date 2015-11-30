@@ -5,6 +5,7 @@ import play.api.mvc.QueryStringBindable
 sealed trait LoginError
 
 case class GroupsValidationFailed() extends LoginError
+case class DomainValidationFailed() extends LoginError
 case class IdentityValidationFailed() extends LoginError
 case class CSRFValidationFailed() extends LoginError
 case class AccessForbidden() extends LoginError
@@ -33,6 +34,7 @@ object LoginError {
         case IdentityValidationFailed() => s"$key=IdentityValidationFailed"
         case CSRFValidationFailed() => s"$key=CSRFValidationFailed"
         case AccessForbidden() => s"$key=AccessForbidden"
+        case _ => "Login error did not match any known errors"
       }
     }
   }
