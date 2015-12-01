@@ -351,10 +351,13 @@
 
             @helper.repeat(form("groups"), min=1) {userGroup =>
                 <div class="row">
-                    <div class="col-xs-6">
-                        <p>@form(userGroup.name + ".name").value</p>
+                    <div class="col-xs-1">
+                        <p>@form(userGroup.name + ".packageCode").value</p>
                     </div>
                     <div class="col-xs-6">
+                        <p>@form(userGroup.name + ".path").value</p>
+                    </div>
+                    <div class="col-xs-5">
                     <p>@form(userGroup.name + ".joinDate").value</p>
                     </div>
                 </div>
