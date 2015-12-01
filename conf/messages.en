@@ -64,3 +64,9 @@ validateEmail.success=Email has been validated for user {0}
 validateEmail.failed=Failed to validate email
 sendEmailValidation.success=Email validation for user {0} has been sent
 sendEmailValidation.failed=Failed to send validation email
+
+login.groupsValidationFailed=Sorry, you do not have access to User Admin. If you would like access, please email {0}. Please state the reason why you need access.
+login.identityValidationFailed=We could not log you in. Please contact {0} if the problem persists.
+login.accessForbidden=We could not fulfill that request. Please log in and try again.
+login.defaultError=Failed to login. Please try again.
+login.loginMessage=Click the button below to login.

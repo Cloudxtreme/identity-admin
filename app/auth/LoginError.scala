@@ -7,6 +7,7 @@ sealed trait LoginError
 case class GroupsValidationFailed() extends LoginError
 case class IdentityValidationFailed() extends LoginError
 case class CSRFValidationFailed() extends LoginError
+case class AccessForbidden() extends LoginError
 
 object LoginError {
   implicit def queryStringBinder = new QueryStringBindable[LoginError] {
@@ -20,6 +21,7 @@ object LoginError {
           case "GroupsValidationFailed" => Right(GroupsValidationFailed())
           case "IdentityValidationFailed" => Right(IdentityValidationFailed())
           case "CSRFValidationFailed" => Right(CSRFValidationFailed())
+          case "AccessForbidden" => Right(AccessForbidden())
           case _ => Left("Login error did not match any known errors")
         }
       }
@@ -30,6 +32,7 @@ object LoginError {
         case GroupsValidationFailed() => s"$key=GroupsValidationFailed"
         case IdentityValidationFailed() => s"$key=IdentityValidationFailed"
         case CSRFValidationFailed() => s"$key=CSRFValidationFailed"
+        case AccessForbidden() => s"$key=AccessForbidden"
       }
     }
   }
