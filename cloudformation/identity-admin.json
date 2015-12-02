@@ -81,6 +81,10 @@
       "Description": "Internal network CIDR IP",
       "Type": "String"
     },
+    "PlatformsTeamcityCidrIp": {
+      "Description": "https://github.com/guardian/platforms-teamcity",
+      "Type": "String"
+    },
     "AlarmEmailAddress": {
       "Description": "Contact email for alarms",
       "Type": "String"
@@ -341,7 +345,7 @@
         "IpProtocol": "tcp",
         "FromPort": "443",
         "ToPort": "443",
-        "CidrIp": "52.31.42.37/32"
+        "CidrIp": { "Ref": "PlatformsTeamcityCidrIp" }
       }
     },
 
