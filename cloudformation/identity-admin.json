@@ -335,6 +335,16 @@
       }
     },
 
+    "PlatformsTeamCityIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "FromPort": "443",
+        "ToPort": "443",
+        "CidrIp": "52.31.42.37/32"
+      }
+    },
+
     "LoadBalancerSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -346,7 +356,8 @@
             "FromPort": "443",
             "ToPort": "443",
             "CidrIp": { "Ref": "InternalCidrIp" }
-          }
+          },
+          { "Ref": "PlatformsTeamCityIngress" }
         ],
         "SecurityGroupEgress": [
           {
