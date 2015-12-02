@@ -25,7 +25,7 @@ object SafeGoogleAuth {
     }).recover {
       case e: IllegalArgumentException => Future(-\/(CSRFValidationFailed()))
     }
-    t.get
+    t.getOrElse(Future(-\/(IdentityValidationFailed())))
   }
 
   def validateUser[A](googleAuthConfig: GoogleAuthConfig)(implicit request: CSRFRequest[A]): Future[\/[LoginError, UserIdentity]] =
