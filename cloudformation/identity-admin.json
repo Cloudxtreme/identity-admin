@@ -82,7 +82,7 @@
       "Type": "String"
     },
     "PlatformsTeamcityCidrIp": {
-      "Description": "https://github.com/guardian/platforms-teamcity",
+      "Description": "Platforms TeamCity CIDR IP",
       "Type": "String"
     },
     "AlarmEmailAddress": {
