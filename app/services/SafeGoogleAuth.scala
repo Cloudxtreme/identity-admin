@@ -21,11 +21,9 @@ object SafeGoogleAuth {
       if (correctHostedDomain(identity, googleAuthConfig)) \/-(identity)
       else -\/(DomainValidationFailed())
     }.recover {
-      case _ => -\/(IdentityValidationFailed())
-    }).recover {
-      case e: IllegalArgumentException => Future(-\/(CSRFValidationFailed()))
-    }
-    t.getOrElse(Future(-\/(IdentityValidationFailed())))
+      case _ =>  -\/(IdentityValidationFailed())
+    })
+    t.getOrElse(Future(-\/(CSRFValidationFailed())))
   }
 
   def validateUser[A](googleAuthConfig: GoogleAuthConfig)(implicit request: CSRFRequest[A]): Future[\/[LoginError, UserIdentity]] =
