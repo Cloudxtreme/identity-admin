@@ -18,7 +18,7 @@ object GoogleGroups extends Logging {
 
   val requiredGroups = Set(TWO_FACTOR_AUTH_GROUP, GoogleAuthConf.userAdminGroup)
 
-  val serviceAccount = GoogleServiceAccount(
+  private val serviceAccount = GoogleServiceAccount(
     credentials.getServiceAccountId,
     credentials.getServiceAccountPrivateKey,
     GoogleAuthConf.impersonatedUser)
