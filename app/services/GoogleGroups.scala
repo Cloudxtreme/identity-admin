@@ -1,10 +1,10 @@
 package services
-
 import java.io.FileInputStream
 
 import auth.{GroupsValidationFailed, LoginError}
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.gu.googleauth.{UserIdentity, GoogleServiceAccount, GoogleGroupChecker}
+import config.Config
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import util.Logging
 
@@ -18,7 +18,7 @@ object GoogleGroups extends Logging {
 
   val requiredGroups = Set(TWO_FACTOR_AUTH_GROUP, GoogleAuthConf.userAdminGroup)
 
-  private val serviceAccount = GoogleServiceAccount(
+  val serviceAccount = GoogleServiceAccount(
     credentials.getServiceAccountId,
     credentials.getServiceAccountPrivateKey,
     GoogleAuthConf.impersonatedUser)
@@ -28,25 +28,33 @@ object GoogleGroups extends Logging {
     GoogleCredential.fromStream(fileInputStream.get)
   }
 
-  def userGroups(email: String): Future[\/[LoginError, Set[String]]] = {
+  def userGroups(identity: UserIdentity): Future[Set[String]] = {
     val checker = new GoogleGroupChecker(serviceAccount)
-    val f = checker.retrieveGroupsFor(email)
-    f.map(\/-(_)) recover {
-      case e => -\/(GroupsValidationFailed())
-    }
+    checker.retrieveGroupsFor(identity.email)
   }
 
-  def isUserAdmin(identity: UserIdentity): Future[\/[LoginError, UserIdentity]] = {
-    userGroups(identity.email).map {
-      case \/-(groups) if isAuthorised(required = requiredGroups, groups = groups) => \/-(identity)
-      case -\/(error) =>
-        logger.info("{} is not in correct groups", identity.email)
-        -\/(GroupsValidationFailed())
-    }
-  }
+
+  def isUserAdmin[A](identity: UserIdentity): Future[\/[LoginError, UserIdentity]] =
+    Admin.isUserInAdminGroups(userGroups(_), identity, requiredGroups)
 }
 
 object Authorisation {
   val TWO_FACTOR_AUTH_GROUP = "2fa_enforce@guardian.co.uk"
+
   def isAuthorised(required: Set[String], groups: Set[String]): Boolean = (required & groups) == required
+}
+
+object Admin extends Logging {
+
+  def isUserInAdminGroups(f: UserIdentity => Future[Set[String]], identity: UserIdentity, requiredGroups: Set[String]): Future[\/[LoginError, UserIdentity]] = {
+    f(identity).map { groups =>
+      if (Authorisation.isAuthorised(required = requiredGroups, groups = groups))  \/-(identity)
+      else {
+        logger.info("{} is not in correct groups", identity.email)
+        -\/(GroupsValidationFailed())
+      }
+    }.recover {
+      case e => -\/(GroupsValidationFailed())
+    }
+  }
 }
