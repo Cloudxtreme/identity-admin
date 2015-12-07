@@ -10,7 +10,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import util.Logging
 import scala.concurrent.Future
 import scala.language.implicitConversions
-import scala.util.Try
+import scala.util.{Success, Failure, Try}
 
 case class CustomError(message: String, details: String){
   override def toString: String ={
@@ -85,9 +85,12 @@ class AdminApi @Inject() (conf: Config, requestSigner: RequestSigner) extends Lo
       } else {
         Left(Json.parse(body).as[CustomError])
       }
-    ).getOrElse{
-      logger.error(s"Invalid response from API could not be parsed. Status: $status, Body: $body.")
-      Left(CustomError("Fatal Error", contact))
+    ) match {
+      case Success(result) => result
+      case Failure(t) => {
+        logger.error(s"Invalid response from API could not be parsed. Status: $status", t)
+        Left(CustomError("Fatal Error", contact))
+      }
     }
 
   def delete(id: String): Future[Either[CustomError, Boolean]] = {
