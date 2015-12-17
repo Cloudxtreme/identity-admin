@@ -2,8 +2,6 @@
 
 source set-env.sh
 
-adduser --home /$apptag --disabled-password --gecos \"\" $apptag
-
 aws s3 cp s3://gu-$apptag-dist/$stacktag/$stagetag/$apptag/$apptag-1.0.0-SNAPSHOT.tgz /$apptag/$apptag.tar.gz
 aws s3 cp s3://gu-$apptag-private/$stagetag/$apptag.conf /etc/gu/$apptag.conf
 aws s3 cp s3://gu-$apptag-private/$apptag-cert.json /etc/gu/$apptag-cert.json

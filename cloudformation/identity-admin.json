@@ -295,40 +295,21 @@
         "IamInstanceProfile": {"Ref": "InstanceProfile"},
         "UserData": {
           "Fn::Base64": {
-            "Fn::Join": ["", [
-              "#!/bin/bash -ev\n",
+            "Fn::Join": ["\n", [
+              "#!/bin/bash -ev",
 
-              "export IDENTITY_stage='", {
-                "Ref": "Stage"
-              }, "'\n",
+              "aws s3 cp s3://gu-identity-dist/identity-functions.sh .",
+              "chmod +x identity-functions.sh",
+              "source identity-functions.sh",
 
-              "aws s3 cp s3://gu-identity-dist/cwlogs-setup.sh .\n",
-              "chmod +x cwlogs-setup.sh\n",
-              "./cwlogs-setup.sh\n",
+              "installScript identity-bootstrap.sh",
+              "installScript logstash-setup.sh",
+              "installScript security-updates.sh",
 
-              "aws s3 cp s3://gu-identity-dist/security-updates.sh .\n",
-              "chmod +x security-updates.sh\n",
-              "./security-updates.sh\n",
+              "installScriptFromS3 s3://gu-identity-admin-dist/identity-admin-bootstrap.sh identity-admin-bootstrap.sh",
 
-              "aws s3 cp s3://gu-identity-dist/cron-setup.sh .\n",
-              "chmod +x cron-setup.sh\n",
-              "./cron-setup.sh\n",
-
-              "aws s3 cp s3://gu-identity-dist/set-ssh-keys.sh .\n",
-              "chmod +x set-ssh-keys.sh\n",
-              "./set-ssh-keys.sh\n",
-
-              "aws s3 cp s3://gu-identity-dist/logstash-setup.sh .\n",
-              "chmod +x logstash-setup.sh\n",
-              "./logstash-setup.sh\n",
-
-              "aws s3 cp s3://gu-identity-admin-dist/identity-admin-bootstrap.sh .\n",
-              "chmod +x identity-admin-bootstrap.sh\n",
-              "./identity-admin-bootstrap.sh\n",
-
-
-              "service identity-admin start\n",
-              "sleep 20s\n"
+              "service identity-admin start",
+              "sleep 20s"
             ]]
           }
         }
