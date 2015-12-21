@@ -7,7 +7,6 @@ import services.AdminApi
 import util.Logging
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
-import scala.language.postfixOps
 
 class AdminApiHealthCheck(adminApi: AdminApi, actorSystem: ActorSystem) extends Logging {
 
@@ -34,7 +33,7 @@ class AdminApiHealthCheck(adminApi: AdminApi, actorSystem: ActorSystem) extends 
     logger.info("Admin API HealthCheck agent started")
     triggerUpdate() // trigger immediately
 
-    actorSystem.scheduler.schedule(1 minute, 1 minutes) {
+    actorSystem.scheduler.schedule(10.seconds, 10.seconds) {
       triggerUpdate()
     }
   }

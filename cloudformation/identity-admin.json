@@ -474,7 +474,7 @@
         "Namespace": "identity-admin",
         "Period": "300",
         "Statistic": "Average",
-        "Threshold": "1",
+        "Threshold": "0.9",
         "AlarmActions": [
           { "Ref": "TopicSendEmail" },
           { "Ref": "TopicPagerDutyAlerts" }
