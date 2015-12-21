@@ -472,9 +472,9 @@
         "EvaluationPeriods": "1",
         "MetricName": "AdminApiHealth",
         "Namespace": "identity-admin",
-        "Period": "300",
+        "Period": "60",
         "Statistic": "Average",
-        "Threshold": "1",
+        "Threshold": "0.9",
         "AlarmActions": [
           { "Ref": "TopicSendEmail" },
           { "Ref": "TopicPagerDutyAlerts" }
