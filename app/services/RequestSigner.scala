@@ -12,7 +12,7 @@ import play.api.http.HeaderNames
 import play.api.libs.ws.WSRequest
 import util.Logging
 
-class RequestSignerWithSecret extends RequestSigner {
+object RequestSignerWithSecret extends RequestSigner {
   val secret = current.configuration.getString("identity-admin.adminApi.secret").get
 }
 
