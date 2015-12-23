@@ -3,7 +3,6 @@ package services
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-import com.google.inject.ImplementedBy
 import org.apache.commons.codec.binary.Base64
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.{DateTimeZone, DateTime}
