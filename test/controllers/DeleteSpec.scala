@@ -12,9 +12,8 @@ class DeleteSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val adminApiMock = mock[AdminApi]
 
-  val controller = new DeleteAction {
-    override val adminApi: AdminApi = adminApiMock
-  }
+  class TestController extends DeleteAction
+  val controller = new TestController
 
   "doDelete" should {
     val userId = "1234"
@@ -22,7 +21,7 @@ class DeleteSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
     "redirect to search results on success" in {
       when(adminApiMock.delete(userId)).thenReturn(Future.successful(Right(true)))
-      val result = controller.doDelete(userId)
+      val result = controller.doDelete(adminApiMock, userId)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustEqual Some(routes.Application.index().url)
       flash(result).get("message") mustEqual Some(s"User $userId has been deleted")
@@ -31,7 +30,7 @@ class DeleteSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
     "redirect to edit user with error message on failure" in {
       val error = CustomError("Fatal error", "Boom")
       when(adminApiMock.delete(userId)).thenReturn(Future.successful(Left(error)))
-      val result = controller.doDelete(userId)
+      val result = controller.doDelete(adminApiMock, userId)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
       flash(result).get("error") mustEqual Some(error.message)

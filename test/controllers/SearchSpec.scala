@@ -16,9 +16,8 @@ class SearchSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
   val adminApiMock = mock[AdminApi]
   val fakeApp = FakeApplication(additionalConfiguration = Map("play.crypto.secret" -> "test"))
 
-  val controller = new SearchAction {
-    override val adminApi: AdminApi = adminApiMock
-  }
+  class TestController extends SearchAction
+  val controller = new TestController
 
   private def createResult(id: String): UserSummary =
     UserSummary(id = id, email = "email", username = None, firstName = None, lastName = None, creationDate = None, lastActiveIpAddress = None, lastActivityDate = None, registrationIp = None)
@@ -34,7 +33,7 @@ class SearchSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
         val sr = SearchResponse(total = 2, hasMore = false, results = Seq(r1, r2))
         when(adminApiMock.getUsers(query)).thenReturn(Future.successful(Right(sr)))
         implicit val request = FakeRequest().withSession("csrfToken" -> CSRF.SignedTokenProvider.generateToken)
-        val result = controller.doSearch(query)
+        val result = controller.doSearch(adminApiMock, query)
 
         status(result) mustEqual OK
         contentAsString(result) must include("Accounts matching your search criteria...")
@@ -46,7 +45,7 @@ class SearchSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
         val sr = SearchResponse(total = 0, hasMore = false, results = Nil)
         when(adminApiMock.getUsers(query)).thenReturn(Future.successful(Right(sr)))
         implicit val request = FakeRequest().withSession("csrfToken" -> CSRF.SignedTokenProvider.generateToken)
-        val result = controller.doSearch(query)
+        val result = controller.doSearch(adminApiMock, query)
 
         status(result) mustEqual OK
         contentAsString(result) must include("Your search query did not match any records.")
@@ -59,7 +58,7 @@ class SearchSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
         val sr = SearchResponse(total = 1, hasMore = false, results = Seq(r1))
         when(adminApiMock.getUsers(query)).thenReturn(Future.successful(Right(sr)))
         implicit val request = FakeRequest().withSession("csrfToken" -> CSRF.SignedTokenProvider.generateToken)
-        val result = controller.doSearch(query)
+        val result = controller.doSearch(adminApiMock, query)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustEqual Some(routes.AccessUser.getUser("123").url)

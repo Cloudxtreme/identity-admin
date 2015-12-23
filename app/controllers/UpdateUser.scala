@@ -1,6 +1,7 @@
 package controllers
 
 import javax.inject.Inject
+import auth.AdminApiProvider
 import config.Config
 import models.Forms._
 import models.{Forms, UserUpdateRequest}
@@ -15,12 +16,11 @@ import util.Logging
 import scala.concurrent.Future
 
 trait SaveAction extends Controller with Logging{
-  val adminApi: AdminApi
   val conf: Config
   val publicProfileUrl: String
   val avatarUrl: String
 
-  private[controllers] def doSave(userId: String, form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
+  private[controllers] def doSave(adminApi: AdminApi, userId: String, form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
     form.fold(
       errorForm => {
         Future(BadRequest(views.html.editUser(
@@ -34,12 +34,13 @@ trait SaveAction extends Controller with Logging{
       userData => {
         val userRequest = userData.convertToUserUpdateRequest
         val userId = userData.id
-        update(userId, userRequest, form)
+        update(adminApi, userId, userRequest, form)
       }
     )
   }
 
-  private[controllers] def update(userId: String,
+  private[controllers] def update( adminApi: AdminApi,
+                     userId: String,
                      userRequest: UserUpdateRequest,
                      form: Form[Forms.UserForm])(implicit request: RequestHeader): Future[Result] = {
 
@@ -62,13 +63,13 @@ trait SaveAction extends Controller with Logging{
   }
 }
 
-class UpdateUser @Inject() (val adminApi: AdminApi, val conf: Config) extends Controller with AuthActions with SaveAction {
+class UpdateUser @Inject() (val conf: Config) extends Controller with AdminApiProvider with AuthActions with SaveAction {
 
   val publicProfileUrl = conf.baseProfileUrl
   val avatarUrl = conf.baseAvatarUrl
 
   def save(userId: String) = AuthAction.async { implicit request =>
     val form = userForm.bindFromRequest()
-    doSave(userId, form)
+    doSave(adminApi, userId, form)
   }
 }

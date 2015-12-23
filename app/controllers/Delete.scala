@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
+import auth.AdminApiProvider
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.{Result, Controller}
@@ -14,9 +15,8 @@ import models.Forms._
 import scala.concurrent.Future
 
 trait DeleteAction extends Controller with Logging{
-  val adminApi: AdminApi
 
-  private[controllers] def doDelete(userId: String): Future[Result] = {
+  private[controllers] def doDelete(adminApi: AdminApi, userId: String): Future[Result] = {
     logger.info(s"Deleting user with id: $userId")
     adminApi.delete(userId).map {
       case Right(result) =>
@@ -29,7 +29,7 @@ trait DeleteAction extends Controller with Logging{
   }
 }
 
-class Delete @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with DeleteAction {
+class Delete extends Controller with AuthActions with AdminApiProvider with DeleteAction {
 
   def delete = AuthAction.async {  implicit request =>
     idForm.bindFromRequest.fold(
@@ -37,7 +37,7 @@ class Delete @Inject() (val adminApi: AdminApi) extends Controller with AuthActi
         Future(Redirect(routes.Application.index()).flashing("error" -> Messages("deleteUser.failed")))
       },
       userData => {
-        doDelete(userData.id)
+        doDelete(adminApi, userData.id)
       }
     )
   }

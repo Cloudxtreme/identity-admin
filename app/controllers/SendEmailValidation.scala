@@ -3,6 +3,7 @@ package controllers
 
 import javax.inject.Inject
 
+import auth.AdminApiProvider
 import models.Forms._
 import models.SearchResponse
 import play.api.i18n.Messages
@@ -17,9 +18,8 @@ import util.Logging
 import scala.concurrent.Future
 
 trait SendEmailValidationAction extends Controller with Logging{
-  val adminApi: AdminApi
 
-  private[controllers] def doSendEmailValidation(userId: String): Future[Result] = {
+  private[controllers] def doSendEmailValidation(adminApi: AdminApi, userId: String): Future[Result] = {
     logger.info(s"Sending email validation for user with id: $userId")
     adminApi.sendEmailValidation(userId).map {
       case Right(result) =>
@@ -30,7 +30,7 @@ trait SendEmailValidationAction extends Controller with Logging{
     }
   }
 
-  private[controllers] def doValidateEmail(userId: String): Future[Result] = {
+  private[controllers] def doValidateEmail(adminApi: AdminApi, userId: String): Future[Result] = {
     logger.info(s"Validating email for user with id: $userId")
     adminApi.validateEmail(userId).map {
       case Right(result) =>
@@ -42,23 +42,23 @@ trait SendEmailValidationAction extends Controller with Logging{
   }
 }
 
-class SendEmailValidation @Inject() (val adminApi: AdminApi) extends Controller with AuthActions with SendEmailValidationAction {
+class SendEmailValidation extends Controller with AuthActions with AdminApiProvider with SendEmailValidationAction {
 
   def sendEmailValidation = AuthAction.async { implicit request =>
-    bind(doSendEmailValidation(_), "error" -> Messages("sendEmailValidation.failed"))(request)
+    bind(doSendEmailValidation, "error" -> Messages("sendEmailValidation.failed"))(request)
   }
 
   def validateEmail = AuthAction.async {implicit request =>
-    bind(doValidateEmail(_), "error" -> Messages("validateEmail.failed"))(request)
+    bind(doValidateEmail, "error" -> Messages("validateEmail.failed"))(request)
   }
 
-  def bind(f: (String) => Future[Result], errorMsg: (String ,String)) = AuthAction.async {implicit request =>
+  def bind(f: (AdminApi, String) => Future[Result], errorMsg: (String ,String)) = AuthAction.async {implicit request =>
     idForm.bindFromRequest.fold(
       errorForm => {
         Future(Redirect(routes.Application.index()).flashing(errorMsg))
       },
       userData => {
-        f(userData.id)
+        f(adminApi, userData.id)
       }
     )
   }

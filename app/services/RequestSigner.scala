@@ -16,7 +16,6 @@ class RequestSignerWithSecret extends RequestSigner {
   val secret = current.configuration.getString("identity-admin.adminApi.secret").get
 }
 
-@ImplementedBy(classOf[RequestSignerWithSecret])
 trait RequestSigner extends Logging {
 
   def secret: String

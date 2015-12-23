@@ -1,6 +1,7 @@
 package controllers
 
 import javax.inject.Inject
+import auth.AdminApiProvider
 import auth.CSRF._
 import com.google.inject.ImplementedBy
 import models.Forms._
@@ -17,9 +18,8 @@ import scala.concurrent.Future
 
 @ImplementedBy(classOf[Search])
 trait SearchAction extends Results {
-  val adminApi: AdminApi
 
-  def doSearch(searchQuery: String)(implicit request: Request[Any]): Future[Result] = {
+  def doSearch(adminApi: AdminApi, searchQuery: String)(implicit request: Request[Any]): Future[Result] = {
     adminApi.getUsers(searchQuery) map {
       case Right(searchResult) =>
         if(searchResult.total == 1 && !searchResult.results.isEmpty) {
@@ -49,7 +49,7 @@ trait SearchAction extends Results {
   }
 }
 
-class Search @Inject() (val adminApi: AdminApi) extends Controller with SearchAction with AuthActions with Logging {
+class Search extends Controller with SearchAction with AuthActions with AdminApiProvider with Logging {
 
   def search = AuthAction.async { implicit request =>
     searchForm.bindFromRequest.fold(
@@ -57,7 +57,7 @@ class Search @Inject() (val adminApi: AdminApi) extends Controller with SearchAc
         Future(Redirect(routes.Application.index()).flashing("error" -> Messages("search.failed")))
       },
       userData => {
-        doSearch(userData.query)
+        doSearch(adminApi, userData.query)
       }
     )
   }

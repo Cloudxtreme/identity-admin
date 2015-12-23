@@ -12,9 +12,8 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
 
   val adminApiMock = mock[AdminApi]
 
-  val controller = new SendEmailValidationAction {
-    override val adminApi: AdminApi = adminApiMock
-  }
+  class TestController extends SendEmailValidationAction
+  val controller = new TestController
 
   "doSendEmailValidation" should {
     val userId = "1234"
@@ -22,7 +21,7 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
 
     "redirect to edit page on success" in {
       when(adminApiMock.sendEmailValidation(userId)).thenReturn(Future.successful(Right(true)))
-      val result = controller.doSendEmailValidation(userId)
+      val result = controller.doSendEmailValidation(adminApiMock, userId)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
       flash(result).get("message") mustEqual Some(s"Email validation for user $userId has been sent")
@@ -31,7 +30,7 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
     "redirect to edit user with customerror message on failure" in {
       val error = CustomError("Fatal customerror", "Boom")
       when(adminApiMock.sendEmailValidation(userId)).thenReturn(Future.successful(Left(error)))
-      val result = controller.doSendEmailValidation(userId)
+      val result = controller.doSendEmailValidation(adminApiMock, userId)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
       flash(result).get("error") mustEqual Some(error.message)
@@ -44,7 +43,7 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
 
     "redirect to edit page on success" in {
       when(adminApiMock.validateEmail(userId)).thenReturn(Future.successful(Right(true)))
-      val result = controller.doValidateEmail(userId)
+      val result = controller.doValidateEmail(adminApiMock, userId)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
       flash(result).get("message") mustEqual Some(s"Email has been validated for user $userId")
@@ -53,7 +52,7 @@ class SendEmailValidationSpec extends PlaySpec with OneServerPerSuite with Mocki
     "redirect to edit user with customerror message on failure" in {
       val error = CustomError("Fatal customerror", "Boom")
       when(adminApiMock.validateEmail(userId)).thenReturn(Future.successful(Left(error)))
-      val result = controller.doValidateEmail(userId)
+      val result = controller.doValidateEmail(adminApiMock, userId)
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
       flash(result).get("error") mustEqual Some(error.message)

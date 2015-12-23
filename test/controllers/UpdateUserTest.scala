@@ -16,8 +16,8 @@ class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
 
   val fakeApp = FakeApplication(additionalConfiguration = Map("play.crypto.secret" -> "test"))
   val adminApiMock = mock[AdminApi]
+
   val controller = new SaveAction {
-    override val adminApi: AdminApi = adminApiMock
     override val conf = new Config {
       val baseUrl = "baseUrl"
       val baseRootUrl = "baseRootUrl"
@@ -44,7 +44,7 @@ class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
           Future.successful(Right(blankUser))
         )
         implicit val request = FakeRequest().withSession("csrfToken" -> CSRF.SignedTokenProvider.generateToken)
-        val result = controller.update(userId, userUpdateData, blankUserForm)
+        val result = controller.update(adminApiMock, userId, userUpdateData, blankUserForm)
         redirectLocation(result) mustEqual Some(routes.AccessUser.getUser(userId).url)
         flash(result).get("message") mustEqual Some("User has been updated")
       }
@@ -55,7 +55,7 @@ class UpdateUserTest extends PlaySpec with OneServerPerSuite with MockitoSugar{
         when(adminApiMock.updateUserData(userId, userUpdateData)).thenReturn(
           Future.successful(Left(customError)))
         implicit val request = FakeRequest().withSession("csrfToken" -> CSRF.SignedTokenProvider.generateToken)
-        val result = controller.update(userId, userUpdateData, blankUserForm)
+        val result = controller.update(adminApiMock, userId, userUpdateData, blankUserForm)
         status(result) mustEqual OK
       }
     }

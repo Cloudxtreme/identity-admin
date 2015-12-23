@@ -1,19 +1,20 @@
 package controllers
 
 import javax.inject.Inject
+import auth.AdminApiProvider
 import config.Config
 import models.Forms._
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.Play._
 import play.api.mvc.Controller
-import services.AdminApi
 import util.Logging
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.language.implicitConversions
 
-class AccessUser @Inject() (adminApi: AdminApi, conf: Config) extends Controller with AuthActions with Logging {
+
+class AccessUser @Inject() (conf: Config) extends Controller with AuthActions with AdminApiProvider with Logging {
 
   def getUser(userId: String) = AuthAction.async { implicit request =>
     adminApi.getFullUser(userId).map {
