@@ -2,6 +2,7 @@ package services
 
 import auth.GroupsValidationFailed
 import com.gu.googleauth.UserIdentity
+import model.AdminUserIdentity
 import org.scalatest.{ParallelTestExecution, Matchers, FlatSpec}
 import org.scalatest.concurrent.{AsyncAssertions, ScalaFutures}
 
@@ -13,6 +14,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class GoogleGroups$Test extends FlatSpec with Matchers with ScalaFutures with ParallelTestExecution with AsyncAssertions {
 
   val identity = UserIdentity("sub","test.com","firstName","lastName",1234,None)
+  val adminIdentity = AdminUserIdentity(identity)
   val requiredGroups = Set("validGroup")
 
   behavior of "GoogleGroups$Test"
@@ -21,7 +23,7 @@ class GoogleGroups$Test extends FlatSpec with Matchers with ScalaFutures with Pa
     def validUserGroups(identity: UserIdentity): Future[Set[String]] = Future.successful(Set("validGroup"))
 
     whenReady(Admin.isUserInAdminGroups(validUserGroups, identity, requiredGroups)) { result =>
-      result should be(\/-(identity))
+      result should be(\/-(adminIdentity))
     }
   }
 

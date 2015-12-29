@@ -6,6 +6,7 @@ import auth._
 import auth.CSRF.ANTI_FORGERY_KEY
 import auth.LoginSession.SessionOps
 import config.Config
+import model.AdminUserIdentity
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.googleauth._
@@ -14,7 +15,7 @@ import services.{GoogleAuthConf, GoogleGroups}
 import services.SafeGoogleAuth._
 import util.Logging
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scalaz.{-\/, \/-, EitherT}
 import scalaz.std.scalaFuture._
 
@@ -47,16 +48,16 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions with Lo
 
     type FutureEither[A] = EitherT[Future, LoginError, A]
 
-    val result: FutureEither[UserIdentity] = for {
-      identity <- EitherT[Future, LoginError, UserIdentity](validateUser(authConfig))
-      validUserAdmin <- EitherT[Future, LoginError, UserIdentity](GoogleGroups.isUserAdmin(identity))
+    val result: FutureEither[AdminUserIdentity] = for {
+      identity <- EitherT(validateUser(authConfig))
+      validUserAdmin <- EitherT(GoogleGroups.isUserAdmin(identity))
     } yield validUserAdmin
 
     result.run map {
-      case \/-(identity) => {
+      case \/-(adminIdentity) => {
         val redirect = successfulLoginRedirect(session)
         val sessionLengthInSeconds = (System.currentTimeMillis + GoogleAuthConf.sessionMaxAge) / 1000
-        redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
+        redirect.withSession { session.loggedIn(adminIdentity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
       }
       case -\/(error) => {
         val redirect = loginErrorRedirect(error)
@@ -74,7 +75,6 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions with Lo
   private def successfulLoginRedirect(session: Session): Result =
     session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
 
-  private def loginErrorRedirect(loginError: LoginError): Result = {
+  private def loginErrorRedirect(loginError: LoginError): Result =
     Redirect(routes.Login.login(Some(loginError)))
-  }
 }
