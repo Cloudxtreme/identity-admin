@@ -298,13 +298,10 @@
             "Fn::Join": ["\n", [
               "#!/bin/bash -ev",
 
-              "aws s3 cp s3://gu-identity-dist/identity-functions.sh .",
-              "chmod +x identity-functions.sh",
-              "source identity-functions.sh",
+              "source /identity-functions.sh",
 
               "installScript identity-bootstrap.sh",
               "installScript logstash-setup.sh",
-              "installScript security-updates.sh",
 
               "installScriptFromS3 s3://gu-identity-admin-dist/identity-admin-bootstrap.sh identity-admin-bootstrap.sh",
 
