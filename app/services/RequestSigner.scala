@@ -5,12 +5,11 @@ import javax.crypto.spec.SecretKeySpec
 
 import com.google.inject.ImplementedBy
 import org.apache.commons.codec.binary.Base64
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.{DateTimeZone, DateTime}
+import org.joda.time.DateTime
 import play.api.Play._
 import play.api.http.HeaderNames
 import play.api.libs.ws.WSRequest
-import util.Logging
+import util.{Formats, Logging}
 
 class RequestSignerWithSecret extends RequestSigner {
   val secret = current.configuration.getString("identity-admin.adminApi.secret").get
@@ -21,7 +20,6 @@ trait RequestSigner extends Logging {
 
   def secret: String
 
-  private val DateFormat = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
   private val ALGORITHM = "HmacSHA256"
   private def hmacHeaderValue(hmacToken: String) = s"HMAC $hmacToken"
 
@@ -40,8 +38,8 @@ trait RequestSigner extends Logging {
   }
 
   private[services] def getDateHeaderValue: String = {
-    val now = DateTime.now().withZone(DateTimeZone.UTC)
-    DateFormat.print(now)
+    val now = DateTime.now()
+    Formats.toHttpDateTimeString(now)
   }
 
   private[services] def sign(date: String, path: String): String = {
