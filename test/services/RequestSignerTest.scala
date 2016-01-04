@@ -1,11 +1,13 @@
 package services
 
+import org.joda.time.DateTime
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import play.api.http.HeaderNames
 import play.api.libs.ws.WS
 import play.api.test.FakeApplication
 import org.mockito.Mockito._
+import util.Formats
 
 class RequestSignerTest extends WordSpec with Matchers with MockitoSugar {
 
@@ -29,8 +31,9 @@ class RequestSignerTest extends WordSpec with Matchers with MockitoSugar {
 
     "set an Authorization header" in {
       val request = WS.url("http://localhost/path/to/resource").withQueryString("param" -> "value")
-      val date = "2015-10-23T16:54:00Z"
-      doReturn(date).when(signer).getDateHeaderValue
+      val date = DateTime.now
+      val dateHeaderValue = Formats.toHttpDateTimeString(date)
+      doReturn(dateHeaderValue).when(signer).getDateHeaderValue
       val result = signer.sign(request)
 
       val header = result.headers.get(HeaderNames.AUTHORIZATION)
@@ -38,7 +41,7 @@ class RequestSignerTest extends WordSpec with Matchers with MockitoSugar {
       val token = "HMAC\\s(.+)".r.findAllIn(header.get.head).matchData map {
         m => m.group(1)
       }
-      val expected = signer.sign(date, "/path/to/resource?param=value")
+      val expected = signer.sign(dateHeaderValue, "/path/to/resource?param=value")
       token.toSeq.headOption shouldEqual Some(expected)
     }
   }
