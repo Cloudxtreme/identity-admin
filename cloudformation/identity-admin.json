@@ -299,11 +299,9 @@
               "#!/bin/bash -ev",
 
               "source /identity-functions.sh",
+              "source /set-env.sh",
 
-              "installScript identity-bootstrap.sh",
-              "installScript logstash-setup.sh",
-
-              "installScriptFromS3 s3://gu-identity-admin-dist/identity-admin-bootstrap.sh identity-admin-bootstrap.sh",
+              "installScriptFromBucket gu-identity-admin-dist/$stacktag/$stagetag identity-admin-bootstrap.sh",
 
               "service identity-admin start",
               "sleep 20s"

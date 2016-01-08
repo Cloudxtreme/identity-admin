@@ -6,8 +6,8 @@
       "data": {
         "bucket": "gu-identity-admin-dist",
         "prefixPackage": false,
-        "prefixStage": false,
-        "prefixStack": false,
+        "prefixStage": true,
+        "prefixStack": true,
         "publicReadAcl": false,
         "cacheControl": "max-age=600"
       }
