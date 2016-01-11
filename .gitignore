@@ -19,6 +19,7 @@ project/plugins/project/
 .DS_Store
 
 # local certificates
+/nginxCerts
 *.crt
 *.key
 
