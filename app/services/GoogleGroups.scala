@@ -5,7 +5,7 @@ import auth.{GroupsValidationFailed, LoginError}
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.gu.googleauth.{UserIdentity, GoogleServiceAccount, GoogleGroupChecker}
 import config.Config
-import model.AdminUserIdentity
+import model.AdminIdentity
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import util.Logging
 
@@ -35,7 +35,7 @@ object GoogleGroups extends Logging {
   }
 
 
-  def isUserAdmin[A](identity: UserIdentity): Future[\/[LoginError, AdminUserIdentity]] =
+  def isUserAdmin[A](identity: UserIdentity): Future[\/[LoginError, AdminIdentity]] =
     Admin.isUserInAdminGroups(userGroups, identity, requiredGroups)
 }
 
@@ -47,9 +47,9 @@ object Authorisation {
 
 object Admin extends Logging {
 
-  def isUserInAdminGroups(f: UserIdentity => Future[Set[String]], identity: UserIdentity, requiredGroups: Set[String]): Future[\/[LoginError, AdminUserIdentity]] = {
+  def isUserInAdminGroups(f: UserIdentity => Future[Set[String]], identity: UserIdentity, requiredGroups: Set[String]): Future[\/[LoginError, AdminIdentity]] = {
     f(identity).map { groups =>
-      if (Authorisation.isAuthorised(required = requiredGroups, groups = groups))  \/-(AdminUserIdentity(identity))
+      if (Authorisation.isAuthorised(required = requiredGroups, groups = groups))  \/-(AdminIdentity(identity))
       else {
         logger.info("{} is not in correct groups", identity.email)
         -\/(GroupsValidationFailed())

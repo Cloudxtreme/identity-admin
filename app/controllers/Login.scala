@@ -6,7 +6,7 @@ import auth._
 import auth.CSRF.ANTI_FORGERY_KEY
 import auth.LoginSession.SessionOps
 import config.Config
-import model.AdminUserIdentity
+import model.AdminIdentity
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.googleauth._
@@ -48,10 +48,10 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions with Lo
 
     type FutureEither[A] = EitherT[Future, LoginError, A]
 
-    val result: FutureEither[AdminUserIdentity] = for {
+    val result: FutureEither[AdminIdentity] = for {
       identity <- EitherT(validateUser(authConfig))
-      validUserAdmin <- EitherT(GoogleGroups.isUserAdmin(identity))
-    } yield validUserAdmin
+      adminUser <- EitherT(GoogleGroups.isUserAdmin(identity))
+    } yield adminUser
 
     result.run map {
       case \/-(adminIdentity) => {
