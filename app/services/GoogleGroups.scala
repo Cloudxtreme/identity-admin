@@ -35,8 +35,8 @@ object GoogleGroups extends Logging {
   }
 
 
-  def isUserAdmin[A](identity: UserIdentity): Future[\/[LoginError, AdminIdentity]] =
-    Admin.isUserInAdminGroups(userGroups, identity, requiredGroups)
+  def validateUserAdmin[A](identity: UserIdentity): Future[\/[LoginError, AdminIdentity]] =
+    Admin.checkAdminGroups(userGroups, identity, requiredGroups)
 }
 
 object Authorisation {
@@ -47,7 +47,7 @@ object Authorisation {
 
 object Admin extends Logging {
 
-  def isUserInAdminGroups(f: UserIdentity => Future[Set[String]], identity: UserIdentity, requiredGroups: Set[String]): Future[\/[LoginError, AdminIdentity]] = {
+  def checkAdminGroups(f: UserIdentity => Future[Set[String]], identity: UserIdentity, requiredGroups: Set[String]): Future[\/[LoginError, AdminIdentity]] = {
     f(identity).map { groups =>
       if (Authorisation.isAuthorised(required = requiredGroups, groups = groups))  \/-(AdminIdentity(identity))
       else {

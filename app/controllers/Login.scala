@@ -50,7 +50,7 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions with Lo
 
     val result: FutureEither[AdminIdentity] = for {
       identity <- EitherT(validateUser(authConfig))
-      adminUser <- EitherT(GoogleGroups.isUserAdmin(identity))
+      adminUser <- EitherT(GoogleGroups.validateUserAdmin(identity))
     } yield adminUser
 
     result.run map {
@@ -64,8 +64,8 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions with Lo
         redirect.withSession { session.loginError }
       }
     } recover {
-      case ex => {
-        logger.error(s"$UnexpectedError: $ex")
+      case ex: Throwable => {
+        logger.error("UnexpectedError", ex)
         val redirect = loginErrorRedirect(UnexpectedError())
         redirect.withSession { session.loginError }
       }

@@ -17,9 +17,8 @@ object SafeGoogleAuth {
 
   def validateUserIdentity[A](f: (GoogleAuthConfig, String) => Future[UserIdentity], googleAuthConfig: GoogleAuthConfig, expectedAntiForgeryToken: String)
                              (implicit request: CSRFRequest[A]): Future[\/[LoginError, UserIdentity]] = {
-    val t = Try(f(googleAuthConfig, expectedAntiForgeryToken).map { identity =>
-      if (correctHostedDomain(identity, googleAuthConfig)) \/-(identity)
-      else -\/(DomainValidationFailed())
+    val t = Try(f(googleAuthConfig, expectedAntiForgeryToken).map{ identity =>
+      \/-(identity)
     }.recover {
       case _ =>  -\/(IdentityValidationFailed())
     })

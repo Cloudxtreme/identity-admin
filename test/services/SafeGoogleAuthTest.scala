@@ -1,7 +1,7 @@
 package services
 
-import auth.{IdentityValidationFailed, CSRFValidationFailed, DomainValidationFailed, CSRFRequest}
-import com.gu.googleauth.{UserIdentity, GoogleAuthConfig}
+import auth.{IdentityValidationFailed, CSRFValidationFailed, CSRFRequest}
+import com.gu.googleauth.{GoogleAuthException, UserIdentity, GoogleAuthConfig}
 import org.scalatest.concurrent.{ScalaFutures, AsyncAssertions}
 import org.scalatest.{ParallelTestExecution, Matchers, FlatSpec}
 import play.api.test.Helpers._
@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import scalaz.{\/-, -\/, \/}
 
-class SafeGoogleAuth$Test extends FlatSpec with Matchers with ScalaFutures with ParallelTestExecution with AsyncAssertions {
+class SafeGoogleAuthTest extends FlatSpec with Matchers with ScalaFutures with ParallelTestExecution with AsyncAssertions {
 
   val identity = UserIdentity("sub","test.com","firstName","lastName",1234,None)
   val googleAuthConfig = GoogleAuthConfig("1", "ssh", "http://test.com", Some("test.com"), None, false)
@@ -22,17 +22,32 @@ class SafeGoogleAuth$Test extends FlatSpec with Matchers with ScalaFutures with 
 
   behavior of "SafeGoogleAuth$Test"
 
-  it should "validateUserIdentity" in {
+  it should "validate user correctly" in {
     running(app) {
       whenReady(SafeGoogleAuth.validateUserIdentity(validUserIdentity, googleAuthConfig, "test")) { result =>
         result should be(\/-(identity))
       }
+    }
+  }
+
+  it should "not validate user with incorrect domain" in {
+    running(app) {
       whenReady(SafeGoogleAuth.validateUserIdentity(incorrectDomainUserIdentity, googleAuthConfig, "test")) { result =>
-        result should be(-\/(DomainValidationFailed()))
+        result should be(-\/(IdentityValidationFailed()))
       }
+    }
+  }
+
+  it should "not validate user with no identity" in {
+    running(app) {
       whenReady(SafeGoogleAuth.validateUserIdentity(futureFailed, googleAuthConfig, "test")) { result =>
         result should be(-\/(IdentityValidationFailed()))
       }
+    }
+  }
+
+  it should "not validate user with csrf failure" in {
+    running(app) {
       whenReady(SafeGoogleAuth.validateUserIdentity(csrfError, googleAuthConfig, "test")) { result =>
         result should be(-\/(CSRFValidationFailed()))
       }
@@ -41,7 +56,7 @@ class SafeGoogleAuth$Test extends FlatSpec with Matchers with ScalaFutures with 
 
   def validUserIdentity(config: GoogleAuthConfig, token: String): Future[UserIdentity] = Future(identity)
 
-  def incorrectDomainUserIdentity(config: GoogleAuthConfig, token: String): Future[UserIdentity] = Future(identity.copy(email = "test1.com"))
+  def incorrectDomainUserIdentity(config: GoogleAuthConfig, token: String): Future[UserIdentity] = Future.failed(new GoogleAuthException("Configured Google domain does not match"))
 
   def futureFailed(config: GoogleAuthConfig, token: String): Future[UserIdentity] = Future.failed(new Exception)
 
