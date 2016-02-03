@@ -2,22 +2,29 @@ package controllers
 
 import javax.inject.Inject
 
-import auth.{IdentityValidationFailed, GroupsValidationFailed, LoginError, CSRFAction}
+import auth._
 import auth.CSRF.ANTI_FORGERY_KEY
 import auth.LoginSession.SessionOps
 import config.Config
+import model.AdminIdentity
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.googleauth._
 import play.api.Play.current
-import services.{SafeGoogleAuth, GoogleAuthConf, GoogleGroups}
+import services.{GoogleAuthConf, GoogleGroups}
+import services.SafeGoogleAuth._
+import util.Logging
+
+import scala.concurrent.Future
+import scalaz.{-\/, \/-, EitherT}
+import scalaz.std.scalaFuture._
 
 trait AuthActions extends Actions {
   val loginTarget: Call = routes.Login.loginAction()
   val authConfig = GoogleAuthConf.googleAuthConfig
 }
 
-class Login @Inject() (conf: Config) extends Controller with AuthActions {
+class Login @Inject() (conf: Config) extends Controller with AuthActions with Logging {
 
   val indexCall = routes.Application.index()
   val contactEmail = conf.errorEmail
@@ -39,24 +46,27 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
   def oauth2Callback = CSRFAction.async { implicit request =>
     val session = request.session
 
-    val result = for {
-      identity <- SafeGoogleAuth.validatedUserIdentity
-      admin <- GoogleGroups.isUserAdmin(identity.email)
-    } yield if (admin) identity
+    type FutureEither[A] = EitherT[Future, LoginError, A]
 
-    result map {
-      case identity: UserIdentity => {
+    val result: FutureEither[AdminIdentity] = for {
+      identity <- EitherT(validateUser(authConfig))
+      adminUser <- EitherT(GoogleGroups.validateUserAdmin(identity))
+    } yield adminUser
+
+    result.run map {
+      case \/-(adminIdentity) => {
         val redirect = successfulLoginRedirect(session)
         val sessionLengthInSeconds = (System.currentTimeMillis + GoogleAuthConf.sessionMaxAge) / 1000
-        redirect.withSession { session.loggedIn(identity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
+        redirect.withSession { session.loggedIn(adminIdentity, LOGIN_ORIGIN_KEY, sessionLengthInSeconds)}
       }
-      case _ => {
-        val redirect = loginErrorRedirect(GroupsValidationFailed())
+      case -\/(error) => {
+        val redirect = loginErrorRedirect(error)
         redirect.withSession { session.loginError }
       }
     } recover {
-      case ex => {
-        val redirect = loginErrorRedirect(IdentityValidationFailed())
+      case ex: Throwable => {
+        logger.error("UnexpectedError", ex)
+        val redirect = loginErrorRedirect(UnexpectedError())
         redirect.withSession { session.loginError }
       }
     }
@@ -65,7 +75,6 @@ class Login @Inject() (conf: Config) extends Controller with AuthActions {
   private def successfulLoginRedirect(session: Session): Result =
     session.get(LOGIN_ORIGIN_KEY).map(Redirect(_)).getOrElse(Redirect(indexCall))
 
-  private def loginErrorRedirect(loginError: LoginError): Result = {
+  private def loginErrorRedirect(loginError: LoginError): Result =
     Redirect(routes.Login.login(Some(loginError)))
-  }
 }

@@ -1,7 +1,14 @@
 package config
 
+import java.io.FileInputStream
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.inject.ImplementedBy
+import com.gu.googleauth.GoogleServiceAccount
 import play.api.Play._
+import services.GoogleAuthConf
+
+import scala.util.Try
 
 @ImplementedBy(classOf[MainConfig])
 trait Config {

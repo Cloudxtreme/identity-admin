@@ -15,6 +15,8 @@ libraryDependencies ++= Seq(
   "org.webjars" % "bootstrap" % "3.3.5",
   "com.typesafe.akka" %% "akka-agent" % "2.4.0",
   "com.typesafe.akka" %% "akka-slf4j" % "2.4.0",
+  "com.amazonaws" % "aws-java-sdk-sns" % "1.10.30",
+  "org.scalaz" %% "scalaz-core" % "7.1.1",
   "com.amazonaws" % "aws-java-sdk-cloudwatch" % "1.10.34",
    ws,
   filters
