@@ -12,9 +12,7 @@ import play.api.Play.current
 import scalaz.{\/-, -\/, \/}
 
 object SafeGoogleAuth {
-
-  def correctHostedDomain(identity: UserIdentity, googleAuthConfig: GoogleAuthConfig): Boolean = Some(identity.emailDomain) == googleAuthConfig.domain
-
+  
   def validateUserIdentity[A](f: (GoogleAuthConfig, String) => Future[UserIdentity], googleAuthConfig: GoogleAuthConfig, expectedAntiForgeryToken: String)
                              (implicit request: CSRFRequest[A]): Future[\/[LoginError, UserIdentity]] = {
     val t = Try(f(googleAuthConfig, expectedAntiForgeryToken).map{ identity =>
