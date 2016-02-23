@@ -122,7 +122,7 @@
     },
     "CertsMap": {
       "CODE": {
-        "ssl": "arn:aws:iam::942464564246:server-certificate/sites.code.dev-gutools.co.uk-exp2023-07-16"
+        "ssl": "arn:aws:iam::942464564246:server-certificate/star.code.dev-gutools.co.uk-exp2018-02-15"
       },
       "PROD": {
         "ssl": "arn:aws:iam::942464564246:server-certificate/star.gutools.co.uk-exp2018-11-17"
